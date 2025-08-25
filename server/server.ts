@@ -1,9 +1,7 @@
-import { createServer } from "http";
+import app from "./src/app";
 
-const httpServer = createServer((req, res) => {
-  res.end("Hello World");
-});
+const PORT = 3000;
 
-httpServer.listen(3000, () => {
-  console.log("Server is running on port 3000");
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });
