@@ -108,7 +108,7 @@ export const logout = (req: Request, res: Response) => {
 export const getProfile = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = (req as any).user.id;
-    const user = await User.findById(userId).select('-passwordHash'); 
+    const user = await User.findById(userId).select('-passwordHash');
 
     if (!user) {
       return next(createHttpError(404, 'User not found'));

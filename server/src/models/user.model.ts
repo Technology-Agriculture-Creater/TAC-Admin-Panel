@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema<IUser>(
     },
     localAddressProof: { type: String, required: true },
     propertyDocument: { type: String, required: true },
-    profilePic: { type: String, required: true },
+    profilePic: { type: String, default: '' },
     aadharNumber: {
       type: String,
       required: true,
@@ -59,7 +59,7 @@ const userSchema = new mongoose.Schema<IUser>(
   },
   { timestamps: true },
 );
-userSchema.statics.hashPassword = async function (password) {
+userSchema.methods.setPassword = async function (password: string) {
   if (!password) {
     throw new Error('Password is required');
   }
@@ -67,7 +67,7 @@ userSchema.statics.hashPassword = async function (password) {
   return await bcrypt.hash(password, salt);
 };
 
-userSchema.methods.comparePassword = async function (password: string) {
+userSchema.methods.verifyPassword = async function (password: string) {
   if (!password) {
     throw new Error('Password is required');
   }
