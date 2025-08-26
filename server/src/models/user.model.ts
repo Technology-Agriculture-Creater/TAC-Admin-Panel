@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import config from '../config/config.ts';
 import type { IUser } from '../types/user.types.ts';
+import { token } from 'morgan';
 
 const userSchema = new mongoose.Schema<IUser>(
   {
@@ -59,29 +60,40 @@ const userSchema = new mongoose.Schema<IUser>(
   },
   { timestamps: true },
 );
-userSchema.methods.generateToken = function () {
+userSchema.statics.hashPassword = async function (password) {
+  if (!password) {
+    throw new Error('Password is required');
+  }
+  const salt = await bcrypt.genSalt(10);
+  return await bcrypt.hash(password, salt);
+};
+
+userSchema.methods.comparePassword = async function (password: string) {
+  if (!password) {
+    throw new Error('Password is required');
+  }
+  if (!this.passwordHash) {
+    throw new Error('Password is required');
+  }
+  return await bcrypt.compare(password, this.passwordHash);
+};
+
+userSchema.methods.generateToken = async function () {
   const token = jwt.sign({ id: this._id }, config.JWT_SECRET as string, {
-    expiresIn: config.JWT_EXPIRES_IN as string,
-    algorithm: config.JWT_ALGORITHM as jwt.Algorithm,
+    expiresIn: config.JWT_EXPIRES_IN as unknown as string,
+    algorithm: config.JWT_ALGORITHM as unknown as jwt.Algorithm,
   });
   return token;
 };
 
-userSchema.methods.setPassword = async function (password: string) {
-  const salt = await bcrypt.genSalt(12);
-  this.passwordHash = await bcrypt.hash(password, salt);
-};
-
-userSchema.methods.verifyPassword = async function (password: string) {
-  return bcrypt.compare(password, this.passwordHash);
-};
-
-userSchema.statics.verifyToken = function (token: string) {
-  try {
-    return jwt.verify(token, config.JWT_SECRET as string);
-  } catch (err) {
-    return null;
+userSchema.statics.verifyToken = async function (token) {
+  if (!token) {
+    throw new Error('Token is required');
   }
+  const decoded = jwt.verify(token, Buffer.from(config.JWT_SECRET as string), {
+    algorithms: [config.JWT_ALGORITHM as unknown as jwt.Algorithm],
+  });
+  return decoded;
 };
 
 const User = mongoose.model<IUser>('User', userSchema);
