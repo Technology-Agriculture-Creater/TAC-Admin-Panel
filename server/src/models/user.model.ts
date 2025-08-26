@@ -2,8 +2,7 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import config from '../config/config.ts';
-import type { IUser } from '../types/user.types.ts';
-import { token } from 'morgan';
+import type { IUser, UserModel } from '../types/user.types.ts';
 
 const userSchema = new mongoose.Schema<IUser>(
   {
@@ -64,7 +63,7 @@ userSchema.statics.hashPassword = async function (password) {
   if (!password) {
     throw new Error('Password is required');
   }
-  const salt = await bcrypt.genSalt(10);
+  const salt = await bcrypt.genSalt(12);
   return await bcrypt.hash(password, salt);
 };
 
@@ -79,10 +78,13 @@ userSchema.methods.comparePassword = async function (password: string) {
 };
 
 userSchema.methods.generateToken = async function () {
-  const token = jwt.sign({ id: this._id }, config.JWT_SECRET as string, {
-    expiresIn: config.JWT_EXPIRES_IN as unknown as string,
-    algorithm: config.JWT_ALGORITHM as unknown as jwt.Algorithm,
-  });
+  if (!config.JWT_SECRET) {
+    throw new Error('JWT_SECRET is not configured');
+  }
+  const signOptions: jwt.SignOptions = {
+    expiresIn: config.JWT_EXPIRES_IN ? parseInt(config.JWT_EXPIRES_IN as string) : 604800,
+  };
+  const token = jwt.sign({ id: this._id.toString() }, config.JWT_SECRET as string, signOptions);
   return token;
 };
 
@@ -90,11 +92,12 @@ userSchema.statics.verifyToken = async function (token) {
   if (!token) {
     throw new Error('Token is required');
   }
-  const decoded = jwt.verify(token, Buffer.from(config.JWT_SECRET as string), {
-    algorithms: [config.JWT_ALGORITHM as unknown as jwt.Algorithm],
-  });
+  if (!config.JWT_SECRET) {
+    throw new Error('JWT_SECRET is not configured');
+  }
+  const decoded = jwt.verify(token, config.JWT_SECRET as string);
   return decoded;
 };
 
-const User = mongoose.model<IUser>('User', userSchema);
+const User = mongoose.model<IUser, UserModel>('User', userSchema);
 export default User;

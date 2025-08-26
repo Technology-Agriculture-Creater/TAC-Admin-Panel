@@ -1,3 +1,6 @@
+import mongoose from 'mongoose';
+import { Document } from 'mongoose';
+
 interface IUser extends Document {
   fullName: string;
   email: string;
@@ -25,4 +28,9 @@ interface IUser extends Document {
   generateToken(): string;
 }
 
-export type { IUser };
+interface UserModel extends mongoose.Model<IUser> {
+  hashPassword(password: string): Promise<string>;
+  verifyToken(token: string): Promise<any>;
+}
+
+export type { IUser, UserModel };

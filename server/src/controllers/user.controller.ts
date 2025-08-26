@@ -4,24 +4,74 @@ import createHttpError from 'http-errors';
 import type { NextFunction } from 'express';
 
 export const register = async (req: Request, res: Response, next: NextFunction) => {
-  const { name, email, password, roleType } = req.body;
+  const {
+    name,
+    email,
+    password,
+    roleType,
+    phoneNumber,
+    localAddressProof,
+    propertyDocument,
+    profilePic,
+    aadharNumber,
+    panNumber,
+    signature,
+    hasSmartPhone,
+    workingHoursPerDay,
+    salaryMonthly,
+    incentives,
+    languageList,
+    userId,
+  } = req.body;
 
-  if (!name || !email || !password || !roleType) {
-    const error = createHttpError(400, 'Name, email, password, and roleType are required');
-    return next(error);
+  if (
+    !name ||
+    !email ||
+    !password ||
+    !roleType ||
+    !phoneNumber ||
+    !localAddressProof ||
+    !propertyDocument ||
+    !profilePic ||
+    !aadharNumber ||
+    !panNumber ||
+    !signature ||
+    hasSmartPhone === undefined ||
+    !workingHoursPerDay ||
+    !salaryMonthly ||
+    !userId
+  ) {
+    return next(createHttpError(400, 'All required fields must be provided'));
   }
 
   const existingUser = await User.findOne({ email });
   if (existingUser) {
-    const error = createHttpError(400, 'Email already registered');
-    return next(error);
+    return next(createHttpError(400, 'Email already registered'));
   }
 
-  const hashPassword = await User.hashPassword(password);
-  const user = new User({ name, email, password: hashPassword, roleType });
+  const passwordHash = await User.hashPassword(password);
+  const user = new User({
+    fullName: name,
+    email,
+    passwordHash,
+    roleType,
+    phoneNumber,
+    localAddressProof,
+    propertyDocument,
+    profilePic,
+    aadharNumber,
+    panNumber,
+    signature,
+    hasSmartPhone,
+    workingHoursPerDay,
+    salaryMonthly,
+    incentives: incentives || 0,
+    languageList: languageList || [],
+    userId,
+  });
+
   await user.save();
-  const token = user.generateToken();
-  res.status(201).json({ message: 'User registered successfully', token });
+  res.status(201).json({ message: 'User registered successfully', user });
 };
 
 export const login = (req: Request, res: Response) => {
