@@ -10,38 +10,48 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
       fullName,
       email,
       password,
-      roleType,
       phoneNumber,
-      localAddressProof,
       aadharNumber,
+      propertyDocument,
+      profilePic,
+      aadharCardPic,
+      panCardPic,
+      signaturePic,
+      basicTechLiteracyList,
       hasSmartPhone,
+      farmingLevel,
       workingHoursPerDay,
       salaryMonthly,
       incentives,
       languageList,
-      userId,
+      // userId,
+      // roleType,
     } = req.body;
 
     // Check if files are uploaded
     const files = req.files as { [fieldname: string]: Express.Multer.File[] };
-    
+
     if (
       !fullName ||
       !email ||
       !password ||
-      !roleType ||
       !phoneNumber ||
-      !localAddressProof ||
       !aadharNumber ||
-      hasSmartPhone === undefined ||
-      !workingHoursPerDay ||
-      !salaryMonthly ||
-      !userId ||
       !files?.propertyDocument?.[0] ||
       !files?.profilePic?.[0] ||
       !files?.aadharCardPic?.[0] ||
       !files?.panCardPic?.[0] ||
-      !files?.signaturePic?.[0]
+      !files?.signaturePic?.[0] ||
+      !basicTechLiteracyList ||
+      hasSmartPhone === undefined ||
+      !farmingLevel ||
+      !workingHoursPerDay ||
+      !salaryMonthly ||
+      incentives === undefined ||
+      !languageList ||
+      // !userId ||
+      // !roleType
+      
     ) {
       return next(createHttpError(400, 'All required fields must be provided'));
     }
@@ -52,34 +62,36 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
     }
 
     // Upload files to ImageKit and get URLs
-    const [propertyDocumentUrl, profilePicUrl, aadharCardPicUrl, panCardPicUrl, signaturePicUrl] = await Promise.all([
-      uploadImage(files.propertyDocument[0]),
-      uploadImage(files.profilePic[0]),
-      uploadImage(files.aadharCardPic[0]),
-      uploadImage(files.panCardPic[0]),
-      uploadImage(files.signaturePic[0])
-    ]);
+    const [propertyDocumentUrl, profilePicUrl, aadharCardPicUrl, panCardPicUrl, signaturePicUrl] =
+      await Promise.all([
+        uploadImage(files.propertyDocument[0]),
+        uploadImage(files.profilePic[0]),
+        uploadImage(files.aadharCardPic[0]),
+        uploadImage(files.panCardPic[0]),
+        uploadImage(files.signaturePic[0]),
+      ]);
 
     const passwordHash = await User.hashPassword(password);
     const user = new User({
       fullName,
       email,
       passwordHash,
-      roleType,
       phoneNumber,
-      localAddressProof,
+      aadharNumber,
       propertyDocument: propertyDocumentUrl,
       profilePic: profilePicUrl,
-      aadharNumber,
       aadharCardPic: aadharCardPicUrl,
       panCardPic: panCardPicUrl,
       signaturePic: signaturePicUrl,
+      basicTechLiteracyList,
       hasSmartPhone,
+      farmingLevel,
       workingHoursPerDay,
       salaryMonthly,
       incentives: incentives || 0,
       languageList: languageList || [],
-      userId,
+      // userId,
+      // roleType,
     });
 
     await user.save();

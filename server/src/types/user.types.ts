@@ -4,6 +4,7 @@ import { Document } from 'mongoose';
 interface IUser extends Document {
   fullName: string;
   email: string;
+  password: string;
   phoneNumber: string;
   aadharNumber: string;
   propertyDocument: string;

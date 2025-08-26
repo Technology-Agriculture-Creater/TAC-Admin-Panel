@@ -15,6 +15,11 @@ const userSchema = new mongoose.Schema<IUser>(
       trim: true,
       match: [/^\S+@\S+\.\S+$/, 'Invalid email'],
     },
+    password: {
+      type: String,
+      required: true,
+      minlength: 6,
+    },
     phoneNumber: {
       type: String,
       required: true,
@@ -44,8 +49,8 @@ const userSchema = new mongoose.Schema<IUser>(
     salaryMonthly: { type: Number, min: 0, required: true },
     incentives: { type: Number, min: 0, default: 0 },
     languageList: { type: [String], default: [] },
-    userId: { type: String, required: true, unique: true, trim: true },
-    roleType: { type: Number, required: true },
+    // userId: { type: String, required: true, unique: true, trim: true },
+    // roleType: { type: Number, required: true },
   },
   { timestamps: true },
 );
