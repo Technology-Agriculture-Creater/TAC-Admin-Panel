@@ -48,10 +48,9 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
       !workingHoursPerDay ||
       !salaryMonthly ||
       incentives === undefined ||
-      !languageList ||
+      !languageList
       // !userId ||
       // !roleType
-      
     ) {
       return next(createHttpError(400, 'All required fields must be provided'));
     }
