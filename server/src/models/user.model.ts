@@ -1,8 +1,10 @@
-// models/BDO.js
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import config from '../config/config.ts';
+import type { IUser } from '../types/user.types.ts';
 
-const userSchema = new mongoose.Schema(
+const userSchema = new mongoose.Schema<IUser>(
   {
     fullName: { type: String, required: true, trim: true },
     email: {
@@ -14,14 +16,12 @@ const userSchema = new mongoose.Schema(
       match: [/^\S+@\S+\.\S+$/, 'Invalid email'],
     },
     phoneNumber: {
-      type: Number,
+      type: String,
       required: true,
       unique: true,
       trim: true,
       match: [/^\d{10}$/, 'Phone must be 10 digits'],
     },
-
-    // Store file paths or URLs
     localAddressProof: { type: String, required: true },
     propertyDocument: { type: String, required: true },
     profilePic: { type: String, required: true },
@@ -40,47 +40,49 @@ const userSchema = new mongoose.Schema(
       trim: true,
       match: [/^[A-Z]{5}\d{4}[A-Z]$/, 'Invalid PAN'],
     },
-    signature: { type: String, required: true }, // path/URL
-
+    signature: { type: String, required: true },
     basicTechLiteracyList: { type: [String], default: [] },
     hasSmartPhone: { type: Boolean, required: true },
-
-    // farming knowledge/background
     farmingLevel: {
       type: String,
       enum: ['none', 'basic', 'intermediate', 'expert'],
       default: 'none',
     },
     farmingNotes: { type: String, trim: true },
-
     workingHoursPerDay: { type: Number, min: 0, max: 24, required: true },
-
     salaryMonthly: { type: Number, min: 0, required: true },
     incentives: { type: Number, min: 0, default: 0 },
-
     languageList: { type: [String], default: [] },
-
     userId: { type: String, required: true, unique: true, trim: true },
     passwordHash: { type: String, required: true },
-    roleType: {
-      type: Number,
-      required: true,
-    },
+    roleType: { type: Number, required: true },
   },
   { timestamps: true },
 );
-
-// helper virtual to set password
-userSchema.methods.setPassword = async function (plain: any) {
-  const salt = await bcrypt.genSalt(10);
-  this.passwordHash = await bcrypt.hash(plain, salt);
+userSchema.methods.generateToken = function () {
+  const token = jwt.sign({ id: this._id }, config.JWT_SECRET as string, {
+    expiresIn: config.JWT_EXPIRES_IN as string,
+    algorithm: config.JWT_ALGORITHM as jwt.Algorithm,
+  });
+  return token;
 };
 
-// helper to check password
-userSchema.methods.verifyPassword = function (plain: any) {
-  return bcrypt.compare(plain, this.passwordHash);
+userSchema.methods.setPassword = async function (password: string) {
+  const salt = await bcrypt.genSalt(12);
+  this.passwordHash = await bcrypt.hash(password, salt);
 };
 
-const User = mongoose.model('User', userSchema);
+userSchema.methods.verifyPassword = async function (password: string) {
+  return bcrypt.compare(password, this.passwordHash);
+};
 
+userSchema.statics.verifyToken = function (token: string) {
+  try {
+    return jwt.verify(token, config.JWT_SECRET as string);
+  } catch (err) {
+    return null;
+  }
+};
+
+const User = mongoose.model<IUser>('User', userSchema);
 export default User;

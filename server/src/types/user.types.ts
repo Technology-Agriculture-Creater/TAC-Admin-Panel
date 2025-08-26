@@ -1,0 +1,28 @@
+interface IUser extends Document {
+  fullName: string;
+  email: string;
+  phoneNumber: string;
+  localAddressProof: string;
+  propertyDocument: string;
+  profilePic: string;
+  aadharNumber: string;
+  panNumber: string;
+  signature: string;
+  basicTechLiteracyList: string[];
+  hasSmartPhone: boolean;
+  farmingLevel: 'none' | 'basic' | 'intermediate' | 'expert';
+  farmingNotes?: string;
+  workingHoursPerDay: number;
+  salaryMonthly: number;
+  incentives: number;
+  languageList: string[];
+  userId: string;
+  passwordHash: string;
+  roleType: number;
+
+  setPassword(plain: string): Promise<void>;
+  verifyPassword(plain: string): Promise<boolean>;
+  generateToken(): string;
+}
+
+export type { IUser };
