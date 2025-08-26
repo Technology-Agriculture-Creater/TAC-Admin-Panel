@@ -1,9 +1,9 @@
 import globalErrorHandler from './middlewares/globalErrorHandler.ts';
 import indexRoute from './routes/index.route.ts';
+import cookieParser from 'cookie-parser';
 import express from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
-import cookieParser from 'cookie-parser';
 
 const app = express();
 
