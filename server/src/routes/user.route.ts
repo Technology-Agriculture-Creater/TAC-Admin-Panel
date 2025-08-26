@@ -8,7 +8,18 @@ import upload from '../services/multer.service.ts';
 
 const authRoute = express.Router();
 
-authRoute.post('/register', upload.single('image'), validate(registerSchema), register);
+authRoute.post(
+  '/register',
+  upload.fields([
+    { name: 'propertyDocument', maxCount: 1 },
+    { name: 'profilePic', maxCount: 1 },
+    { name: 'aadharCardPic', maxCount: 1 },
+    { name: 'panCardPic', maxCount: 1 },
+    { name: 'signaturePic', maxCount: 1 },
+  ]),
+  validate(registerSchema),
+  register,
+);
 authRoute.post('/login', validate(loginSchema), login);
 authRoute.get('/logout', logout);
 authRoute.get('/profile', authenticate, getProfile);
