@@ -5,7 +5,7 @@ import type { NextFunction } from 'express';
 
 export const register = async (req: Request, res: Response, next: NextFunction) => {
   const {
-    name,
+    fullName,
     email,
     password,
     roleType,
@@ -25,7 +25,7 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
   } = req.body;
 
   if (
-    !name ||
+    !fullName ||
     !email ||
     !password ||
     !roleType ||
@@ -51,7 +51,7 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
 
   const passwordHash = await User.hashPassword(password);
   const user = new User({
-    fullName: name,
+    fullName,
     email,
     passwordHash,
     roleType,
