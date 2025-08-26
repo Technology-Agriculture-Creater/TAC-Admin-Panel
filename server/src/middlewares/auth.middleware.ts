@@ -8,7 +8,7 @@ interface AuthRequest extends Request {
   user?: { id: string };
 }
 
-export const authenticate = async (req: AuthRequest, res: Response, next: NextFunction) => {
+const authenticate = async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
     const token = req.cookies.token;
 
@@ -27,7 +27,7 @@ export const authenticate = async (req: AuthRequest, res: Response, next: NextFu
       return next(createHttpError(401, 'Authentication failed: User not found'));
     }
 
-    req.user = { id: user._id.toString() };
+    req.user = { id: (user._id as any).toString() };
     next();
   } catch (error) {
     if (error instanceof jwt.JsonWebTokenError) {
@@ -36,3 +36,5 @@ export const authenticate = async (req: AuthRequest, res: Response, next: NextFu
     next(createHttpError(500, 'Authentication failed'));
   }
 };
+
+export { authenticate };
