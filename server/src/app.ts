@@ -1,4 +1,5 @@
 import globalErrorHandler from './middlewares/globalErrorHandler.ts';
+import indexRoute from './routes/index.route.ts';
 import express from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
@@ -17,8 +18,11 @@ app.use(
   }),
 );
 
-// app.use('/api', indexRoute);
+app.use('/api', indexRoute);
 
+// Example of Error Handler
+// import createHttpError from 'http-errors';
+// import type { NextFunction } from 'express';
 // app.get('/', (req, res, next: NextFunction) => {
 //   const error = createHttpError(400, 'Error');
 //   return next(error);
