@@ -1,3 +1,4 @@
+import globalErrorHandler from './middlewares/globalErrorHandler.ts';
 import express from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
@@ -16,8 +17,13 @@ app.use(
   }),
 );
 
-app.get('/', (req, res) => {
-  res.send('Hello, World!');
-});
+// app.use('/api', indexRoute);
+
+// app.get('/', (req, res, next: NextFunction) => {
+//   const error = createHttpError(400, 'Error');
+//   return next(error);
+// });
+
+app.use(globalErrorHandler);
 
 export default app;
