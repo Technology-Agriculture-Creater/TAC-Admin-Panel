@@ -66,10 +66,10 @@ userSchema.methods.verifyPassword = async function (password: string) {
   if (!password) {
     throw new Error('Password is required');
   }
-  if (!this.passwordHash) {
+  if (!this.password) {
     throw new Error('Password is required');
   }
-  return await bcrypt.compare(password, this.passwordHash);
+  return await bcrypt.compare(password, this.password);
 };
 
 userSchema.methods.generateToken = async function () {
