@@ -12,6 +12,6 @@ export const validate =
       });
       next();
     } catch (error: any) {
-      next(createHttpError(400, error.errors[0].message));
+      next(createHttpError(400, error.errors ? error.errors[0].message : error.message));
     }
   };
