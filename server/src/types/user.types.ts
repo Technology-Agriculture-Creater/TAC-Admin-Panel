@@ -16,7 +16,7 @@ interface IUser extends Document {
   hasSmartPhone: boolean;
   farmingLevel: 'none' | 'basic' | 'intermediate' | 'expert';
   workingHoursPerDay: number;
-  salaryMonthly: number;
+  parsedSalaryMonthly: number;
   incentives: number;
   languageList: string[];
   userId: string;

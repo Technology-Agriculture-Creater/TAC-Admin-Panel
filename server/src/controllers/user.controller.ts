@@ -15,7 +15,7 @@ export const register = async (req: Request, res: Response) => {
       hasSmartPhone,
       farmingLevel,
       workingHoursPerDay,
-      salaryMonthly,
+      parsedSalaryMonthly,
       incentives,
       languageList,
       // userId,
@@ -40,7 +40,7 @@ export const register = async (req: Request, res: Response) => {
       hasSmartPhone === undefined ||
       !farmingLevel ||
       !workingHoursPerDay ||
-      !salaryMonthly ||
+      !parsedSalaryMonthly ||
       incentives === undefined ||
       !languageList
       // !userId ||
@@ -68,7 +68,7 @@ export const register = async (req: Request, res: Response) => {
     const user = new User({
       fullName,
       email,
-      passwordHash,
+      password: passwordHash,
       phoneNumber,
       aadharNumber,
       propertyDocument: propertyDocumentUrl,
@@ -80,7 +80,7 @@ export const register = async (req: Request, res: Response) => {
       hasSmartPhone,
       farmingLevel,
       workingHoursPerDay,
-      salaryMonthly,
+      parsedSalaryMonthly,
       incentives: incentives || 0,
       languageList: languageList || [],
       // userId,

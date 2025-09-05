@@ -46,7 +46,7 @@ const userSchema = new mongoose.Schema<IUser>(
       default: 'none',
     },
     workingHoursPerDay: { type: Number, min: 0, max: 24, required: true },
-    salaryMonthly: { type: Number, min: 0, required: true },
+    parsedSalaryMonthly: { type: Number, min: 0, required: true },
     incentives: { type: Number, min: 0, default: 0 },
     languageList: { type: [String], default: [] },
     // userId: { type: String, required: true, unique: true, trim: true },
@@ -54,7 +54,7 @@ const userSchema = new mongoose.Schema<IUser>(
   },
   { timestamps: true },
 );
-userSchema.methods.setPassword = async function (password: string) {
+userSchema.statics.hashPassword = async function (password: string) {
   if (!password) {
     throw new Error('Password is required');
   }
