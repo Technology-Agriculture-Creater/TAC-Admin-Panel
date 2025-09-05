@@ -76,10 +76,7 @@ userSchema.methods.generateToken = async function () {
   if (!config.JWT_SECRET) {
     throw new Error('JWT_SECRET is not configured');
   }
-  const signOptions: jwt.SignOptions = {
-    expiresIn: config.JWT_EXPIRES_IN ? parseInt(config.JWT_EXPIRES_IN as string) : 604800,
-  };
-  const token = jwt.sign({ id: this._id.toString() }, config.JWT_SECRET as string, signOptions);
+  const token = jwt.sign({ id: this._id.toString() }, config.JWT_SECRET as string);
   return token;
 };
 

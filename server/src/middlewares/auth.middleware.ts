@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import createHttpError from 'http-errors';
+
 import config from '../config/config.ts';
 import User from '../models/user.model.ts';
 
@@ -13,7 +13,7 @@ const authenticate = async (req: AuthRequest, res: Response, next: NextFunction)
     const token = req.cookies.token;
 
     if (!token) {
-      return next(createHttpError(401, 'Authentication failed: No token provided'));
+      return res.status(401).json({ error: 'Authentication failed: No token provided' });
     }
 
     if (!config.JWT_SECRET) {
@@ -24,16 +24,16 @@ const authenticate = async (req: AuthRequest, res: Response, next: NextFunction)
 
     const user = await User.findById(decoded.id);
     if (!user) {
-      return next(createHttpError(401, 'Authentication failed: User not found'));
+      return res.status(401).json({ error: 'Authentication failed: User not found' });
     }
 
     req.user = { id: (user._id as any).toString() };
     next();
   } catch (error) {
     if (error instanceof jwt.JsonWebTokenError) {
-      return next(createHttpError(401, 'Authentication failed: Invalid token'));
+      return res.status(401).json({ error: 'Authentication failed: Invalid token' });
     }
-    next(createHttpError(500, 'Authentication failed'));
+    return res.status(500).json({ error: 'Authentication failed' });
   }
 };
 

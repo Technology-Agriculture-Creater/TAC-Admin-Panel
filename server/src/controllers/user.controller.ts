@@ -112,7 +112,8 @@ export const login = async (req: Request, res: Response) => {
     return res.status(401).json({ error: 'Invalid credentials' });
   }
 
-  const token = user.generateToken();
+  const token = await user.generateToken();
+
   res.cookie('token', token, {
     httpOnly: true,
     secure: config.NODE_ENV === 'production',
@@ -129,7 +130,7 @@ export const logout = (req: Request, res: Response) => {
 export const getProfile = async (req: Request, res: Response) => {
   try {
     const userId = (req as any).user.id;
-    const user = await User.findById(userId).select('-passwordHash');
+    const user = await User.findById(userId).select('-password');
 
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
