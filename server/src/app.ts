@@ -1,4 +1,3 @@
-import globalErrorHandler from './middlewares/globalErrorHandler.ts';
 import indexRoute from './routes/index.route.ts';
 import cookieParser from 'cookie-parser';
 import express from 'express';
@@ -22,14 +21,8 @@ app.use(cookieParser());
 
 app.use('/api', indexRoute);
 
-// Example of Error Handler
-// import createHttpError from 'http-errors';
-// import type { NextFunction } from 'express';
-// app.get('/', (req, res, next: NextFunction) => {
-//   const error = createHttpError(400, 'Error');
-//   return next(error);
-// });
-
-app.use(globalErrorHandler);
+app.get('/', (req, res) => {
+  res.send('Hello World!');
+});
 
 export default app;
