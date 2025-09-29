@@ -46,7 +46,7 @@ const Header = () => {
         </div>
         <div className="flex items-center space-x-2">
           <Image
-            src=""
+            src="/images/Ellipse 1.svg"
             alt="User Avatar"
             height={0}
             width={0}
