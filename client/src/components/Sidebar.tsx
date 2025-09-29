@@ -18,7 +18,7 @@ const Sidebar = () => {
         <ul>
           <li className="flex items-center px-4 py-2 text-blue-600 bg-blue-50 border-r-4 border-blue-600 font-semibold">
             <Image
-              src="/images/monitor.png"
+              src="/images/dashboard.png"
               height={0}
               width={0}
               sizes="100vw"
@@ -40,7 +40,7 @@ const Sidebar = () => {
           </li>
           <li className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer">
             <Image
-              src="/images/monitor.png"
+              src="/images/framer.png"
               height={0}
               width={0}
               sizes="100vw"
@@ -51,7 +51,7 @@ const Sidebar = () => {
           </li>
           <li className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer">
             <Image
-              src="/images/monitor.png"
+              src="/images/communication.png"
               height={0}
               width={0}
               sizes="100vw"
@@ -62,7 +62,7 @@ const Sidebar = () => {
           </li>
           <li className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer">
             <Image
-              src="/images/monitor.png"
+              src="/images/report.png"
               height={0}
               width={0}
               sizes="100vw"
@@ -73,7 +73,7 @@ const Sidebar = () => {
           </li>
           <li className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer">
             <Image
-              src="/images/monitor.png"
+              src="/images/profile.png"
               height={0}
               width={0}
               sizes="100vw"
