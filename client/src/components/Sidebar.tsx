@@ -4,17 +4,15 @@ import Image from "next/image";
 const Sidebar = () => {
   return (
     <aside className="w-64 bg-white shadow-md flex flex-col">
-      <div className="p-4 flex items-center border-b border-gray-200">
+      <div className="p-4 flex items-center">
         <Image
-          src="/tac-logo.svg"
+          src="/images/logo1.png"
           height={0}
           width={0}
           sizes="100vw"
           alt="TAC Logo"
-          className="h-8 w-8 mr-2"
+          className="h-full w-full mr-2"
         />{" "}
-        {/* Placeholder for logo */}
-        <h1 className="text-xl font-bold text-gray-800">TACAGRICONNECT</h1>
       </div>
       <nav className="mt-6 flex-1">
         <ul>
