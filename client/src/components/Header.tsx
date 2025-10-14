@@ -1,10 +1,53 @@
 import React from "react";
 import Image from "next/image";
 
-const Header = () => {
+interface HeaderProps {
+  toggleSidebar: () => void;
+  isOpen: boolean;
+}
+
+const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen }) => {
   return (
     <header className="flex items-center justify-between p-4 bg-white shadow-md">
-      <h2 className="text-xl font-semibold text-gray-800">Dashboard</h2>
+      <div className="flex items-center">
+        <button
+          onClick={toggleSidebar}
+          className="text-gray-500 focus:outline-none focus:bg-gray-100 md:hidden mr-4"
+        >
+          {isOpen ? (
+            <svg
+              className="h-6 w-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M6 18L18 6M6 6l12 12"
+              ></path>
+            </svg>
+          ) : (
+            <svg
+              className="h-6 w-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              ></path>
+            </svg>
+          )}
+        </button>
+        <h2 className="text-xl font-semibold text-gray-800">Dashboard</h2>
+      </div>
       <div className="flex items-center space-x-4">
         <div className="relative">
           <input
