@@ -269,7 +269,7 @@ const VillageActivityPanel = () => {
                 value={selectedStatus}
                 onChange={(e) => setSelectedStatus(e.target.value)}
               >
-                <option value="All" selected>
+                <option value="All">
                   All
                 </option>
                 <option value="Approved">Approved</option>
