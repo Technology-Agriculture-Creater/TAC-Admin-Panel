@@ -1,167 +1,163 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
+import { CropApproval, TradeActivity } from "../../../types";
 import { Search } from "lucide-react";
 import { ChevronsLeft, ChevronsRight } from "lucide-react";
+import TabComponent from "../../../components/TabComponent";
+import cropApprovalData from "../../../data/CropApproval.json";
+import tradeData from "../../../data/TradeActivities.json";
+import CropApprovalTable from "./CropApprovalTable";
+import TradeActivitiesTable from "./TradeActivitiesTable";
 
 const VillageActivityPanel = () => {
   const [selectedStatus, setSelectedStatus] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
+  const [activeTab, setActiveTab] = useState("Crop Approval");
   const itemsPerPage = 10;
 
-  const data = [
-    {
-      bda: { name: "Rajest Patil", id: "BDAXXXXX001" },
-      cropQty: "Onion - 20 Quintals",
-      farmer: "Rishi Mehta",
-      village: "Kuhi",
-      status: "Awaiting approval",
-    },
-    {
-      bda: { name: "Rajest Patil", id: "BDAXXXXX001" },
-      cropQty: "Tomatoes - 15 Quintals",
-      farmer: "Anita Sharma",
-      village: "Kuhi",
-      status: "Approved",
-    },
-    {
-      bda: { name: "Rajest Patil", id: "BDAXXXXX001" },
-      cropQty: "Potatoes - 25 Quintals",
-      farmer: "Vikram Singh",
-      village: "Kuhi",
-      status: "Awaiting approval",
-    },
-    {
-      bda: { name: "Rajest Patil", id: "BDAXXXXX001" },
-      cropQty: "Wheat - 50 Quintals",
-      farmer: "Ravi Kumar",
-      village: "Kuhi",
-      status: "Approved",
-    },
-    {
-      bda: { name: "Rajest Patil", id: "BDAXXXXX001" },
-      cropQty: "Rice - 30 Quintals",
-      farmer: "Sita Devi",
-      village: "Kuhi",
-      status: "Awaiting approval",
-    },
-    {
-      bda: { name: "Rajest Patil", id: "BDAXXXXX001" },
-      cropQty: "Lentils - 18 Quintals",
-      farmer: "Manoj Patel",
-      village: "Kuhi",
-      status: "Approved",
-    },
-    {
-      bda: { name: "Rajest Patil", id: "BDAXXXXX001" },
-      cropQty: "Onion - 20 Quintals",
-      farmer: "Rishi Mehta",
-      village: "Kuhi",
-      status: "Awaiting approval",
-    },
-    {
-      bda: { name: "Rajest Patil", id: "BDAXXXXX001" },
-      cropQty: "Tomatoes - 15 Quintals",
-      farmer: "Anita Sharma",
-      village: "Kuhi",
-      status: "Approved",
-    },
-    {
-      bda: { name: "Rajest Patil", id: "BDAXXXXX001" },
-      cropQty: "Potatoes - 25 Quintals",
-      farmer: "Vikram Singh",
-      village: "Kuhi",
-      status: "Awaiting approval",
-    },
-    {
-      bda: { name: "Rajest Patil", id: "BDAXXXXX001" },
-      cropQty: "Wheat - 50 Quintals",
-      farmer: "Ravi Kumar",
-      village: "Kuhi",
-      status: "Approved",
-    },
-    {
-      bda: { name: "Rajest Patil", id: "BDAXXXXX001" },
-      cropQty: "Rice - 30 Quintals",
-      farmer: "Sita Devi",
-      village: "Kuhi",
-      status: "Awaiting approval",
-    },
-    {
-      bda: { name: "Rajest Patil", id: "BDAXXXXX001" },
-      cropQty: "Lentils - 18 Quintals",
-      farmer: "Manoj Patel",
-      village: "Kuhi",
-      status: "Approved",
-    },
-    {
-      bda: { name: "Rajest Patil", id: "BDAXXXXX001" },
-      cropQty: "Chili Peppers - 12 Quintals",
-      farmer: "Suresh Gupta",
-      village: "Kuhi",
-      status: "Rejected",
-    },
-    {
-      bda: { name: "Rajest Patil", id: "BDAXXXXX001" },
-      cropQty: "Cabbage - 22 Quintals",
-      farmer: "Rahul Sharma",
-      village: "Kuhi",
-      status: "Approved",
-    },
-    {
-      bda: { name: "Rajest Patil", id: "BDAXXXXX001" },
-      cropQty: "Cauliflower - 19 Quintals",
-      farmer: "Geeta Singh",
-      village: "Kuhi",
-      status: "Rejected",
-    },
-    {
-      bda: { name: "Rajest Patil", id: "BDAXXXXX001" },
-      cropQty: "Beans - 15 Quintals",
-      farmer: "Karan Verma",
-      village: "Kuhi",
-      status: "Approved",
-    },
-    {
-      bda: { name: "Rajest Patil", id: "BDAXXXXX001" },
-      cropQty: "Chili Peppers - 12 Quintals",
-      farmer: "Suresh Gupta",
-      village: "Kuhi",
-      status: "Rejected",
-    },
-    {
-      bda: { name: "Rajest Patil", id: "BDAXXXXX001" },
-      cropQty: "Cabbage - 22 Quintals",
-      farmer: "Rahul Sharma",
-      village: "Kuhi",
-      status: "Approved",
-    },
-    {
-      bda: { name: "Rajest Patil", id: "BDAXXXXX001" },
-      cropQty: "Cauliflower - 19 Quintals",
-      farmer: "Geeta Singh",
-      village: "Kuhi",
-      status: "Rejected",
-    },
-    {
-      bda: { name: "Rajest Patil", id: "BDAXXXXX001" },
-      cropQty: "Beans - 15 Quintals",
-      farmer: "Karan Verma",
-      village: "Kuhi",
-      status: "Approved",
-    },
-  ];
+  const data = activeTab === "Crop Approval" ? cropApprovalData : tradeData;
 
-  const getStatusClasses = (status: string) => {
+  const getStatusInfo = (status: string) => {
     switch (status) {
       case "Awaiting approval":
-        return "bg-yellow-100 text-yellow-800";
+        return {
+          icon: (
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M7.00004 12.8333C10.2217 12.8333 12.8334 10.2216 12.8334 6.99996C12.8334 3.77829 10.2217 1.16663 7.00004 1.16663C3.77837 1.16663 1.16671 3.77829 1.16671 6.99996C1.16671 10.2216 3.77837 12.8333 7.00004 12.8333Z"
+                stroke="#D97706"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M7 4.66663V7.00004"
+                stroke="#D97706"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M7 9.33337H7.00583"
+                stroke="#D97706"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          ),
+          color: "#D97706",
+        };
       case "Approved":
-        return "bg-green-100 text-green-800";
+        return {
+          icon: (
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M7.00004 12.8333C10.2217 12.8333 12.8334 10.2216 12.8334 6.99996C12.8334 3.77829 10.2217 1.16663 7.00004 1.16663C3.77837 1.16663 1.16671 3.77829 1.16671 6.99996C1.16671 10.2216 3.77837 12.8333 7.00004 12.8333Z"
+                stroke="#059669"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M4.66671 7L6.41671 8.75L9.33337 5.83333"
+                stroke="#059669"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          ),
+          color: "#059669",
+        };
       case "Rejected":
-        return "bg-red-100 text-red-800";
+        return {
+          icon: (
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M7.00004 12.8333C10.2217 12.8333 12.8334 10.2216 12.8334 6.99996C12.8334 3.77829 10.2217 1.16663 7.00004 1.16663C3.77837 1.16663 1.16671 3.77829 1.16671 6.99996C1.16671 10.2216 3.77837 12.8333 7.00004 12.8333Z"
+                stroke="#EF4444"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M5.25 8.75L8.75 5.25"
+                stroke="#EF4444"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M8.75 8.75L5.25 5.25"
+                stroke="#EF4444"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          ),
+          color: "#EF4444",
+        };
+      case "In process":
+        return {
+          icon: (
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M7.00004 12.8333C10.2217 12.8333 12.8334 10.2216 12.8334 6.99996C12.8334 3.77829 10.2217 1.16663 7.00004 1.16663C3.77837 1.16663 1.16671 3.77829 1.16671 6.99996C1.16671 10.2216 3.77837 12.8333 7.00004 12.8333Z"
+                stroke="#3B82F6"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M7 4.66663V7.00004"
+                stroke="#3B82F6"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M7 9.33337H7.00583"
+                stroke="#3B82F6"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          ),
+          color: "#3B82F6",
+        };
       default:
-        return "bg-gray-100 text-gray-800";
+        return {
+          icon: null,
+          color: "#6B7280",
+        };
     }
   };
 
@@ -211,63 +207,12 @@ const VillageActivityPanel = () => {
         />
         Village Activity Panel
       </div>
-      <div className="flex items-center justify-between border-b border-gray-200 w-full">
-        <button className="px-4 py-2 text-sm font-medium text-blue-600 border-b-2 border-blue-600">
-          <Image
-            src="/Images/cropA.png"
-            alt="Crop Icon"
-            height={0}
-            width={0}
-            sizes="100vw"
-            className="inline-block w-5 h-5 mr-2"
-          />
-          Crop Approval 26
-        </button>
-        <button className="ml-4 px-4 py-2 text-sm font-medium text-gray-600 hover:text-blue-600">
-          <Image
-            src="/Images/tradeA.png"
-            alt="Crop Icon"
-            height={0}
-            width={0}
-            sizes="100vw"
-            className="inline-block w-5 h-5 mr-2"
-          />
-          Trade Activities 12
-        </button>
-        <button className="ml-4 px-4 py-2 text-sm font-medium text-gray-600 hover:text-blue-600">
-          <Image
-            src="/Images/complaint.png"
-            alt="Crop Icon"
-            height={0}
-            width={0}
-            sizes="100vw"
-            className="inline-block w-5 h-5 mr-2"
-          />
-          Complaints 04
-        </button>
-        <button className="ml-4 px-4 py-2 text-sm font-medium text-gray-600 hover:text-blue-600">
-          <Image
-            src="/Images/dispute.png"
-            alt="Crop Icon"
-            height={0}
-            width={0}
-            sizes="100vw"
-            className="inline-block w-5 h-5 mr-2"
-          />
-          Disputes 04
-        </button>
-        <button className="ml-4 px-4 py-2 text-sm font-medium text-gray-600 hover:text-blue-600">
-          <Image
-            src="/Images/system.png"
-            alt="Crop Icon"
-            height={0}
-            width={0}
-            sizes="100vw"
-            className="inline-block w-5 h-5 mr-2"
-          />
-          System 02
-        </button>
-      </div>
+      <TabComponent
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        cropApprovalCount={cropApprovalData.length}
+        tradeActivitiesCount={tradeData.length}
+      />
       {/* Filters Section */}
       <div className="flex items-center justify-between mt-4 space-x-4">
         {/* Dropdowns */}
@@ -286,6 +231,9 @@ const VillageActivityPanel = () => {
                 <option value="Approved">Approved</option>
                 <option value="Awaiting approval">Awaiting approval</option>
                 <option value="Rejected">Rejected</option>
+                {activeTab === "Trade Activities" && (
+                  <option value="In process">In process</option>
+                )}
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                 <svg
@@ -365,83 +313,18 @@ const VillageActivityPanel = () => {
       </div>
       {/* Data Table */}
       <div className="mt-6 overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                BDA
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Crop/Qty
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Farmer
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Village
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Status
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {currentItems.map((item, index) => (
-              <tr key={index}>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="flex items-center">
-                    <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 text-sm">
-                      {item.bda.name.charAt(0)}
-                    </div>
-                    <div className="ml-4">
-                      <div className="text-sm font-medium text-gray-900">
-                        {item.bda.name}
-                      </div>
-                      <div className="text-sm text-gray-500">{item.bda.id}</div>
-                    </div>
-                  </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900 bg-yellow-100 inline-flex items-center justify-center px-2 py-1 rounded-full">
-                    {item.cropQty}
-                  </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">{item.farmer}</div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">{item.village}</div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span
-                    className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusClasses(
-                      item.status
-                    )}`}
-                  >
-                    {item.status}
-                  </span>
-                </td>
-                <td className="px-6 py-4 flex gap-4 whitespace-nowrap text-sm font-medium">
-                  {item.status === "Rejected" ? (
-                    <button className="text-zinc-700 hover:text-blue-900 bg-gray-100 px-14 py-1 rounded-md">
-                      Review
-                    </button>
-                  ) : (
-                    <button className="text-blue-600 hover:text-blue-900 bg-blue-100 px-16 py-1 rounded-md">
-                      View
-                    </button>
-                  )}
-                  <button className="ml-2 text-gray-600 hover:text-gray-900 bg-gray-100 px-3 py-1 rounded-md">
-                    ...
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        {activeTab === "Crop Approval" && (
+          <CropApprovalTable
+            data={currentItems as CropApproval[]}
+            getStatusInfo={getStatusInfo}
+          />
+        )}
+        {activeTab === "Trade Activities" && (
+          <TradeActivitiesTable
+            data={currentItems as TradeActivity[]}
+            getStatusInfo={getStatusInfo}
+          />
+        )}
       </div>
       {/* Pagination */}
       <div className="flex justify-center items-center mt-4">
