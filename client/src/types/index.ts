@@ -22,3 +22,15 @@ export interface TradeActivity {
   buyerType: string;
   status: string;
 }
+
+export interface Complaint {
+  // Define complaint properties here
+}
+
+export interface Dispute {
+  // Define dispute properties here
+}
+
+export interface System {
+  // Define system properties here
+}
