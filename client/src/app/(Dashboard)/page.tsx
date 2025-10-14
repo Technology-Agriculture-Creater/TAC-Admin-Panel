@@ -3,6 +3,9 @@ import Header from "../../components/Header";
 import Sidebar from "../../components/Sidebar";
 import SummaryCards from "./components/SummaryCards";
 import VillageActivityPanel from "./components/VillageActivityPanel";
+import PerformanceOverview from "./components/PerformanceOverview";
+import ComplaintsTrend from "./components/ComplaintsTrend";
+import TradeValue from "./components/TradeValue";
 
 const page = () => {
   return (
@@ -23,15 +26,9 @@ const page = () => {
           {/* Village Activity Panel */}
           <VillageActivityPanel />
 
-          {/* Placeholder for the rest of the dashboard content */}
-          <div className="bg-white p-6 rounded-lg shadow-md mt-4">
-            <h3 className="text-lg font-semibold mb-4">
-              Additional Dashboard Content
-            </h3>
-            <p className="text-gray-600">
-              Any other components or information can be added here.
-            </p>
-          </div>
+          <PerformanceOverview />
+          <ComplaintsTrend />
+          <TradeValue />
         </div>
       </main>
     </div>
