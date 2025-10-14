@@ -86,7 +86,7 @@ const Sidebar = () => {
       </nav>
       <div className="mt-auto p-4">
         <ul className="flex flex-col gap-4">
-          <li className="flex bg-gray-100 border border-gray-300 font-bold text-sm items-center justify-between rounded-lg px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer">
+          <li className="flex bg-gray-100 border border-gray-300 font-bold text-sm items-center justify-between rounded-lg px-2 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer">
             Register New Farmer
             <svg
               className="h-4 w-4"
@@ -103,7 +103,7 @@ const Sidebar = () => {
               ></path>
             </svg>
           </li>
-          <li className="flex bg-gray-100 border border-gray-300 font-bold text-sm items-center justify-between rounded-lg px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer">
+          <li className="flex bg-gray-100 border border-gray-300 font-bold text-sm items-center justify-between rounded-lg px-2 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer">
             Support center
             <svg
               className="h-4 w-4"
@@ -120,7 +120,7 @@ const Sidebar = () => {
               ></path>
             </svg>
           </li>
-          <li className="flex bg-gray-100 border border-gray-300 font-bold text-sm items-center justify-between rounded-lg px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer">
+          <li className="flex bg-gray-100 border border-gray-300 font-bold text-sm items-center justify-between rounded-lg px-2 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer">
             About
             <svg
               className="h-4 w-4"

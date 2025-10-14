@@ -11,7 +11,7 @@ const page = () => {
       <Sidebar />
 
       {/* Main Content Area */}
-      <main className="flex-1 flex flex-col overflow-hidden">
+      <main className="flex-1 flex flex-col overflow-hidden font-roboto">
         {/* Header */}
         <Header />
 
@@ -25,8 +25,12 @@ const page = () => {
 
           {/* Placeholder for the rest of the dashboard content */}
           <div className="bg-white p-6 rounded-lg shadow-md mt-4">
-            <h3 className="text-lg font-semibold mb-4">Additional Dashboard Content</h3>
-            <p className="text-gray-600">Any other components or information can be added here.</p>
+            <h3 className="text-lg font-semibold mb-4">
+              Additional Dashboard Content
+            </h3>
+            <p className="text-gray-600">
+              Any other components or information can be added here.
+            </p>
           </div>
         </div>
       </main>
