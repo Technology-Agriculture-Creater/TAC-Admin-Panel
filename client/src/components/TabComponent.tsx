@@ -13,6 +13,9 @@ interface TabComponentProps {
   onTabChange: (tab: string) => void;
   cropApprovalCount: number;
   tradeActivitiesCount: number;
+  complaintsCount: number;
+  disputesCount: number;
+  systemCount: number;
 }
 
 const TabComponent: React.FC<TabComponentProps> = ({
@@ -20,13 +23,16 @@ const TabComponent: React.FC<TabComponentProps> = ({
   onTabChange,
   cropApprovalCount,
   tradeActivitiesCount,
+  complaintsCount,
+  disputesCount,
+  systemCount,
 }) => {
   const tabs: Tab[] = [
     { label: "Crop Approval", icon: "/Images/cropA.png", count: cropApprovalCount },
     { label: "Trade Activities", icon: "/Images/tradeA.png", count: tradeActivitiesCount },
-    { label: "Complaints", icon: "/Images/complaint.png", count: 4 },
-    { label: "Disputes", icon: "/Images/dispute.png", count: 4 },
-    { label: "System", icon: "/Images/system.png", count: 2 },
+    { label: "Complaints", icon: "/Images/complaint.png", count: complaintsCount },
+    { label: "Disputes", icon: "/Images/dispute.png", count: disputesCount },
+    { label: "System", icon: "/Images/system.png", count: systemCount },
   ];
   return (
     <div className="flex items-center justify-between border-b border-gray-200 w-full">
