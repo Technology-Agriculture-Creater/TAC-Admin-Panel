@@ -1,5 +1,7 @@
 import { X } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -7,6 +9,41 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
+  const pathname = usePathname();
+
+  const navItems = [
+    {
+      name: "Dashboard",
+      icon: "/images/dashboard.png",
+      href: "/",
+    },
+    {
+      name: "BDA Monitoring",
+      icon: "/images/monitor.png",
+      href: "/bda-monitoring",
+    },
+    {
+      name: "Farmer Management",
+      icon: "/images/framer.png",
+      href: "/farmer-management",
+    },
+    {
+      name: "Communications",
+      icon: "/images/communication.png",
+      href: "/communications",
+    },
+    {
+      name: "Reports",
+      icon: "/images/report.png",
+      href: "/reports",
+    },
+    {
+      name: "Profile & Settings",
+      icon: "/images/profile.png",
+      href: "/profile-settings",
+    },
+  ];
+
   return (
     <aside
       role="navigation"
@@ -33,72 +70,28 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
       </div>
       <nav className="mt-6 flex-1">
         <ul>
-          <li className="flex items-center px-4 py-2 text-blue-600 bg-blue-50 border-r-4 border-blue-600 font-semibold">
-            <Image
-              src="/images/dashboard.png"
-              height={0}
-              width={0}
-              sizes="100vw"
-              alt="TAC Logo"
-              className="h-6 w-6 mr-2"
-            />{" "}
-            Dashboard
-          </li>
-          <li className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer">
-            <Image
-              src="/images/monitor.png"
-              height={0}
-              width={0}
-              sizes="100vw"
-              alt="TAC Logo"
-              className="h-6 w-6 mr-2"
-            />
-            BDA Monitoring
-          </li>
-          <li className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer">
-            <Image
-              src="/images/framer.png"
-              height={0}
-              width={0}
-              sizes="100vw"
-              alt="TAC Logo"
-              className="h-6 w-6 mr-2"
-            />
-            Farmer Management
-          </li>
-          <li className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer">
-            <Image
-              src="/images/communication.png"
-              height={0}
-              width={0}
-              sizes="100vw"
-              alt="TAC Logo"
-              className="h-6 w-6 mr-2"
-            />
-            Communications
-          </li>
-          <li className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer">
-            <Image
-              src="/images/report.png"
-              height={0}
-              width={0}
-              sizes="100vw"
-              alt="TAC Logo"
-              className="h-6 w-6 mr-2"
-            />
-            Reports
-          </li>
-          <li className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer">
-            <Image
-              src="/images/profile.png"
-              height={0}
-              width={0}
-              sizes="100vw"
-              alt="TAC Logo"
-              className="h-6 w-6 mr-2"
-            />
-            Profile & Settings
-          </li>
+          {navItems.map((item) => (
+            <li key={item.name}>
+              <Link
+                href={item.href}
+                className={`flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer ${
+                  pathname === item.href
+                    ? "text-blue-600 bg-blue-50 border-r-4 border-blue-600 font-semibold"
+                    : ""
+                }`}
+              >
+                <Image
+                  src={item.icon}
+                  height={0}
+                  width={0}
+                  sizes="100vw"
+                  alt={item.name}
+                  className="h-6 w-6 mr-2"
+                />{" "}
+                {item.name}
+              </Link>
+            </li>
+          ))}
         </ul>
       </nav>
       <div className="mt-auto p-4">
