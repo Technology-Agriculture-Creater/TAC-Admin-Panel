@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import { Search } from "lucide-react";
 
 const VillageActivityPanel = () => {
   const data = [
@@ -101,7 +102,7 @@ const VillageActivityPanel = () => {
         />
         Village Activity Panel
       </div>
-      <div className="flex border-b border-gray-200">
+      <div className="flex items-center justify-between border-b border-gray-200 w-full">
         <button className="px-4 py-2 text-sm font-medium text-blue-600 border-b-2 border-blue-600">
           <Image
             src="/Images/cropA.png"
@@ -162,18 +163,74 @@ const VillageActivityPanel = () => {
       <div className="flex items-center justify-between mt-4 space-x-4">
         {/* Dropdowns */}
         <div className="flex space-x-2">
-          <select className="border border-gray-300 rounded-md p-2 text-sm">
-            <option>Status: All</option>
-          </select>
-          <select className="border border-gray-300 rounded-md p-2 text-sm">
-            <option>BDA: All</option>
-          </select>
-          <select className="border border-gray-300 rounded-md p-2 text-sm">
-            <option>Village: All</option>
-          </select>
-          <select className="border border-gray-300 rounded-md p-2 text-sm">
-            <option>Duration: Last 7 days</option>
-          </select>
+          <div className="flex flex-col">
+            <span className="text-sm font-medium text-gray-600">Status</span>
+            <div className="relative">
+              <select className="border border-gray-300 rounded-md p-2 text-sm appearance-none pr-20">
+                <option> All</option>
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                <svg
+                  className="fill-current h-4 w-4"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-col">
+            <span className="text-sm font-medium text-gray-600">BDA</span>
+            <div className="relative">
+              <select className="border border-gray-300 rounded-md p-2 text-sm appearance-none pr-20">
+                <option> All</option>
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                <svg
+                  className="fill-current h-4 w-4"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-col">
+            <span className="text-sm font-medium text-gray-600">Village</span>
+            <div className="relative">
+              <select className="border border-gray-300 rounded-md p-2 text-sm appearance-none pr-20">
+                <option> All</option>
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                <svg
+                  className="fill-current h-4 w-4"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-col">
+            <span className="text-sm font-medium text-gray-600">Duration</span>
+            <div className="relative">
+              <select className="border border-gray-300 rounded-md p-2 text-sm appearance-none pr-20">
+                <option>Last 7 days</option>
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                <svg
+                  className="fill-current h-4 w-4"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                </svg>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Search Bar */}
@@ -183,8 +240,8 @@ const VillageActivityPanel = () => {
             placeholder="Search here"
             className="border border-gray-300 rounded-l-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <button className="bg-blue-600 text-white p-2 rounded-r-md text-sm hover:bg-blue-700">
-            Q Search
+          <button className="bg-blue-600 flex items-center justify-between gap-2 text-white p-2 rounded-r-md text-sm hover:bg-blue-700">
+            <Search /> Search
           </button>
         </div>
       </div>
@@ -230,7 +287,7 @@ const VillageActivityPanel = () => {
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900 bg-yellow-100 inline-flex px-2 py-1 rounded-full">
+                  <div className="text-sm text-gray-900 bg-yellow-100 inline-flex items-center justify-center px-2 py-1 rounded-full">
                     {item.cropQty}
                   </div>
                 </td>
@@ -240,7 +297,7 @@ const VillageActivityPanel = () => {
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm text-gray-900">{item.village}</div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td className="px-6 py-4 flex items-center justify-center whitespace-nowrap">
                   <span
                     className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusClasses(
                       item.status
@@ -251,7 +308,7 @@ const VillageActivityPanel = () => {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                   {item.status === "Rejected" ? (
-                    <button className="text-blue-600 hover:text-blue-900 bg-blue-100 px-3 py-1 rounded-md">
+                    <button className="text-zinc-700 hover:text-blue-900 bg-gray-100 px-3 py-1 rounded-md">
                       Review
                     </button>
                   ) : (
@@ -269,7 +326,7 @@ const VillageActivityPanel = () => {
         </table>
       </div>
       {/* Pagination */}
-      <div className="flex justify-end items-center mt-4">
+      <div className="flex justify-center items-center mt-4">
         <nav
           className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
           aria-label="Pagination"
