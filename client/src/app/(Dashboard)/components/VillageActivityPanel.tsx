@@ -1,9 +1,56 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import Image from "next/image";
 import { Search } from "lucide-react";
+import { ChevronsLeft, ChevronsRight } from "lucide-react";
 
 const VillageActivityPanel = () => {
+  const [selectedStatus, setSelectedStatus] = useState("All");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
   const data = [
+    {
+      bda: { name: "Rajest Patil", id: "BDAXXXXX001" },
+      cropQty: "Onion - 20 Quintals",
+      farmer: "Rishi Mehta",
+      village: "Kuhi",
+      status: "Awaiting approval",
+    },
+    {
+      bda: { name: "Rajest Patil", id: "BDAXXXXX001" },
+      cropQty: "Tomatoes - 15 Quintals",
+      farmer: "Anita Sharma",
+      village: "Kuhi",
+      status: "Approved",
+    },
+    {
+      bda: { name: "Rajest Patil", id: "BDAXXXXX001" },
+      cropQty: "Potatoes - 25 Quintals",
+      farmer: "Vikram Singh",
+      village: "Kuhi",
+      status: "Awaiting approval",
+    },
+    {
+      bda: { name: "Rajest Patil", id: "BDAXXXXX001" },
+      cropQty: "Wheat - 50 Quintals",
+      farmer: "Ravi Kumar",
+      village: "Kuhi",
+      status: "Approved",
+    },
+    {
+      bda: { name: "Rajest Patil", id: "BDAXXXXX001" },
+      cropQty: "Rice - 30 Quintals",
+      farmer: "Sita Devi",
+      village: "Kuhi",
+      status: "Awaiting approval",
+    },
+    {
+      bda: { name: "Rajest Patil", id: "BDAXXXXX001" },
+      cropQty: "Lentils - 18 Quintals",
+      farmer: "Manoj Patel",
+      village: "Kuhi",
+      status: "Approved",
+    },
     {
       bda: { name: "Rajest Patil", id: "BDAXXXXX001" },
       cropQty: "Onion - 20 Quintals",
@@ -74,6 +121,34 @@ const VillageActivityPanel = () => {
       village: "Kuhi",
       status: "Approved",
     },
+    {
+      bda: { name: "Rajest Patil", id: "BDAXXXXX001" },
+      cropQty: "Chili Peppers - 12 Quintals",
+      farmer: "Suresh Gupta",
+      village: "Kuhi",
+      status: "Rejected",
+    },
+    {
+      bda: { name: "Rajest Patil", id: "BDAXXXXX001" },
+      cropQty: "Cabbage - 22 Quintals",
+      farmer: "Rahul Sharma",
+      village: "Kuhi",
+      status: "Approved",
+    },
+    {
+      bda: { name: "Rajest Patil", id: "BDAXXXXX001" },
+      cropQty: "Cauliflower - 19 Quintals",
+      farmer: "Geeta Singh",
+      village: "Kuhi",
+      status: "Rejected",
+    },
+    {
+      bda: { name: "Rajest Patil", id: "BDAXXXXX001" },
+      cropQty: "Beans - 15 Quintals",
+      farmer: "Karan Verma",
+      village: "Kuhi",
+      status: "Approved",
+    },
   ];
 
   const getStatusClasses = (status: string) => {
@@ -87,6 +162,35 @@ const VillageActivityPanel = () => {
       default:
         return "bg-gray-100 text-gray-800";
     }
+  };
+
+  const filteredData =
+    selectedStatus === "All"
+      ? data
+      : data.filter((item) => item.status === selectedStatus);
+
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
+
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
+  const renderPageNumbers = () => {
+    const pageNumbers = [];
+    for (let i = 1; i <= totalPages; i++) {
+      pageNumbers.push(
+        <a
+          key={i}
+          href="#"
+          onClick={() => paginate(i)}
+          className={`relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium ${currentPage === i ? "bg-blue-50 text-blue-600 hover:bg-blue-100" : "bg-white text-gray-700 hover:bg-gray-50"}`}
+        >
+          {i}
+        </a>
+      );
+    }
+    return pageNumbers;
   };
 
   return (
@@ -166,8 +270,17 @@ const VillageActivityPanel = () => {
           <div className="flex flex-col">
             <span className="text-sm font-medium text-gray-600">Status</span>
             <div className="relative">
-              <select className="border border-gray-300 rounded-md p-2 text-sm appearance-none pr-20">
-                <option> All</option>
+              <select
+                className="border border-gray-300 rounded-md p-2 text-sm appearance-none pr-20"
+                value={selectedStatus}
+                onChange={(e) => setSelectedStatus(e.target.value)}
+              >
+                <option value="All" selected>
+                  All
+                </option>
+                <option value="Approved">Approved</option>
+                <option value="Awaiting approval">Awaiting approval</option>
+                <option value="Rejected">Rejected</option>
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                 <svg
@@ -271,7 +384,7 @@ const VillageActivityPanel = () => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {data.map((item, index) => (
+            {currentItems.map((item, index) => (
               <tr key={index}>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
@@ -331,59 +444,25 @@ const VillageActivityPanel = () => {
           className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
           aria-label="Pagination"
         >
-          <a
-            href="#"
-            className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+          <button
+            onClick={() => paginate(currentPage - 1)}
+            disabled={currentPage === 1}
+            className={`relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 ${currentPage === 1 ? "cursor-not-allowed opacity-50" : ""}`}
           >
             <span className="sr-only">Previous</span>
             {/* Heroicon name: solid/chevron-left */}
-            <svg
-              className="h-5 w-5"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                fillRule="evenodd"
-                d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </a>
-          <a
-            href="#"
-            aria-current="page"
-            className="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-blue-50 text-sm font-medium text-blue-600 hover:bg-blue-100"
-          >
-            1
-          </a>
-          <a
-            href="#"
-            className="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
-          >
-            2
-          </a>
-          <a
-            href="#"
-            className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+            <ChevronsLeft />
+          </button>
+          {renderPageNumbers()}
+          <button
+            onClick={() => paginate(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className={`relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 ${currentPage === totalPages ? "cursor-not-allowed opacity-50" : ""}`}
           >
             <span className="sr-only">Next</span>
             {/* Heroicon name: solid/chevron-right */}
-            <svg
-              className="h-5 w-5"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                fillRule="evenodd"
-                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </a>
+            <ChevronsRight />
+          </button>
         </nav>
       </div>
     </div>
