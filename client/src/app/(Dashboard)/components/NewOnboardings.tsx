@@ -194,10 +194,10 @@ const NewOnboardings = () => {
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {onboarding.village}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex gap-4">
                   <a
                     href="#"
-                    className="text-indigo-600 hover:text-indigo-900 mr-2"
+                    className="text-blue-600 border border-blue-600 hover:text-blue-900 px-3 py-1 rounded-md"
                   >
                     More info
                   </a>

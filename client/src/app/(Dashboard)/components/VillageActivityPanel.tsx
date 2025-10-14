@@ -306,13 +306,13 @@ const VillageActivityPanel = () => {
                     {item.status}
                   </span>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <td className="px-6 py-4 flex gap-4 whitespace-nowrap text-sm font-medium">
                   {item.status === "Rejected" ? (
-                    <button className="text-zinc-700 hover:text-blue-900 bg-gray-100 px-3 py-1 rounded-md">
+                    <button className="text-zinc-700 hover:text-blue-900 bg-gray-100 px-14 py-1 rounded-md">
                       Review
                     </button>
                   ) : (
-                    <button className="text-blue-600 hover:text-blue-900 bg-blue-100 px-3 py-1 rounded-md">
+                    <button className="text-blue-600 hover:text-blue-900 bg-blue-100 px-16 py-1 rounded-md">
                       View
                     </button>
                   )}
