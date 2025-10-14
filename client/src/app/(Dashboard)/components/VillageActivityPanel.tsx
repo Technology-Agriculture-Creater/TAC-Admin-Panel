@@ -8,6 +8,7 @@ const VillageActivityPanel = () => {
   const [selectedStatus, setSelectedStatus] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+
   const data = [
     {
       bda: { name: "Rajest Patil", id: "BDAXXXXX001" },
@@ -184,7 +185,11 @@ const VillageActivityPanel = () => {
           key={i}
           href="#"
           onClick={() => paginate(i)}
-          className={`relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium ${currentPage === i ? "bg-blue-50 text-blue-600 hover:bg-blue-100" : "bg-white text-gray-700 hover:bg-gray-50"}`}
+          className={`relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium ${
+            currentPage === i
+              ? "bg-blue-50 text-blue-600 hover:bg-blue-100"
+              : "bg-white text-gray-700 hover:bg-gray-50"
+          }`}
         >
           {i}
         </a>
@@ -447,20 +452,22 @@ const VillageActivityPanel = () => {
           <button
             onClick={() => paginate(currentPage - 1)}
             disabled={currentPage === 1}
-            className={`relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 ${currentPage === 1 ? "cursor-not-allowed opacity-50" : ""}`}
+            className={`relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 ${
+              currentPage === 1 ? "cursor-not-allowed opacity-50" : ""
+            }`}
           >
             <span className="sr-only">Previous</span>
-            {/* Heroicon name: solid/chevron-left */}
             <ChevronsLeft />
           </button>
           {renderPageNumbers()}
           <button
             onClick={() => paginate(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className={`relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 ${currentPage === totalPages ? "cursor-not-allowed opacity-50" : ""}`}
+            className={`relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 ${
+              currentPage === totalPages ? "cursor-not-allowed opacity-50" : ""
+            }`}
           >
             <span className="sr-only">Next</span>
-            {/* Heroicon name: solid/chevron-right */}
             <ChevronsRight />
           </button>
         </nav>
