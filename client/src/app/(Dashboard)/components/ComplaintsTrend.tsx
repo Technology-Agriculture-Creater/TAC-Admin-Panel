@@ -2,7 +2,7 @@ import React from "react";
 
 const ComplaintsTrend = () => {
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md mt-4">
+    <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 mt-4">
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-lg font-semibold">Complaints Trend (This Month)</h3>
         <div className="relative">

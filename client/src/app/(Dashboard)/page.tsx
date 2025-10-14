@@ -6,6 +6,7 @@ import VillageActivityPanel from "./components/VillageActivityPanel";
 import PerformanceOverview from "./components/PerformanceOverview";
 import ComplaintsTrend from "./components/ComplaintsTrend";
 import TradeValue from "./components/TradeValue";
+import NewOnboardings from "./components/NewOnboardings";
 
 const page = () => {
   return (
@@ -25,6 +26,8 @@ const page = () => {
 
           {/* Village Activity Panel */}
           <VillageActivityPanel />
+
+          <NewOnboardings />
 
           <PerformanceOverview />
           <ComplaintsTrend />

@@ -3,9 +3,9 @@ import Image from "next/image";
 
 const PerformanceOverview = () => {
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md mt-4">
+    <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 mt-4">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-semibold">Performance Overview</h3>
+        <h3 className="text-lg font-semibold">BDA Leaderboard</h3>
         <div className="relative">
           <select className="bg-gray-100 rounded-md px-4 py-2 border border-gray-300 text-gray-700 appearance-none pr-8 font-roboto">
             <option>This Month</option>
