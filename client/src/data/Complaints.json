@@ -1,0 +1,30 @@
+[
+  {
+    "id": "C001",
+    "subject": "Late delivery",
+    "description": "Order #12345 was delivered 3 days late.",
+    "status": "Pending",
+    "date": "2023-01-10"
+  },
+  {
+    "id": "C002",
+    "subject": "Wrong item received",
+    "description": "Received potatoes instead of onions.",
+    "status": "Resolved",
+    "date": "2023-01-05"
+  },
+  {
+    "id": "C003",
+    "subject": "Poor quality produce",
+    "description": "Tomatoes were bruised and overripe.",
+    "status": "Pending",
+    "date": "2023-01-12"
+  },
+  {
+    "id": "C004",
+    "subject": "Billing error",
+    "description": "Charged incorrect amount for order #12346.",
+    "status": "In Review",
+    "date": "2023-01-15"
+  }
+]
