@@ -13,6 +13,9 @@ import { ChevronsLeft, ChevronsRight } from "lucide-react";
 import TabComponent from "../../../components/TabComponent";
 import cropApprovalData from "../../../data/CropApproval.json";
 import tradeData from "../../../data/TradeActivities.json";
+import complaintsData from "../../../data/Complaints.json";
+import disputesData from "../../../data/Disputes.json";
+import systemData from "../../../data/System.json";
 import CropApprovalTable from "./CropApprovalTable";
 import TradeActivitiesTable from "./TradeActivitiesTable";
 import ComplaintsTable from "./ComplaintsTable";
@@ -25,11 +28,29 @@ const VillageActivityPanel = () => {
   const [activeTab, setActiveTab] = useState("Crop Approval");
   const itemsPerPage = 10;
 
-  const data = activeTab === "Crop Approval" ? cropApprovalData : tradeData;
+  const data = (() => {
+    switch (activeTab) {
+      case "Crop Approval":
+        return cropApprovalData;
+      case "Trade Activities":
+        return tradeData;
+      case "Complaints":
+        return complaintsData;
+      case "Disputes":
+        return disputesData;
+      case "System":
+        return systemData;
+      default:
+        return [];
+    }
+  })();
 
   const getStatusInfo = (status: string) => {
     switch (status) {
       case "Awaiting approval":
+      case "Pending":
+      case "Open":
+      case "In Review":
         return {
           icon: (
             <svg
@@ -40,7 +61,7 @@ const VillageActivityPanel = () => {
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
-                d="M7.00004 12.8333C10.2217 12.8333 12.8334 10.2216 12.8334 6.99996C12.8334 3.77829 10.2217 1.16663 7.00004 1.16663C3.77837 1.16663 1.16671 3.77829 1.16671 6.99996C1.16671 10.2216 3.77837 12.8333 7.00004 12.8333Z"
+                d="M7.00004 12.8333C10.2217 12.8333 12.8334 10.2216 12.8334 6.99996C12.8334 3.77829 10.2217 1.16663 7.00004 1.16663C3.77837 1.16663 1.16671 3.77829 1.16671 10.2216 3.77837 12.8333 7.00004 12.8333Z"
                 stroke="#D97706"
                 strokeWidth="1.5"
                 strokeLinecap="round"
@@ -63,8 +84,12 @@ const VillageActivityPanel = () => {
             </svg>
           ),
           color: "#D97706",
+          backgroundColor: "#FFFBEB",
         };
       case "Approved":
+      case "Resolved":
+      case "Closed":
+      case "Completed":
         return {
           icon: (
             <svg
@@ -75,7 +100,7 @@ const VillageActivityPanel = () => {
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
-                d="M7.00004 12.8333C10.2217 12.8333 12.8334 10.2216 12.8334 6.99996C12.8334 3.77829 10.2217 1.16663 7.00004 1.16663C3.77837 1.16663 1.16671 3.77829 1.16671 6.99996C1.16671 10.2216 3.77837 12.8333 7.00004 12.8333Z"
+                d="M7.00004 12.8333C10.2217 12.8333 12.8334 10.2216 12.8334 6.99996C12.8334 3.77829 10.2217 1.16663 7.00004 1.16663C3.77837 1.16663 1.16671 3.77829 1.16671 10.2216 3.77837 12.8333 7.00004 12.8333Z"
                 stroke="#059669"
                 strokeWidth="1.5"
                 strokeLinecap="round"
@@ -91,8 +116,10 @@ const VillageActivityPanel = () => {
             </svg>
           ),
           color: "#059669",
+          backgroundColor: "#ECFDF5",
         };
       case "Rejected":
+      case "Warning":
         return {
           icon: (
             <svg
@@ -103,7 +130,7 @@ const VillageActivityPanel = () => {
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
-                d="M7.00004 12.8333C10.2217 12.8333 12.8334 10.2216 12.8334 6.99996C12.8334 3.77829 10.2217 1.16663 7.00004 1.16663C3.77837 1.16663 1.16671 3.77829 1.16671 6.99996C1.16671 10.2216 3.77837 12.8333 7.00004 12.8333Z"
+                d="M7.00004 12.8333C10.2217 12.8333 12.8334 10.2216 12.8334 6.99996C12.8334 3.77829 10.2217 1.16663 7.00004 1.16663C3.77837 1.16663 1.16671 3.77829 1.16671 10.2216 3.77837 12.8333 7.00004 12.8333Z"
                 stroke="#EF4444"
                 strokeWidth="1.5"
                 strokeLinecap="round"
@@ -126,8 +153,11 @@ const VillageActivityPanel = () => {
             </svg>
           ),
           color: "#EF4444",
+          backgroundColor: "#FEF2F2",
         };
       case "In process":
+      case "In Progress":
+      case "Pending Resolution":
         return {
           icon: (
             <svg
@@ -138,7 +168,7 @@ const VillageActivityPanel = () => {
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
-                d="M7.00004 12.8333C10.2217 12.8333 12.8334 10.2216 12.8334 6.99996C12.8334 3.77829 10.2217 1.16663 7.00004 1.16663C3.77837 1.16663 1.16671 3.77829 1.16671 6.99996C1.16671 10.2216 3.77837 12.8333 7.00004 12.8333Z"
+                d="M7.00004 12.8333C10.2217 12.8333 12.8334 10.2216 12.8334 6.99996C12.8334 3.77829 10.2217 1.16663 7.00004 1.16663C3.77837 1.16663 1.16671 3.77829 1.16671 10.2216 3.77837 12.8333 7.00004 12.8333Z"
                 stroke="#3B82F6"
                 strokeWidth="1.5"
                 strokeLinecap="round"
@@ -161,11 +191,13 @@ const VillageActivityPanel = () => {
             </svg>
           ),
           color: "#3B82F6",
+          backgroundColor: "#EFF6FF",
         };
       default:
         return {
           icon: null,
           color: "#6B7280",
+          backgroundColor: "#F9FAFB",
         };
     }
   };
@@ -221,9 +253,9 @@ const VillageActivityPanel = () => {
         onTabChange={setActiveTab}
         cropApprovalCount={cropApprovalData.length}
         tradeActivitiesCount={tradeData.length}
-        complaintsCount={4} // Placeholder
-        disputesCount={4} // Placeholder
-        systemCount={2} // Placeholder
+        complaintsCount={complaintsData.length}
+        disputesCount={disputesData.length}
+        systemCount={systemData.length}
       />
       {/* Filters Section */}
       <div className="flex items-center justify-between mt-4 space-x-4">
@@ -338,13 +370,22 @@ const VillageActivityPanel = () => {
           />
         )}
         {activeTab === "Complaints" && (
-          <ComplaintsTable data={currentItems as Complaint[]} />
+          <ComplaintsTable
+            data={currentItems as unknown as Complaint[]}
+            getStatusInfo={getStatusInfo}
+          />
         )}
         {activeTab === "Disputes" && (
-          <DisputesTable data={currentItems as Dispute[]} />
+          <DisputesTable
+            data={currentItems as unknown as Dispute[]}
+            getStatusInfo={getStatusInfo}
+          />
         )}
         {activeTab === "System" && (
-          <SystemTable data={currentItems as System[]} />
+          <SystemTable
+            data={currentItems as unknown as System[]}
+            getStatusInfo={getStatusInfo}
+          />
         )}
       </div>
       {/* Pagination */}
