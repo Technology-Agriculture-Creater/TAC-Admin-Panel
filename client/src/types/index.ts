@@ -24,13 +24,37 @@ export interface TradeActivity {
 }
 
 export interface Complaint {
-  // Define complaint properties here
+  id: string;
+  subject: string;
+  description: string;
+  status: "Pending" | "Resolved" | "In Review";
+  date: string;
+  farmer?: {
+    name: string;
+    id: string;
+  };
+  issue: string;
 }
 
 export interface Dispute {
-  // Define dispute properties here
+  id: string;
+  type: string;
+  description: string;
+  status: "Open" | "Closed" | "Pending Resolution";
+  parties: string;
+  date: string;
+  farmer?: {
+    name: string;
+    id: string;
+  };
+  issue: string;
+  createdAt: string;
 }
 
 export interface System {
-  // Define system properties here
+  id: string;
+  eventType: string;
+  description: string;
+  status: "Completed" | "In Progress" | "Warning";
+  timestamp: string;
 }
