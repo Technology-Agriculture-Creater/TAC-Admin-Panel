@@ -29,43 +29,43 @@ const TradeActivitiesTable: React.FC<TradeActivitiesTableProps> = ({
           <tr>
             <th
               scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
             >
               BDA
             </th>
             <th
               scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
             >
               BDA
             </th>
             <th
               scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
             >
               Farmer
             </th>
             <th
               scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
             >
               Village
             </th>
             <th
               scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
             >
               Buyer
             </th>
             <th
               scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
             >
               Status
             </th>
             <th
               scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
             >
               Actions
             </th>
@@ -74,15 +74,15 @@ const TradeActivitiesTable: React.FC<TradeActivitiesTableProps> = ({
         <tbody className="bg-white divide-y divide-gray-200">
           {data.map((item, index) => (
             <tr key={index}>
-              <td className="px-6 py-4 whitespace-nowrap">
+              <td className="px-6 py-4 whitespace-nowrap text-center">
                 <div className="text-sm text-gray-900">{item.cropQty}</div>
               </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="flex items-center">
+              <td className="px-6 py-4 whitespace-nowrap text-center">
+                <div className="flex items-center justify-center">
                   <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 text-sm">
                     {item.bda.charAt(0)}
                   </div>
-                  <div className="ml-4">
+                  <div className="ml-4 text-left">
                     <div className="text-sm font-medium text-gray-900">
                       {item.bda}
                     </div>
@@ -90,18 +90,18 @@ const TradeActivitiesTable: React.FC<TradeActivitiesTableProps> = ({
                   </div>
                 </div>
               </td>
-              <td className="px-6 py-4 whitespace-nowrap">
+              <td className="px-6 py-4 whitespace-nowrap text-center">
                 <div className="text-sm text-gray-900">{item.farmer}</div>
               </td>
-              <td className="px-6 py-4 whitespace-nowrap">
+              <td className="px-6 py-4 whitespace-nowrap text-center">
                 <div className="text-sm text-gray-900">{item.village}</div>
               </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="flex items-center">
+              <td className="px-6 py-4 whitespace-nowrap text-center">
+                <div className="flex items-center justify-center">
                   <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 text-sm">
                     {item.buyer.charAt(0)}
                   </div>
-                  <div className="ml-4">
+                  <div className="ml-4 text-left">
                     <div className="text-sm font-medium text-gray-900">
                       {item.buyer}
                     </div>
@@ -111,7 +111,7 @@ const TradeActivitiesTable: React.FC<TradeActivitiesTableProps> = ({
                   </div>
                 </div>
               </td>
-              <td className="px-6 py-4 whitespace-nowrap">
+              <td className="px-6 py-4 whitespace-nowrap text-center">
                 <span
                   className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full`}
                   style={{
@@ -122,7 +122,7 @@ const TradeActivitiesTable: React.FC<TradeActivitiesTableProps> = ({
                   {getStatusInfo(item.status).icon} {item.status}
                 </span>
               </td>
-              <td className="px-6 py-4 flex gap-4 whitespace-nowrap text-sm font-medium">
+              <td className="px-6 py-4 flex gap-4 whitespace-nowrap text-sm font-medium justify-center">
                 <button className="text-blue-600 hover:text-blue-900 bg-blue-100 px-16 py-1 rounded-md">
                   View
                 </button>
