@@ -297,7 +297,7 @@ const VillageActivityPanel = () => {
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm text-gray-900">{item.village}</div>
                 </td>
-                <td className="px-6 py-4 flex items-center justify-center whitespace-nowrap">
+                <td className="px-6 py-4 whitespace-nowrap">
                   <span
                     className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusClasses(
                       item.status
