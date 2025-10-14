@@ -24,40 +24,40 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
     <div className="min-w-full overflow-hidden">
       <table className="min-w-full divide-y divide-gray-200">
         <thead className="bg-gray-50">
-          <tr>
+          <tr className="w-full">
             <th
               scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
             >
               BDA
             </th>
             <th
               scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
             >
-              BDA
+              Crop/Qty
             </th>
             <th
               scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
             >
               Farmer
             </th>
             <th
               scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
             >
               Village
             </th>
             <th
               scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
             >
               Status
             </th>
             <th
               scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
             >
               Actions
             </th>
@@ -65,30 +65,32 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
           {data.map((item, index) => (
-            <tr key={index}>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-900">{item.cropQty}</div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="flex items-center">
+            <tr key={index} className="w-full">
+              <td className="px-6 py-4 whitespace-nowrap text-center">
+                <div className="flex items-center justify-center">
                   <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 text-sm">
-                    {item.bda.name.charAt(0)}
+                    {item.bda?.name?.charAt(0) || "—"}
                   </div>
-                  <div className="ml-4">
+                  <div className="ml-4 text-left">
                     <div className="text-sm font-medium text-gray-900">
-                      {item.bda.name}
+                      {item.bda?.name || "—"}
                     </div>
                     <div className="text-sm text-gray-500">{item.bda.id}</div>
                   </div>
                 </div>
               </td>
-              <td className="px-6 py-4 whitespace-nowrap">
+              <td className="px-6 py-4 flex items-center justify-center whitespace-nowrap">
+                <div className="text-sm text-center text-gray-900 px-5 w-fit py-2 rounded-lg bg-yellow-100">
+                  {item.cropQty}
+                </div>
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap text-center">
                 <div className="text-sm text-gray-900">{item.farmer}</div>
               </td>
-              <td className="px-6 py-4 whitespace-nowrap">
+              <td className="px-6 py-4 whitespace-nowrap text-center">
                 <div className="text-sm text-gray-900">{item.village}</div>
               </td>
-              <td className="px-6 py-4 whitespace-nowrap">
+              <td className="px-6 py-4 whitespace-nowrap text-center">
                 <span
                   className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full`}
                   style={{
