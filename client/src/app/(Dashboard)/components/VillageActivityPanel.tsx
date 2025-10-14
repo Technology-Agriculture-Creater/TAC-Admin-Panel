@@ -1,7 +1,13 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
-import { CropApproval, TradeActivity } from "../../../types";
+import {
+  CropApproval,
+  System,
+  Dispute,
+  Complaint,
+  TradeActivity,
+} from "../../../types";
 import { Search } from "lucide-react";
 import { ChevronsLeft, ChevronsRight } from "lucide-react";
 import TabComponent from "../../../components/TabComponent";
@@ -9,6 +15,9 @@ import cropApprovalData from "../../../data/CropApproval.json";
 import tradeData from "../../../data/TradeActivities.json";
 import CropApprovalTable from "./CropApprovalTable";
 import TradeActivitiesTable from "./TradeActivitiesTable";
+import ComplaintsTable from "./ComplaintsTable";
+import SystemTable from "./SystemTable";
+import DisputesTable from "./DisputesTable";
 
 const VillageActivityPanel = () => {
   const [selectedStatus, setSelectedStatus] = useState("All");
@@ -212,6 +221,9 @@ const VillageActivityPanel = () => {
         onTabChange={setActiveTab}
         cropApprovalCount={cropApprovalData.length}
         tradeActivitiesCount={tradeData.length}
+        complaintsCount={4} // Placeholder
+        disputesCount={4} // Placeholder
+        systemCount={2} // Placeholder
       />
       {/* Filters Section */}
       <div className="flex items-center justify-between mt-4 space-x-4">
@@ -324,6 +336,15 @@ const VillageActivityPanel = () => {
             data={currentItems as TradeActivity[]}
             getStatusInfo={getStatusInfo}
           />
+        )}
+        {activeTab === "Complaints" && (
+          <ComplaintsTable data={currentItems as Complaint[]} />
+        )}
+        {activeTab === "Disputes" && (
+          <DisputesTable data={currentItems as Dispute[]} />
+        )}
+        {activeTab === "System" && (
+          <SystemTable data={currentItems as System[]} />
         )}
       </div>
       {/* Pagination */}
