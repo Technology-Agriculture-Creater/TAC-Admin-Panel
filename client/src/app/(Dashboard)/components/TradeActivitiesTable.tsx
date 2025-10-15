@@ -121,13 +121,22 @@ const TradeActivitiesTable: React.FC<TradeActivitiesTableProps> = ({
                   {getStatusInfo(item.status).icon} {item.status}
                 </span>
               </td>
-              <td className="px-6 py-4 flex gap-4 whitespace-nowrap text-sm font-medium justify-center">
-                <button className="text-blue-600 hover:text-blue-900 bg-blue-100 px-16 py-1 rounded-md">
-                  View
-                </button>
-                <button className="ml-2 text-gray-600 hover:text-gray-900 bg-gray-100 px-3 py-1 rounded-md">
-                  ...
-                </button>
+              <td className="px-6 py-4 flex gap-4 whitespace-nowrap text-sm font-medium">
+                {item.action.includes("view") && (
+                  <button className="text-blue-600 hover:text-blue-900 bg-blue-100 w-40 px-3 py-1 rounded-md">
+                    View
+                  </button>
+                )}
+                {item.action.includes("review") && (
+                  <button className="text-gray-600 hover:text-gray-900 bg-white border w-40 border-gray-300 px-3 py-1 rounded-md">
+                    Review
+                  </button>
+                )}
+                {item.action.includes("...") && (
+                  <button className="ml-2 text-gray-600 hover:text-gray-900 bg-gray-100 px-3 py-1 rounded-md">
+                    ...
+                  </button>
+                )}
               </td>
             </tr>
           ))}
