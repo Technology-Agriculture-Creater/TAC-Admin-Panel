@@ -42,19 +42,25 @@ const ComplaintsTable: React.FC<ComplaintsTableProps> = ({
               scope="col"
               className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
             >
-              Issue
+              Village
             </th>
             <th
               scope="col"
               className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
             >
-              Status
+              Issue Type
             </th>
             <th
               scope="col"
               className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
             >
               Date
+            </th>
+            <th
+              scope="col"
+              className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Status
             </th>
             <th
               scope="col"
@@ -74,7 +80,13 @@ const ComplaintsTable: React.FC<ComplaintsTableProps> = ({
                 {complaint.farmer?.name || "—"}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
-                {complaint.issue || "—"}
+                {complaint.village || "—"}
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                {complaint.issueType || "—"}
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                {complaint.date}
               </td>
               <td className="px-4 py-2 text-center">
                 <div
@@ -83,19 +95,20 @@ const ComplaintsTable: React.FC<ComplaintsTableProps> = ({
                     color: getStatusInfo(complaint.status).color,
                     backgroundColor: `${
                       getStatusInfo(complaint.status).color
-                    }1A`, 
+                    }1A`,
                   }}
                 >
                   {getStatusInfo(complaint.status).icon}
                   {complaint.status}
                 </div>
               </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
-                {complaint.date}
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-center">
-                <button className="text-blue-600 hover:text-blue-900">
+
+              <td className="px-6 py-4 flex gap-4 whitespace-nowrap text-sm font-medium">
+                <button className="text-blue-600 hover:text-blue-900 bg-blue-100 px-16 py-1 rounded-md">
                   View
+                </button>
+                <button className="ml-2 text-gray-600 hover:text-gray-900 bg-gray-100 px-3 py-1 rounded-md">
+                  ...
                 </button>
               </td>
             </tr>

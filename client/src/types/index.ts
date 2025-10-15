@@ -34,7 +34,8 @@ export interface Complaint {
     name: string;
     id: string;
   };
-  issue: string;
+  issueType: string;
+  village: string;
 }
 
 export interface Dispute {
