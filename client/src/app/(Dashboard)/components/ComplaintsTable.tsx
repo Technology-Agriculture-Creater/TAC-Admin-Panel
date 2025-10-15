@@ -86,7 +86,7 @@ const ComplaintsTable: React.FC<ComplaintsTableProps> = ({
                 {complaint.village || "—"}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
-                <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                <span className="inline-flex px-5 py-3 rounded-lg text-xs items-center justify-center w-40 font-medium bg-red-100 text-red-800">
                   {complaint.issueType || "—"}
                 </span>
               </td>
@@ -103,6 +103,7 @@ const ComplaintsTable: React.FC<ComplaintsTableProps> = ({
                     }1A`,
                   }}
                 >
+                  {complaint.status === "Pending review" }
                   {getStatusInfo(complaint.status).icon}
                   {complaint.status}
                 </div>
