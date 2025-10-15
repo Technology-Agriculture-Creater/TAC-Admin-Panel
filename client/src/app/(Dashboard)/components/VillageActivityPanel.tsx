@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Image from "next/image";
 import {
   CropApproval,
@@ -28,7 +28,35 @@ const VillageActivityPanel = () => {
   const [activeTab, setActiveTab] = useState("Crop Approval");
   const itemsPerPage = 10;
 
-  const data = (() => {
+  useEffect(() => {
+    setSelectedStatus("All");
+  }, [activeTab]);
+
+  const tabs = [
+    {
+      label: "Crop Approval",
+      icon: "/Images/cropA.png",
+      count: cropApprovalData.length,
+    },
+    {
+      label: "Trade Activities",
+      icon: "/Images/tradeA.png",
+      count: tradeData.length,
+    },
+    {
+      label: "Complaints",
+      icon: "/Images/complaint.png",
+      count: complaintsData.length,
+    },
+    {
+      label: "Disputes",
+      icon: "/Images/dispute.png",
+      count: disputesData.length,
+    },
+    { label: "System", icon: "/Images/system.png", count: systemData.length },
+  ];
+
+  const data = useMemo(() => {
     switch (activeTab) {
       case "Crop Approval":
         return cropApprovalData;
@@ -43,7 +71,17 @@ const VillageActivityPanel = () => {
       default:
         return [];
     }
-  })();
+  }, [activeTab]);
+
+  const uniqueStatuses = useMemo(() => {
+    const statuses = new Set<string>();
+    data.forEach((item) => {
+      if (item.status) {
+        statuses.add(item.status);
+      }
+    });
+    return ["All", ...Array.from(statuses)];
+  }, [data]);
 
   const getStatusInfo = (status: string) => {
     switch (status) {
@@ -202,10 +240,11 @@ const VillageActivityPanel = () => {
     }
   };
 
-  const filteredData =
-    selectedStatus === "All"
+  const filteredData = useMemo(() => {
+    return selectedStatus === "All"
       ? data
       : data.filter((item) => item.status === selectedStatus);
+  }, [selectedStatus, data]);
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -251,11 +290,7 @@ const VillageActivityPanel = () => {
       <TabComponent
         activeTab={activeTab}
         onTabChange={setActiveTab}
-        cropApprovalCount={cropApprovalData.length}
-        tradeActivitiesCount={tradeData.length}
-        complaintsCount={complaintsData.length}
-        disputesCount={disputesData.length}
-        systemCount={systemData.length}
+        tabs={tabs}
       />
       {/* Filters Section */}
       <div className="flex items-center justify-between mt-4 space-x-4">
@@ -269,15 +304,11 @@ const VillageActivityPanel = () => {
                 value={selectedStatus}
                 onChange={(e) => setSelectedStatus(e.target.value)}
               >
-                <option value="All">
-                  All
-                </option>
-                <option value="Approved">Approved</option>
-                <option value="Awaiting approval">Awaiting approval</option>
-                <option value="Rejected">Rejected</option>
-                {activeTab === "Trade Activities" && (
-                  <option value="In process">In process</option>
-                )}
+                {uniqueStatuses.map((status) => (
+                  <option key={status} value={status}>
+                    {status}
+                  </option>
+                ))}
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                 <svg
