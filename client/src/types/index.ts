@@ -8,6 +8,7 @@ export interface CropApproval {
   farmer: string;
   village: string;
   status: string;
+  action: string[];
 }
 
 export interface TradeActivity {
