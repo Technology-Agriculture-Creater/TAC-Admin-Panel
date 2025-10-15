@@ -103,7 +103,7 @@ const ComplaintsTable: React.FC<ComplaintsTableProps> = ({
                     }1A`,
                   }}
                 >
-                  {complaint.status === "Pending review" }
+                  {complaint.status === "Pending review"}
                   {getStatusInfo(complaint.status).icon}
                   {complaint.status}
                 </div>
