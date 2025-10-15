@@ -75,13 +75,12 @@ const TradeActivitiesTable: React.FC<TradeActivitiesTableProps> = ({
           {data.map((item, index) => (
             <tr key={index}>
               <td className="px-6 py-4 whitespace-nowrap text-center">
-                <div className="text-sm text-gray-900">{item.cropQty}</div>
+                <div className="text-sm text-center text-gray-900 px-5 w-44 py-2 rounded-lg bg-yellow-100">
+                  {item.cropQty}
+                </div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-center">
                 <div className="flex items-center justify-center">
-                  <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 text-sm">
-                    {item.bda.charAt(0)}
-                  </div>
                   <div className="ml-4 text-left">
                     <div className="text-sm font-medium text-gray-900">
                       {item.bda}
@@ -91,17 +90,17 @@ const TradeActivitiesTable: React.FC<TradeActivitiesTableProps> = ({
                 </div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-center">
-                <div className="text-sm text-gray-900">{item.farmer}</div>
+                <div className="text-sm text-center text-gray-900 px-5 w-40 py-2 rounded-lg bg-green-100">
+                  {item.farmer}
+                  <div className="text-sm text-gray-500">{item.farmerId}</div>
+                </div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-center">
                 <div className="text-sm text-gray-900">{item.village}</div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-center">
                 <div className="flex items-center justify-center">
-                  <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 text-sm">
-                    {item.buyer.charAt(0)}
-                  </div>
-                  <div className="ml-4 text-left">
+                  <div className="text-sm text-center text-gray-900 px-5 w-44 py-2 rounded-lg bg-purple-100">
                     <div className="text-sm font-medium text-gray-900">
                       {item.buyer}
                     </div>
