@@ -54,7 +54,7 @@ const ComplaintsTable: React.FC<ComplaintsTableProps> = ({
               scope="col"
               className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
             >
-              Date
+              Raised on
             </th>
             <th
               scope="col"
@@ -78,12 +78,17 @@ const ComplaintsTable: React.FC<ComplaintsTableProps> = ({
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
                 {complaint.farmer?.name || "—"}
+                <p className="text-gray-400 text-xs">
+                  {complaint.farmer?.id || "—"}
+                </p>
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
                 {complaint.village || "—"}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
-                {complaint.issueType || "—"}
+                <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                  {complaint.issueType || "—"}
+                </span>
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
                 {complaint.date}
@@ -104,12 +109,21 @@ const ComplaintsTable: React.FC<ComplaintsTableProps> = ({
               </td>
 
               <td className="px-6 py-4 flex gap-4 whitespace-nowrap text-sm font-medium">
-                <button className="text-blue-600 hover:text-blue-900 bg-blue-100 px-16 py-1 rounded-md">
-                  View
-                </button>
-                <button className="ml-2 text-gray-600 hover:text-gray-900 bg-gray-100 px-3 py-1 rounded-md">
-                  ...
-                </button>
+                {complaint.action.includes("view") && (
+                  <button className="text-blue-600 hover:text-blue-900 bg-blue-100 w-40 px-3 py-1 rounded-md">
+                    View
+                  </button>
+                )}
+                {complaint.action.includes("review") && (
+                  <button className="text-gray-600 hover:text-gray-900 bg-white border w-40 border-gray-300 px-3 py-1 rounded-md">
+                    Review
+                  </button>
+                )}
+                {complaint.action.includes("...") && (
+                  <button className="ml-2 text-gray-600 hover:text-gray-900 bg-gray-100 px-3 py-1 rounded-md">
+                    ...
+                  </button>
+                )}
               </td>
             </tr>
           ))}
