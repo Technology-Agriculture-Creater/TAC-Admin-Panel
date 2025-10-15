@@ -83,7 +83,7 @@ const ComplaintsTable: React.FC<ComplaintsTableProps> = ({
                     color: getStatusInfo(complaint.status).color,
                     backgroundColor: `${
                       getStatusInfo(complaint.status).color
-                    }1A`, // 1A is for 10% opacity
+                    }1A`, 
                   }}
                 >
                   {getStatusInfo(complaint.status).icon}

@@ -92,7 +92,7 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-center">
                 <span
-                  className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full`}
+                  className={`px-2 inline-flex text-xs leading-5 items-center justify-center gap-2 font-semibold rounded-full`}
                   style={{
                     backgroundColor: `${getStatusInfo(item.status).color}1A`,
                     color: getStatusInfo(item.status).color,
