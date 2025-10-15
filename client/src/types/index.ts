@@ -22,20 +22,22 @@ export interface TradeActivity {
   buyer: string;
   buyerType: string;
   status: string;
+  action: string[];
 }
 
 export interface Complaint {
   id: string;
   subject: string;
   description: string;
-  status: "Pending" | "Resolved" | "In Review";
+  status: string;
   date: string;
-  farmer?: {
+  farmer: {
     name: string;
     id: string;
   };
   issueType: string;
   village: string;
+  action: string[];
 }
 
 export interface Dispute {
