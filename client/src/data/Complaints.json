@@ -1,30 +1,156 @@
 [
   {
-    "id": "C001",
+    "id": "COMP-0001",
     "subject": "Late delivery",
     "description": "Order #12345 was delivered 3 days late.",
-    "status": "Pending",
-    "date": "2023-01-10"
+    "status": "Pending review",
+    "date": "12 Sept, 2025",
+    "farmer": {
+      "name": "Rajest Patil",
+      "id": "TACXXXX0001"
+    },
+    "issueType": "App Issue",
+    "village": "Kuhi",
+    "action": ["view", "..."]
   },
   {
-    "id": "C002",
+    "id": "COMP-0001",
+    "subject": "Wrong item received",
+    "description": "Received potatoes instead of onions.",
+    "status": "Pending review",
+    "date": "12 Sept, 2025",
+    "farmer": {
+      "name": "Rajest Patil",
+      "id": "TACXXXX0001"
+    },
+    "issueType": "App Issue",
+    "village": "Kuhi",
+    "action": ["view", "..."]
+  },
+  {
+    "id": "COMP-0001",
+    "subject": "Poor quality produce",
+    "description": "Tomatoes were bruised and overripe.",
+    "status": "Pending review",
+    "date": "12 Sept, 2025",
+    "farmer": {
+      "name": "Rajest Patil",
+      "id": "TACXXXX0001"
+    },
+    "issueType": "App Issue",
+    "village": "Kuhi",
+    "action": ["view", "..."]
+  },
+  {
+    "id": "COMP-0001",
+    "subject": "Billing error",
+    "description": "Charged incorrect amount for order #12346.",
+    "status": "Resolved",
+    "date": "12 Sept, 2025",
+    "farmer": {
+      "name": "Rajest Patil",
+      "id": "TACXXXX0001"
+    },
+    "issueType": "App Issue",
+    "village": "Kuhi",
+    "action": ["review", "..."]
+  },
+  {
+    "id": "COMP-0001",
+    "subject": "Late delivery",
+    "description": "Order #12345 was delivered 3 days late.",
+    "status": "Pending review",
+    "date": "12 Sept, 2025",
+    "farmer": {
+      "name": "Rajest Patil",
+      "id": "TACXXXX0001"
+    },
+    "issueType": "App Issue",
+    "village": "Kuhi",
+    "action": ["view", "..."]
+  },
+  {
+    "id": "COMP-0001",
     "subject": "Wrong item received",
     "description": "Received potatoes instead of onions.",
     "status": "Resolved",
-    "date": "2023-01-05"
+    "date": "12 Sept, 2025",
+    "farmer": {
+      "name": "Rajest Patil",
+      "id": "TACXXXX0001"
+    },
+    "issueType": "App Issue",
+    "village": "Kuhi",
+    "action": ["review", "..."]
   },
   {
-    "id": "C003",
+    "id": "COMP-0001",
     "subject": "Poor quality produce",
     "description": "Tomatoes were bruised and overripe.",
-    "status": "Pending",
-    "date": "2023-01-12"
+    "status": "Resolved",
+    "date": "12 Sept, 2025",
+    "farmer": {
+      "name": "Rajest Patil",
+      "id": "TACXXXX0001"
+    },
+    "issueType": "App Issue",
+    "village": "Kuhi",
+    "action": ["review", "..."]
   },
   {
-    "id": "C004",
+    "id": "COMP-0001",
     "subject": "Billing error",
     "description": "Charged incorrect amount for order #12346.",
-    "status": "In Review",
-    "date": "2023-01-15"
+    "status": "Pending review",
+    "date": "12 Sept, 2025",
+    "farmer": {
+      "name": "Rajest Patil",
+      "id": "TACXXXX0001"
+    },
+    "issueType": "App Issue",
+    "village": "Kuhi",
+    "action": ["view", "..."]
+  },
+  {
+    "id": "COMP-0001",
+    "subject": "Late delivery",
+    "description": "Order #12345 was delivered 3 days late.",
+    "status": "Resolved",
+    "date": "12 Sept, 2025",
+    "farmer": {
+      "name": "Rajest Patil",
+      "id": "TACXXXX0001"
+    },
+    "issueType": "App Issue",
+    "village": "Kuhi",
+    "action": ["review", "..."]
+  },
+  {
+    "id": "COMP-0001",
+    "subject": "Wrong item received",
+    "description": "Received potatoes instead of onions.",
+    "status": "Resolved",
+    "date": "12 Sept, 2025",
+    "farmer": {
+      "name": "Rajest Patil",
+      "id": "TACXXXX00001"
+    },
+    "issueType": "App Issue",
+    "village": "Kuhi",
+    "action": ["review", "..."]
+  },
+  {
+    "id": "COMP-0001",
+    "subject": "Poor quality produce",
+    "description": "Tomatoes were bruised and overripe.",
+    "status": "Resolved",
+    "date": "12 Sept, 2025",
+    "farmer": {
+      "name": "Rajest Patil",
+      "id": "TACXXXX0001"
+    },
+    "issueType": "App Issue",
+    "village": "Kuhi",
+    "action": ["review", "..."]
   }
 ]
