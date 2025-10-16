@@ -19,5 +19,68 @@
     "description": "High error rate detected on API Gateway.",
     "status": "Warning",
     "timestamp": "2023-01-21T10:30:00Z"
+  },
+  {
+    "id": "S001",
+    "event": "Server Maintenance",
+    "description": "Scheduled server maintenance completed successfully.",
+    "status": "Completed",
+    "timestamp": "2023-01-20T03:00:00Z"
+  },
+  {
+    "id": "S002",
+    "event": "Database Backup",
+    "description": "Daily database backup initiated.",
+    "status": "In Progress",
+    "timestamp": "2023-01-21T02:00:00Z"
+  },
+  {
+    "id": "S003",
+    "event": "API Gateway Error",
+    "description": "High error rate detected on API Gateway.",
+    "status": "Warning",
+    "timestamp": "2023-01-21T10:30:00Z"
+  },
+  {
+    "id": "S001",
+    "event": "Server Maintenance",
+    "description": "Scheduled server maintenance completed successfully.",
+    "status": "Completed",
+    "timestamp": "2023-01-20T03:00:00Z"
+  },
+  {
+    "id": "S002",
+    "event": "Database Backup",
+    "description": "Daily database backup initiated.",
+    "status": "In Progress",
+    "timestamp": "2023-01-21T02:00:00Z"
+  },
+  {
+    "id": "S003",
+    "event": "API Gateway Error",
+    "description": "High error rate detected on API Gateway.",
+    "status": "Warning",
+    "timestamp": "2023-01-21T10:30:00Z"
+  },
+  {
+    "id": "S001",
+    "event": "Server Maintenance",
+    "description": "Scheduled server maintenance completed successfully.",
+    "status": "Completed",
+    "timestamp": "2023-01-20T03:00:00Z"
+  },
+  {
+    "id": "S002",
+    "event": "Database Backup",
+    "description": "Daily database backup initiated.",
+    "status": "In Progress",
+    "timestamp": "2023-01-21T02:00:00Z"
+  },
+  {
+    "id": "S003",
+    "event": "API Gateway Error",
+    "description": "High error rate detected on API Gateway.",
+    "status": "Warning",
+    "timestamp": "2023-01-21T10:30:00Z"
   }
 ]

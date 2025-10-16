@@ -30,5 +30,69 @@
     "status": "Open",
     "parties": "Farmer G vs Processor H",
     "date": "2023-01-20"
+  },
+  {
+    "id": "D001",
+    "type": "Payment Dispute",
+    "description": "Dispute over payment for crop delivery #456.",
+    "status": "Open",
+    "parties": "Farmer A vs Buyer B",
+    "date": "2023-01-01"
+  },
+  {
+    "id": "D002",
+    "type": "Quality Dispute",
+    "description": "Buyer claims poor quality of produce received.",
+    "status": "Closed",
+    "parties": "Farmer C vs Buyer D",
+    "date": "2023-01-08"
+  },
+  {
+    "id": "D003",
+    "type": "Delivery Dispute",
+    "description": "Disagreement on delivery schedule for order #789.",
+    "status": "Pending Resolution",
+    "parties": "Farmer E vs Transporter F",
+    "date": "2023-01-14"
+  },
+  {
+    "id": "D004",
+    "type": "Contract Dispute",
+    "description": "Disagreement on terms of contract for seasonal crops.",
+    "status": "Open",
+    "parties": "Farmer G vs Processor H",
+    "date": "2023-01-20"
+  },
+  {
+    "id": "D001",
+    "type": "Payment Dispute",
+    "description": "Dispute over payment for crop delivery #456.",
+    "status": "Open",
+    "parties": "Farmer A vs Buyer B",
+    "date": "2023-01-01"
+  },
+  {
+    "id": "D002",
+    "type": "Quality Dispute",
+    "description": "Buyer claims poor quality of produce received.",
+    "status": "Closed",
+    "parties": "Farmer C vs Buyer D",
+    "date": "2023-01-08"
+  },
+  {
+    "id": "D003",
+    "type": "Delivery Dispute",
+    "description": "Disagreement on delivery schedule for order #789.",
+    "status": "Pending Resolution",
+    "parties": "Farmer E vs Transporter F",
+    "date": "2023-01-14"
+  },
+  {
+    "id": "D004",
+    "type": "Contract Dispute",
+    "description": "Disagreement on terms of contract for seasonal crops.",
+    "status": "Open",
+    "parties": "Farmer G vs Processor H",
+    "date": "2023-01-20"
   }
 ]
