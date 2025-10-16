@@ -74,10 +74,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
             <li key={item.name}>
               <Link
                 href={item.href}
-                className={`flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer ${
+                className={`flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer ${
                   pathname === item.href
-                    ? "text-blue-600 bg-blue-50 border-r-4 border-blue-600 font-semibold"
-                    : ""
+                    ? "bg-blue-50 border-r-4 border-blue-600 text-blue-400 font-semibold"
+                    : "text-gray-700"
                 }`}
               >
                 <Image
