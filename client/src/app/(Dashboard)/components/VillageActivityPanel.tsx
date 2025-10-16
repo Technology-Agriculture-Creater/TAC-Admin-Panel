@@ -30,6 +30,7 @@ const VillageActivityPanel = () => {
 
   useEffect(() => {
     setSelectedStatus("All");
+    setCurrentPage(1);
   }, [activeTab]);
 
   const tabs = [
