@@ -50,16 +50,6 @@ const ProfileSettingsPage = () => {
               alt="Profile"
               className="w-full h-full object-cover"
             />
-            <div className="absolute bottom-0 right-0 bg-white rounded-full p-1 shadow-md">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 text-gray-600"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zm-6.707 6.707L10 13.586V16h2.414l-3.707 3.707a1 1 0 01-1.414 0L3.586 17.414a1 1 0 010-1.414l3.707-3.707z" />
-              </svg>
-            </div>
           </div>
           <div>
             <h2 className="text-xl font-semibold">UPLOAD NEW PHOTO</h2>
