@@ -74,8 +74,8 @@ const TradeActivitiesTable: React.FC<TradeActivitiesTableProps> = ({
         <tbody className="bg-white divide-y divide-gray-200">
           {data.map((item, index) => (
             <tr key={index}>
-              <td className="px-6 py-4 whitespace-nowrap text-center">
-                <div className="text-sm text-center text-gray-900 px-5 w-44 py-2 rounded-lg bg-yellow-100">
+              <td className="py-4 px-4 w-20 whitespace-nowrap text-center">
+                <div className="text-sm text-center text-gray-900 px-2 py-2 rounded-lg bg-yellow-100 ">
                   {item.cropQty}
                 </div>
               </td>
@@ -89,18 +89,18 @@ const TradeActivitiesTable: React.FC<TradeActivitiesTableProps> = ({
                   </div>
                 </div>
               </td>
-              <td className="px-6 py-4 whitespace-nowrap text-center">
-                <div className="text-sm text-center text-gray-900 px-5 w-40 py-2 rounded-lg bg-green-100">
+              <td className="px-4 py-4 whitespace-nowrap text-center">
+                <div className="text-sm text-center text-gray-900 px-2 py-2 rounded-lg bg-green-100">
                   {item.farmer}
                   <div className="text-sm text-gray-500">{item.farmerId}</div>
                 </div>
               </td>
-              <td className="px-6 py-4 whitespace-nowrap text-center">
+              <td className="px-4 py-4 whitespace-nowrap text-center">
                 <div className="text-sm text-gray-900">{item.village}</div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-center">
                 <div className="flex items-center justify-center">
-                  <div className="text-sm text-center text-gray-900 px-5 w-44 py-2 rounded-lg bg-purple-100">
+                  <div className="text-sm text-center text-gray-900 w-36 px-2 py-2 rounded-lg bg-purple-100">
                     <div className="text-sm font-medium text-gray-900">
                       {item.buyer}
                     </div>
