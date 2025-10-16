@@ -15,13 +15,8 @@ const ProfileSettingsPage = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleUpdateChanges = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (newPassword !== confirmPassword) {
-      alert("New password and confirm password do not match");
-      return;
-    }
-    console.log("Form submitted", {
+  const handleUpdateChanges = () => {
+    console.log({
       firstName,
       middleName,
       lastName,
@@ -116,11 +111,14 @@ const ProfileSettingsPage = () => {
                 MOBILE NUMBER
               </label>
               <input
-                type="text"
+                type="number"
                 id="mobileNumber"
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
                 value={mobileNumber}
-                onChange={(e) => setMobileNumber(e.target.value)}
+                onChange={(e) => {
+                  if (e.target.value.length <= 10)
+                    setMobileNumber(e.target.value);
+                }}
               />
             </div>
             <div>
@@ -131,7 +129,7 @@ const ProfileSettingsPage = () => {
                 DATE OF BIRTH
               </label>
               <input
-                type="text"
+                type="date"
                 id="dateOfBirth"
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
                 value={dateOfBirth}
