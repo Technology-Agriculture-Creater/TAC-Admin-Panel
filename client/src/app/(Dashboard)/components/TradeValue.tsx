@@ -30,7 +30,7 @@ const TradeValue = () => {
           <p className="text-yellow-600 text-2xl font-bold">₹12.5 Cr</p>
         </div>
       </div>
-      <p className="text-sm text-gray-500 text-center mt-4">
+      <p className="text-sm text-gray-500 text-center mt-4 italic">
         Avg. farmer price: +4% vs MSP
       </p>
     </div>
