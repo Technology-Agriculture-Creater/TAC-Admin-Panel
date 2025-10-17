@@ -8,8 +8,7 @@ import {
   Complaint,
   TradeActivity,
 } from "../../../types";
-import { Search } from "lucide-react";
-import { ChevronsLeft, ChevronsRight } from "lucide-react";
+import { Search, ChevronsLeft, ChevronsRight } from "lucide-react";
 import TabComponent from "../../../components/TabComponent";
 import cropApprovalData from "../../../data/CropApproval.json";
 import tradeData from "../../../data/TradeActivities.json";
