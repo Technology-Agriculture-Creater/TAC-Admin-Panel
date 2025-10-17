@@ -1,4 +1,6 @@
-import { CropApproval } from "../../../types";
+import { CropApproval, Activity } from "../../../types";
+import ActivityDetailsModal from "./ActivityDetailsModal";
+import { useState } from "react";
 
 interface CropApprovalTableProps {
   data: CropApproval[];
@@ -12,6 +14,53 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
   data,
   getStatusInfo,
 }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedActivity, setSelectedActivity] = useState<Activity | null>(
+    null
+  );
+
+  const mapCropApprovalToActivity = (cropApproval: CropApproval): Activity => {
+    const cropName = cropApproval.cropQty.split(" - ")[0];
+    return {
+      id: cropApproval.id || Math.random().toString(36).substring(7),
+      farmerName: cropApproval.farmer,
+      village: cropApproval.village,
+      crop: cropName.trim(),
+      grade: "N/A", // Placeholder as CropApproval doesn't have grade
+      sowingDate: "N/A", // Placeholder
+      harvestExpected: "N/A", // Placeholder
+      notes: "", // Placeholder
+      minBid: "N/A", // Placeholder
+      maxBid: "N/A", // Placeholder
+      status:
+        cropApproval.status === "Approved"
+          ? "Approved"
+          : cropApproval.status === "Awaiting approval"
+          ? "Pending"
+          : "Rejected",
+      farmerEvidence: [], // Placeholder
+      bdaName: cropApproval.bda.name,
+      bdaEvidence: {
+        cropConfirmed: false,
+        qualityConfirmed: false,
+        locationConfirmed: false,
+        quantityConfirmed: false,
+        images: [],
+      },
+      remarks: "", // Placeholder
+    };
+  };
+
+  const handleViewClick = (item: CropApproval) => {
+    setSelectedActivity(mapCropApprovalToActivity(item));
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedActivity(null);
+  };
+
   if (data.length === 0) {
     return (
       <div className="text-center py-8 text-gray-500">
@@ -21,7 +70,7 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
   }
 
   return (
-    <div className="min-w-full overflow-hidden">
+    <div className="min-w-full align-middle">
       <table className="min-w-full divide-y divide-gray-200">
         <thead className="bg-gray-50">
           <tr className="w-full">
@@ -103,7 +152,10 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
               </td>
               <td className="px-6 py-4 flex gap-4 whitespace-nowrap text-sm font-medium">
                 {item.action.includes("view") && (
-                  <button className="text-blue-600 hover:text-blue-900 bg-blue-100 w-40 px-3 py-1 rounded-md">
+                  <button
+                    onClick={() => handleViewClick(item)}
+                    className="text-blue-600 hover:text-blue-900 bg-blue-100 w-40 px-3 py-1 rounded-md"
+                  >
                     View
                   </button>
                 )}
@@ -122,6 +174,13 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
           ))}
         </tbody>
       </table>
+      {selectedActivity && (
+        <ActivityDetailsModal
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          activityData={selectedActivity}
+        />
+      )}
     </div>
   );
 };

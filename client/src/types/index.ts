@@ -62,3 +62,27 @@ export interface System {
   status: "Completed" | "In Progress" | "Warning";
   timestamp: string;
 }
+
+export interface Activity {
+  id: string;
+  farmerName: string;
+  village: string;
+  crop: string;
+  grade: string;
+  sowingDate: string;
+  harvestExpected: string;
+  notes: string;
+  minBid: string;
+  maxBid: string;
+  status: 'Approved' | 'Pending' | 'Rejected';
+  farmerEvidence: string[];
+  bdaName: string;
+  bdaEvidence: {
+    cropConfirmed: boolean;
+    qualityConfirmed: boolean;
+    locationConfirmed: boolean;
+    quantityConfirmed: boolean;
+    images: string[];
+  };
+  remarks: string;
+}
