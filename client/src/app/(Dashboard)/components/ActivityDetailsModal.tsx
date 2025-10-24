@@ -9,7 +9,9 @@ interface ActivityDetailsModalProps {
   activityData: Activity | TradeActivity;
 }
 
-const isTradeActivity = (activity: Activity | TradeActivity): activity is TradeActivity => 'cropQty' in activity;
+const isTradeActivity = (
+  activity: Activity | TradeActivity
+): activity is TradeActivity => "cropQty" in activity;
 
 const ActivityDetailsModal: React.FC<ActivityDetailsModalProps> = ({
   isOpen,
@@ -131,7 +133,8 @@ const ActivityDetailsModal: React.FC<ActivityDetailsModalProps> = ({
                 <span className="text-gray-600">Crop:</span> {activityData.crop}
               </div>
               <div className="w-full flex items-center justify-between">
-                <span className="text-gray-600">Grade:</span> {activityData.grade}
+                <span className="text-gray-600">Grade:</span>{" "}
+                {activityData.grade}
               </div>
               <div className="w-full flex items-center justify-between">
                 <span className="text-gray-600">Sowing Date:</span>{" "}
@@ -142,7 +145,8 @@ const ActivityDetailsModal: React.FC<ActivityDetailsModalProps> = ({
                 {activityData.harvestExpected}
               </div>
               <div className="w-full flex items-center justify-between">
-                <span className="text-gray-600">Notes:</span> {activityData.notes}
+                <span className="text-gray-600">Notes:</span>{" "}
+                {activityData.notes}
               </div>
               <div className="w-full flex items-center justify-between">
                 <span className="text-gray-600">Min Bid:</span> ₹
@@ -152,9 +156,32 @@ const ActivityDetailsModal: React.FC<ActivityDetailsModalProps> = ({
                 <span className="text-gray-600">Max Bid:</span> ₹
                 {activityData.maxBid}/Qtl
               </div>
+              {!isTradeActivity(activityData) &&
+                activityData.farmerEvidence && (
+                  <div className="mb-6 rounded-lg bg-gray-100">
+                    <h3 className="mb-3 text-gray-600">
+                      Evidence Submitted by Farmer:
+                    </h3>
+                    <div className="flex gap-2">
+                      {activityData.farmerEvidence.map((image, index) => (
+                        <Image
+                          key={index}
+                          src={image}
+                          alt={`Farmer Evidence ${index + 1}`}
+                          height={0}
+                          width={0}
+                          sizes={"100vw"}
+                          className="w-24 h-24 object-cover rounded-md"
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
             </div>
           </div>
         )}
+
+        {/* Evidence Submitted by Farmer */}
 
         {/* Assigned BDA */}
         {isTradeActivity(activityData) ? (
@@ -196,7 +223,7 @@ const ActivityDetailsModal: React.FC<ActivityDetailsModalProps> = ({
             <h4 className="text-md font-semibold mt-4 mb-2">
               Evidence Submitted by BDA:
             </h4>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4">
+            <div className="flex gap-2 mb-4">
               <div
                 className={`flex flex-col items-center ${
                   activityData.bdaEvidence.cropConfirmed
@@ -327,7 +354,8 @@ const ActivityDetailsModal: React.FC<ActivityDetailsModalProps> = ({
               </div>
             </div>
             <p className="text-gray-600 mt-4">
-              <span className="font-medium">Remarks:</span> {activityData.remarks}
+              <span className="font-medium">Remarks:</span>{" "}
+              {activityData.remarks}
             </p>
           </div>
         )}
