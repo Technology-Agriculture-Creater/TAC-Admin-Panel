@@ -26,7 +26,6 @@ const mapComplaintToActivity = (complaint: Complaint): Activity => {
       | "Approved"
       | "Pending"
       | "Rejected"
-      | "Pending review"
       | "In process"
       | "Completed"
       | "Disputed",
@@ -49,7 +48,6 @@ const mapComplaintToActivity = (complaint: Complaint): Activity => {
       quantityImage: "",
     },
     remarks: "", // Default value
-    action: complaint.action || [],
   };
 };
 
@@ -75,7 +73,7 @@ const ComplaintsTable: React.FC<ComplaintsTableProps> = ({
   const actionButtons = useMemo(() => {
     if (!selectedActivity) return null;
 
-    return selectedActivity.action.map((action) => {
+    return selectedActivity.map((action) => {
       if (action === "view") {
         return (
           <button
@@ -205,7 +203,6 @@ const ComplaintsTable: React.FC<ComplaintsTableProps> = ({
                     }1A`,
                   }}
                 >
-                  {complaint.status === "Pending review"}
                   {getStatusInfo(complaint.status).icon}
                   {complaint.status}
                 </div>

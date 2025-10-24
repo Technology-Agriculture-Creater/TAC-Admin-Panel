@@ -3,7 +3,7 @@
     "id": "COMP0001",
     "subject": "Late delivery",
     "description": "Order #12345 was delivered 3 days late.",
-    "status": "Pending view",
+    "status": "Pending review",
     "date": "12 Sept, 2025",
     "farmer": {
       "name": "Rajest Patil",
@@ -17,7 +17,7 @@
     "id": "COMP0002",
     "subject": "Wrong item received",
     "description": "Received potatoes instead of onions.",
-    "status": "Pending view",
+    "status": "Pending review",
     "date": "12 Sept, 2025",
     "farmer": {
       "name": "Rajest Patil",
@@ -31,7 +31,7 @@
     "id": "COMP0003",
     "subject": "Poor quality produce",
     "description": "Tomatoes were bruised and overripe.",
-    "status": "Pending view",
+    "status": "Pending review",
     "date": "12 Sept, 2025",
     "farmer": {
       "name": "Rajest Patil",
@@ -59,7 +59,7 @@
     "id": "COMP0005",
     "subject": "Late delivery",
     "description": "Order #12345 was delivered 3 days late.",
-    "status": "Pending view",
+    "status": "Pending review",
     "date": "12 Sept, 2025",
     "farmer": {
       "name": "Rajest Patil",
@@ -101,7 +101,7 @@
     "id": "COMP0008",
     "subject": "Billing error",
     "description": "Charged incorrect amount for order #12346.",
-    "status": "Pending view",
+    "status": "Pending review",
     "date": "12 Sept, 2025",
     "farmer": {
       "name": "Rajest Patil",
