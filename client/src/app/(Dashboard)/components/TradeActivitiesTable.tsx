@@ -137,7 +137,7 @@ const TradeActivitiesTable: React.FC<TradeActivitiesTableProps> = ({
                 </span>
               </td>
               <td className="px-6 py-4 flex gap-4 whitespace-nowrap text-sm font-medium">
-                {item.action.includes("view") && (
+                {(item.status === "Pending review" || item.status === "In process") && (
                   <button
                     className="text-blue-600 hover:text-blue-900 bg-blue-100 w-40 px-3 py-1 rounded-md"
                     onClick={() => handleViewClick(item)}
@@ -145,17 +145,12 @@ const TradeActivitiesTable: React.FC<TradeActivitiesTableProps> = ({
                     View
                   </button>
                 )}
-                {item.action.includes("review") && (
+                {!(item.status === "Pending review" || item.status === "In process") && (
                   <button
                     className="text-gray-600 hover:text-gray-900 bg-white border w-40 border-gray-300 px-3 py-1 rounded-md"
                     onClick={() => handleViewClick(item)}
                   >
                     Review
-                  </button>
-                )}
-                {item.action.includes("...") && (
-                  <button className="ml-2 text-gray-600 hover:text-gray-900 bg-gray-100 px-3 py-1 rounded-md">
-                    ...
                   </button>
                 )}
               </td>
