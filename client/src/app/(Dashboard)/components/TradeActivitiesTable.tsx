@@ -35,13 +35,7 @@ const TradeActivitiesTable: React.FC<TradeActivitiesTableProps> = ({
       notes: "", // Default value
       minBid: "N/A", // Default value
       maxBid: "N/A", // Default value
-      status:
-        tradeActivity.status === "Pending review"
-          ? "Pending"
-          : tradeActivity.status === "In process" ||
-            tradeActivity.status === "Completed"
-          ? "Approved"
-          : "Rejected",
+      status: tradeActivity.status as "Approved" | "Pending" | "Rejected",
       farmerEvidence: [
         "/Images/veg.png",
         "/Images/veg.png",
@@ -210,6 +204,50 @@ const TradeActivitiesTable: React.FC<TradeActivitiesTableProps> = ({
           isOpen={isModalOpen}
           onClose={handleCloseModal}
           activityData={selectedActivity}
+          actionButtons={
+            <>
+              {selectedActivity.status === "Pending review" && (
+                <>
+                  <button className="border w-full border-blue-600 text-blue-600 px-6 py-2 rounded-md hover:bg-blue-50">
+                    Delete
+                  </button>
+                  <button className="bg-green-500 w-full text-white px-6 py-2 rounded-md hover:bg-green-600">
+                    Retain
+                  </button>
+                </>
+              )}
+              {selectedActivity.status === "In process" && (
+                <>
+                  <button className="border w-full border-blue-600 text-blue-600 px-6 py-2 rounded-md hover:bg-blue-50">
+                    Delete
+                  </button>
+                  <button className="bg-green-500 w-full text-white px-6 py-2 rounded-md hover:bg-green-600">
+                    Retain
+                  </button>
+                </>
+              )}
+              {selectedActivity.status === "Completed" && (
+                <>
+                  <button className="border w-full border-blue-600 text-blue-600 px-6 py-2 rounded-md hover:bg-blue-50">
+                    Delete
+                  </button>
+                  <button className="bg-green-500 w-full text-white px-6 py-2 rounded-md hover:bg-green-600">
+                    Retain
+                  </button>
+                </>
+              )}
+              {selectedActivity.status === "Disputed" && (
+                <>
+                  <button className="border w-full border-blue-600 text-blue-600 px-6 py-2 rounded-md hover:bg-blue-50">
+                    Delete
+                  </button>
+                  <button className="bg-green-500 w-full text-white px-6 py-2 rounded-md hover:bg-green-600">
+                    Retain
+                  </button>
+                </>
+              )}
+            </>
+          }
         />
       )}
     </div>

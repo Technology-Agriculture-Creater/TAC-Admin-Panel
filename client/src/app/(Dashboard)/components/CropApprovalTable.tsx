@@ -190,6 +190,43 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
           isOpen={isModalOpen}
           onClose={handleCloseModal}
           activityData={selectedActivity}
+          actionButtons={
+            <>
+              {selectedActivity.status === "Pending" && (
+                <>
+                  <button className="border w-full border-blue-600 text-blue-600 px-6 py-2 rounded-md hover:bg-blue-50">
+                    Escalate to Admin
+                  </button>
+                  <button className="bg-red-500 w-full text-white px-6 py-2 rounded-md hover:bg-red-600">
+                    Reject
+                  </button>
+                  <button className="bg-green-500 w-full text-white px-6 py-2 rounded-md hover:bg-green-600">
+                    Approve
+                  </button>
+                </>
+              )}
+              {selectedActivity.status === "Approved" && (
+                <>
+                  <button className="border w-full border-blue-600 text-blue-600 px-6 py-2 rounded-md hover:bg-blue-50">
+                    Delete
+                  </button>
+                  <button className="bg-red-500 w-full text-white px-6 py-2 rounded-md hover:bg-red-600">
+                    Reject
+                  </button>
+                </>
+              )}
+              {selectedActivity.status === "Rejected" && (
+                <>
+                  <button className="border w-full border-blue-600 text-blue-600 px-6 py-2 rounded-md hover:bg-blue-50">
+                    Delete
+                  </button>
+                  <button className="bg-green-500 w-full text-white px-6 py-2 rounded-md hover:bg-green-600">
+                    Retain
+                  </button>
+                </>
+              )}
+            </>
+          }
         />
       )}
     </div>
