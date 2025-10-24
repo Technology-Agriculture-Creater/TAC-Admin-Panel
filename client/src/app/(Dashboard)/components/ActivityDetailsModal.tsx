@@ -156,98 +156,133 @@ const ActivityDetailsModal: React.FC<ActivityDetailsModalProps> = ({
           </h4>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4">
             <div
-              className={`flex items-center ${
+              className={`flex flex-col items-center ${
                 activityData.bdaEvidence.cropConfirmed
                   ? "text-green-700"
                   : "text-gray-500"
               }`}
             >
-              <svg
-                className="h-5 w-5 mr-1"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                  clipRule="evenodd"
-                ></path>
-              </svg>
-              Crop Confirmed
+              <div className="flex item-center">
+                <svg
+                  className="h-5 w-5 mr-1"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clipRule="evenodd"
+                  ></path>
+                </svg>
+                Crop Confirmed
+              </div>
+              {activityData.bdaEvidence.cropImage && (
+                <Image
+                  src={activityData.bdaEvidence.cropImage}
+                  alt="Crop Evidence"
+                  height={0}
+                  width={0}
+                  sizes={"100vw"}
+                  className="w-36 h-24 object-cover rounded-md"
+                />
+              )}
             </div>
             <div
-              className={`flex items-center ${
+              className={`flex flex-col items-center ${
                 activityData.bdaEvidence.qualityConfirmed
                   ? "text-green-700"
                   : "text-gray-500"
               }`}
             >
-              <svg
-                className="h-5 w-5 mr-1"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                  clipRule="evenodd"
-                ></path>
-              </svg>
-              Quality Confirmed
+              <div className="flex item-center">
+                <svg
+                  className="h-5 w-5 mr-1"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clipRule="evenodd"
+                  ></path>
+                </svg>
+                Quality Confirmed
+              </div>
+              {activityData.bdaEvidence.qualityImage && (
+                <Image
+                  src={activityData.bdaEvidence.qualityImage}
+                  alt="Quality Evidence"
+                  height={0}
+                  width={0}
+                  sizes={"100vw"}
+                  className="w-36 h-24 object-cover rounded-md"
+                />
+              )}
             </div>
             <div
-              className={`flex items-center ${
+              className={`flex flex-col items-center ${
                 activityData.bdaEvidence.locationConfirmed
                   ? "text-green-700"
                   : "text-gray-500"
               }`}
             >
-              <svg
-                className="h-5 w-5 mr-1"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                  clipRule="evenodd"
-                ></path>
-              </svg>
-              Location Confirmed
+              <div className="flex item-center">
+                <svg
+                  className="h-5 w-5 mr-1"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clipRule="evenodd"
+                  ></path>
+                </svg>
+                Location Confirmed
+              </div>
+              {activityData.bdaEvidence.locationImage && (
+                <Image
+                  src={activityData.bdaEvidence.locationImage}
+                  alt="Location Evidence"
+                  height={0}
+                  width={0}
+                  sizes={"100vw"}
+                  className="w-36 h-24 object-cover rounded-md"
+                />
+              )}
             </div>
             <div
-              className={`flex items-center ${
+              className={`flex flex-col items-center ${
                 activityData.bdaEvidence.quantityConfirmed
                   ? "text-green-700"
                   : "text-gray-500"
               }`}
             >
-              <svg
-                className="h-5 w-5 mr-1"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                  clipRule="evenodd"
-                ></path>
-              </svg>
-              Quantity Confirmed
+              <div className="flex item-center">
+                <svg
+                  className="h-5 w-5 mr-1"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clipRule="evenodd"
+                  ></path>
+                </svg>
+                Quantity Confirmed
+              </div>
+              {activityData.bdaEvidence.quantityImage && (
+                <Image
+                  src={activityData.bdaEvidence.quantityImage}
+                  alt="Quantity Evidence"
+                  height={0}
+                  width={0}
+                  sizes={"100vw"}
+                  className="w-36 h-24 object-cover rounded-md"
+                />
+              )}
             </div>
-          </div>
-          <div className="flex space-x-2 overflow-x-auto">
-            {activityData.bdaEvidence.images.map((image, index) => (
-              <Image
-                key={index}
-                src={image}
-                alt={`BDA Evidence ${index + 1}`}
-                height={0}
-                width={0}
-                sizes={"100vw"}
-                className="w-24 h-24 object-cover rounded-md"
-              />
-            ))}
           </div>
           <p className="text-gray-600 mt-4">
             <span className="font-medium">Remarks:</span> {activityData.remarks}
