@@ -74,7 +74,7 @@ export interface Activity {
   notes: string;
   minBid: string;
   maxBid: string;
-  status: 'Approved' | 'Pending' | 'Rejected';
+  status: 'Approved' | 'Pending' | 'Rejected' | 'Pending review' | 'In process' | 'Completed' | 'Disputed';
   farmerEvidence: string[];
   bdaName: string;
   bdaEvidence: {
