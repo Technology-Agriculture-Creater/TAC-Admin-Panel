@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { TradeActivity } from "../../../types";
+import ActivityDetailsModal from "./ActivityDetailsModal";
 
 interface TradeActivitiesTableProps {
   data: TradeActivity[];
@@ -14,6 +15,20 @@ const TradeActivitiesTable: React.FC<TradeActivitiesTableProps> = ({
   data,
   getStatusInfo,
 }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedActivity, setSelectedActivity] =
+    useState<TradeActivity | null>(null);
+
+  const handleViewClick = (activity: TradeActivity) => {
+    setSelectedActivity(activity);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedActivity(null);
+  };
+
   if (data.length === 0) {
     return (
       <div className="text-center py-8 text-gray-500">
@@ -123,12 +138,18 @@ const TradeActivitiesTable: React.FC<TradeActivitiesTableProps> = ({
               </td>
               <td className="px-6 py-4 flex gap-4 whitespace-nowrap text-sm font-medium">
                 {item.action.includes("view") && (
-                  <button className="text-blue-600 hover:text-blue-900 bg-blue-100 w-40 px-3 py-1 rounded-md">
+                  <button
+                    className="text-blue-600 hover:text-blue-900 bg-blue-100 w-40 px-3 py-1 rounded-md"
+                    onClick={() => handleViewClick(item)}
+                  >
                     View
                   </button>
                 )}
                 {item.action.includes("review") && (
-                  <button className="text-gray-600 hover:text-gray-900 bg-white border w-40 border-gray-300 px-3 py-1 rounded-md">
+                  <button
+                    className="text-gray-600 hover:text-gray-900 bg-white border w-40 border-gray-300 px-3 py-1 rounded-md"
+                    onClick={() => handleViewClick(item)}
+                  >
                     Review
                   </button>
                 )}
@@ -142,6 +163,13 @@ const TradeActivitiesTable: React.FC<TradeActivitiesTableProps> = ({
           ))}
         </tbody>
       </table>
+      {selectedActivity && (
+        <ActivityDetailsModal
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          activityData={selectedActivity}
+        />
+      )}
     </div>
   );
 };
