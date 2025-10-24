@@ -160,7 +160,10 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
                   </button>
                 )}
                 {item.action.includes("review") && (
-                  <button className="text-gray-600 hover:text-gray-900 bg-white border w-40 border-gray-300 px-3 py-1 rounded-md">
+                  <button
+                    onClick={() => handleViewClick(item)}
+                    className="text-gray-600 hover:text-gray-900 bg-white border w-40 border-gray-300 px-3 py-1 rounded-md"
+                  >
                     Review
                   </button>
                 )}
