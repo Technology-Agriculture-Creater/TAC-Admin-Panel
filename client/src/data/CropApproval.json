@@ -29,7 +29,7 @@
     "farmer": "Ravi Kumar",
     "village": "Kuhi",
     "status": "Approved",
-    "action": ["view", "..."]
+    "action": ["review", "..."]
   },
   {
     "bda": { "name": "Rajest Patil", "id": "BDAXXXXX001" },
@@ -61,7 +61,7 @@
     "farmer": "Anita Sharma",
     "village": "Kuhi",
     "status": "Approved",
-    "action": ["view", "..."]
+    "action": ["review", "..."]
   },
   {
     "bda": { "name": "Rajest Patil", "id": "BDAXXXXX001" },
@@ -69,7 +69,7 @@
     "farmer": "Vikram Singh",
     "village": "Kuhi",
     "status": "Awaiting approval",
-    "action": ["review", "..."]
+    "action": ["view", "..."]
   },
   {
     "bda": { "name": "Rajest Patil", "id": "BDAXXXXX001" },
@@ -77,7 +77,7 @@
     "farmer": "Ravi Kumar",
     "village": "Kuhi",
     "status": "Approved",
-    "action": ["view", "..."]
+    "action": ["review", "..."]
   },
   {
     "bda": { "name": "Rajest Patil", "id": "BDAXXXXX001" },
@@ -93,7 +93,7 @@
     "farmer": "Manoj Patel",
     "village": "Kuhi",
     "status": "Approved",
-    "action": ["view", "..."]
+    "action": ["review", "..."]
   },
   {
     "bda": { "name": "Rajest Patil", "id": "BDAXXXXX001" },
@@ -117,7 +117,7 @@
     "farmer": "Geeta Singh",
     "village": "Kuhi",
     "status": "Rejected",
-    "action": ["view", "..."]
+    "action": ["review", "..."]
   },
   {
     "bda": { "name": "Rajest Patil", "id": "BDAXXXXX001" },
@@ -125,7 +125,7 @@
     "farmer": "Karan Verma",
     "village": "Kuhi",
     "status": "Approved",
-    "action": ["view", "..."]
+    "action": ["review", "..."]
   },
   {
     "bda": { "name": "Rajest Patil", "id": "BDAXXXXX001" },
@@ -133,7 +133,7 @@
     "farmer": "Suresh Gupta",
     "village": "Kuhi",
     "status": "Rejected",
-    "action": ["view", "..."]
+    "action": ["review", "..."]
   },
   {
     "bda": { "name": "Rajest Patil", "id": "BDAXXXXX001" },
@@ -141,7 +141,7 @@
     "farmer": "Rahul Sharma",
     "village": "Kuhi",
     "status": "Approved",
-    "action": ["view", "..."]
+    "action": ["review", "..."]
   },
   {
     "bda": { "name": "Rajest Patil", "id": "BDAXXXXX001" },
@@ -149,7 +149,7 @@
     "farmer": "Geeta Singh",
     "village": "Kuhi",
     "status": "Rejected",
-    "action": ["view", "..."]
+    "action": ["review", "..."]
   },
   {
     "bda": { "name": "Rajest Patil", "id": "BDAXXXXX001" },
@@ -157,6 +157,6 @@
     "farmer": "Karan Verma",
     "village": "Kuhi",
     "status": "Approved",
-    "action": ["view", "..."]
+    "action": ["review", "..."]
   }
 ]
