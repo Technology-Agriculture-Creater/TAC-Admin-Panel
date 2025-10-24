@@ -26,28 +26,36 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
       farmerName: cropApproval.farmer,
       village: cropApproval.village,
       crop: cropName.trim(),
-      grade: "N/A", // Placeholder as CropApproval doesn't have grade
-      sowingDate: "N/A", // Placeholder
-      harvestExpected: "N/A", // Placeholder
-      notes: "", // Placeholder
-      minBid: "N/A", // Placeholder
-      maxBid: "N/A", // Placeholder
+      grade: "N/A",
+      sowingDate: "N/A",
+      harvestExpected: "N/A",
+      notes: "",
+      minBid: "N/A",
+      maxBid: "N/A",
       status:
         cropApproval.status === "Approved"
           ? "Approved"
           : cropApproval.status === "Awaiting approval"
           ? "Pending"
           : "Rejected",
-      farmerEvidence: [], // Placeholder
+      farmerEvidence: [
+        "/Images/veg.png",
+        "/Images/veg.png",
+        "/Images/veg.png",
+        "/Images/veg.png",
+      ],
       bdaName: cropApproval.bda.name,
       bdaEvidence: {
-        cropConfirmed: false,
-        qualityConfirmed: false,
-        locationConfirmed: false,
-        quantityConfirmed: false,
-        images: [],
+        cropConfirmed: true,
+        cropImage: "/Images/veg.png",
+        qualityConfirmed: true,
+        qualityImage: "/Images/veg.png",
+        locationConfirmed: true,
+        locationImage: "/Images/veg.png",
+        quantityConfirmed: true,
+        quantityImage: "/Images/veg.png",
       },
-      remarks: "", // Placeholder
+      remarks: "",
     };
   };
 
