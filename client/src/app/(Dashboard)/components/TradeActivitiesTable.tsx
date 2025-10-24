@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { TradeActivity } from "../../../types";
+import { TradeActivity, Activity } from "../../../types";
 import ActivityDetailsModal from "./ActivityDetailsModal";
 
 interface TradeActivitiesTableProps {
@@ -16,14 +16,57 @@ const TradeActivitiesTable: React.FC<TradeActivitiesTableProps> = ({
   getStatusInfo,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedActivity, setSelectedActivity] =
-    useState<TradeActivity | null>(null);
+  const [selectedActivity, setSelectedActivity] = useState<Activity | null>(
+    null
+  );
 
-  const handleViewClick = (activity: TradeActivity) => {
-    setSelectedActivity(activity);
+  const mapTradeActivityToActivity = (
+    tradeActivity: TradeActivity
+  ): Activity => {
+    const cropName = tradeActivity.cropQty.split(" - ")[0];
+    return {
+      id: tradeActivity.id || Math.random().toString(36).substring(7),
+      farmerName: tradeActivity.farmer,
+      village: tradeActivity.village,
+      crop: cropName.trim(),
+      grade: "N/A", // Default value as it's not in TradeActivity
+      sowingDate: "N/A", // Default value
+      harvestExpected: "N/A", // Default value
+      notes: "", // Default value
+      minBid: "N/A", // Default value
+      maxBid: "N/A", // Default value
+      status:
+        tradeActivity.status === "Pending review"
+          ? "Pending"
+          : tradeActivity.status === "In process" ||
+            tradeActivity.status === "Completed"
+          ? "Approved"
+          : "Rejected",
+      farmerEvidence: [
+        "/Images/veg.png",
+        "/Images/veg.png",
+        "/Images/veg.png",
+        "/Images/veg.png",
+      ],
+      bdaName: tradeActivity.bda,
+      bdaEvidence: {
+        cropConfirmed: true,
+        cropImage: "/Images/veg.png",
+        qualityConfirmed: true,
+        qualityImage: "/Images/veg.png",
+        locationConfirmed: true,
+        locationImage: "/Images/veg.png",
+        quantityConfirmed: true,
+        quantityImage: "/Images/veg.png",
+      },
+      remarks: "", // Default value
+    };
+  };
+  const handleViewClick = (tradeActivity: TradeActivity) => {
+    const activityData: Activity = mapTradeActivityToActivity(tradeActivity);
+    setSelectedActivity(activityData);
     setIsModalOpen(true);
   };
-
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedActivity(null);
@@ -137,7 +180,8 @@ const TradeActivitiesTable: React.FC<TradeActivitiesTableProps> = ({
                 </span>
               </td>
               <td className="px-6 py-4 flex gap-4 whitespace-nowrap text-sm font-medium">
-                {(item.status === "Pending review" || item.status === "In process") && (
+                {(item.status === "Pending review" ||
+                  item.status === "In process") && (
                   <button
                     className="text-blue-600 hover:text-blue-900 bg-blue-100 w-40 px-3 py-1 rounded-md"
                     onClick={() => handleViewClick(item)}
@@ -145,7 +189,10 @@ const TradeActivitiesTable: React.FC<TradeActivitiesTableProps> = ({
                     View
                   </button>
                 )}
-                {!(item.status === "Pending review" || item.status === "In process") && (
+                {!(
+                  item.status === "Pending review" ||
+                  item.status === "In process"
+                ) && (
                   <button
                     className="text-gray-600 hover:text-gray-900 bg-white border w-40 border-gray-300 px-3 py-1 rounded-md"
                     onClick={() => handleViewClick(item)}
