@@ -48,12 +48,12 @@ const TradeActivitiesTable: React.FC<TradeActivitiesTableProps> = ({
         cropImage: "/Images/veg.png",
         qualityConfirmed: true,
         qualityImage: "/Images/veg.png",
-        locationConfirmed: true,
-        locationImage: "/Images/veg.png",
-        quantityConfirmed: true,
-        quantityImage: "/Images/veg.png",
+        locationConfirmed: false,
+        locationImage: undefined,
+        quantityConfirmed: false,
+        quantityImage: undefined,
       },
-      remarks: "", // Default value
+      remarks: "",
     };
   };
   const handleViewClick = (tradeActivity: TradeActivity) => {

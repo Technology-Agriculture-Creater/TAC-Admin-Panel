@@ -21,7 +21,14 @@ export interface TradeActivity {
   village: string;
   buyer: string;
   buyerType: string;
-  status: string;
+  status:
+    | "Approved"
+    | "Pending"
+    | "Rejected"
+    | "Pending review"
+    | "In process"
+    | "Completed"
+    | "Disputed";
   action: string[];
 }
 
@@ -29,7 +36,14 @@ export interface Complaint {
   id: string;
   subject: string;
   description: string;
-  status: string;
+  status:
+    | "Approved"
+    | "Pending"
+    | "Rejected"
+    | "Pending review"
+    | "In process"
+    | "Completed"
+    | "Disputed";
   date: string;
   farmer: {
     name: string;
@@ -74,7 +88,14 @@ export interface Activity {
   notes: string;
   minBid: string;
   maxBid: string;
-  status: 'Approved' | 'Pending' | 'Rejected' | 'Pending review' | 'In process' | 'Completed' | 'Disputed';
+  status:
+    | "Approved"
+    | "Pending"
+    | "Rejected"
+    | "Pending review"
+    | "In process"
+    | "Completed"
+    | "Disputed";
   farmerEvidence: string[];
   bdaName: string;
   bdaEvidence: {
