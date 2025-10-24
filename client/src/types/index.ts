@@ -79,10 +79,13 @@ export interface Activity {
   bdaName: string;
   bdaEvidence: {
     cropConfirmed: boolean;
+    cropImage?: string;
     qualityConfirmed: boolean;
+    qualityImage?: string;
     locationConfirmed: boolean;
+    locationImage?: string;
     quantityConfirmed: boolean;
-    images: string[];
+    quantityImage?: string;
   };
   remarks: string;
 }
