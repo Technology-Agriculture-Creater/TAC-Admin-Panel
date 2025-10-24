@@ -16,7 +16,7 @@ const ActivityDetailsModal: React.FC<ActivityDetailsModalProps> = ({
   activityData,
   actionButtons,
 }) => {
-  if (!isOpen) return null;
+  if (!isOpen || !activityData) return null;
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50">
@@ -164,7 +164,7 @@ const ActivityDetailsModal: React.FC<ActivityDetailsModalProps> = ({
           <div className="flex gap-2 mb-4">
             <div
               className={`flex flex-col items-center ${
-                activityData.bdaEvidence.cropConfirmed
+                activityData.bdaEvidence?.cropConfirmed || false
                   ? "text-green-700"
                   : "text-gray-500"
               }`}
@@ -183,7 +183,7 @@ const ActivityDetailsModal: React.FC<ActivityDetailsModalProps> = ({
                 </svg>
                 Crop Confirmed
               </div>
-              {activityData.bdaEvidence.cropImage && (
+              {activityData.bdaEvidence?.cropImage && (
                 <Image
                   src={activityData.bdaEvidence.cropImage}
                   alt="Crop Evidence"
@@ -196,7 +196,7 @@ const ActivityDetailsModal: React.FC<ActivityDetailsModalProps> = ({
             </div>
             <div
               className={`flex flex-col items-center ${
-                activityData.bdaEvidence.qualityConfirmed
+                activityData.bdaEvidence?.qualityConfirmed || false
                   ? "text-green-700"
                   : "text-gray-500"
               }`}
@@ -215,7 +215,7 @@ const ActivityDetailsModal: React.FC<ActivityDetailsModalProps> = ({
                 </svg>
                 Quality Confirmed
               </div>
-              {activityData.bdaEvidence.qualityImage && (
+              {activityData.bdaEvidence?.qualityImage && (
                 <Image
                   src={activityData.bdaEvidence.qualityImage}
                   alt="Quality Evidence"
@@ -228,7 +228,7 @@ const ActivityDetailsModal: React.FC<ActivityDetailsModalProps> = ({
             </div>
             <div
               className={`flex flex-col items-center ${
-                activityData.bdaEvidence.locationConfirmed
+                activityData.bdaEvidence?.locationConfirmed || false
                   ? "text-green-700"
                   : "text-gray-500"
               }`}
@@ -247,7 +247,7 @@ const ActivityDetailsModal: React.FC<ActivityDetailsModalProps> = ({
                 </svg>
                 Location Confirmed
               </div>
-              {activityData.bdaEvidence.locationImage && (
+              {activityData.bdaEvidence?.locationImage && (
                 <Image
                   src={activityData.bdaEvidence.locationImage}
                   alt="Location Evidence"
@@ -260,7 +260,7 @@ const ActivityDetailsModal: React.FC<ActivityDetailsModalProps> = ({
             </div>
             <div
               className={`flex flex-col items-center ${
-                activityData.bdaEvidence.quantityConfirmed
+                activityData.bdaEvidence?.quantityConfirmed || false
                   ? "text-green-700"
                   : "text-gray-500"
               }`}
@@ -279,7 +279,7 @@ const ActivityDetailsModal: React.FC<ActivityDetailsModalProps> = ({
                 </svg>
                 Quantity Confirmed
               </div>
-              {activityData.bdaEvidence.quantityImage && (
+              {activityData.bdaEvidence?.quantityImage && (
                 <Image
                   src={activityData.bdaEvidence.quantityImage}
                   alt="Quantity Evidence"
@@ -292,7 +292,9 @@ const ActivityDetailsModal: React.FC<ActivityDetailsModalProps> = ({
             </div>
           </div>
           <p className="text-gray-600 mt-4">
-            <span className="font-medium">Remarks:</span> {activityData.remarks}
+            <span className="font-medium">Remarks:</span>{" "}
+            {(activityData.bdaEvidence as { remarks?: string })?.remarks ||
+              "N/A"}
           </p>
         </div>
 

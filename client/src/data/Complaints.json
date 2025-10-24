@@ -1,6 +1,6 @@
 [
   {
-    "id": "COMP-0001",
+    "id": "COMP0001",
     "subject": "Late delivery",
     "description": "Order #12345 was delivered 3 days late.",
     "status": "Pending review",
@@ -11,10 +11,10 @@
     },
     "issueType": "App Issue",
     "village": "Kuhi",
-    "action": ["view", "..."]
+    "action": ["view"]
   },
   {
-    "id": "COMP-0001",
+    "id": "COMP0002",
     "subject": "Wrong item received",
     "description": "Received potatoes instead of onions.",
     "status": "Pending review",
@@ -25,10 +25,10 @@
     },
     "issueType": "App Issue",
     "village": "Kuhi",
-    "action": ["view", "..."]
+    "action": ["view"]
   },
   {
-    "id": "COMP-0001",
+    "id": "COMP0003",
     "subject": "Poor quality produce",
     "description": "Tomatoes were bruised and overripe.",
     "status": "Pending review",
@@ -39,10 +39,10 @@
     },
     "issueType": "App Issue",
     "village": "Kuhi",
-    "action": ["view", "..."]
+    "action": ["view"]
   },
   {
-    "id": "COMP-0001",
+    "id": "COMP0004",
     "subject": "Billing error",
     "description": "Charged incorrect amount for order #12346.",
     "status": "Resolved",
@@ -56,7 +56,7 @@
     "action": ["review", "..."]
   },
   {
-    "id": "COMP-0001",
+    "id": "COMP0005",
     "subject": "Late delivery",
     "description": "Order #12345 was delivered 3 days late.",
     "status": "Pending review",
@@ -70,7 +70,7 @@
     "action": ["view", "..."]
   },
   {
-    "id": "COMP-0001",
+    "id": "COMP0006",
     "subject": "Wrong item received",
     "description": "Received potatoes instead of onions.",
     "status": "Resolved",
@@ -84,7 +84,7 @@
     "action": ["review", "..."]
   },
   {
-    "id": "COMP-0001",
+    "id": "COMP0007",
     "subject": "Poor quality produce",
     "description": "Tomatoes were bruised and overripe.",
     "status": "Resolved",
@@ -98,7 +98,7 @@
     "action": ["review", "..."]
   },
   {
-    "id": "COMP-0001",
+    "id": "COMP0008",
     "subject": "Billing error",
     "description": "Charged incorrect amount for order #12346.",
     "status": "Pending review",
@@ -112,7 +112,7 @@
     "action": ["view", "..."]
   },
   {
-    "id": "COMP-0001",
+    "id": "COMP0009",
     "subject": "Late delivery",
     "description": "Order #12345 was delivered 3 days late.",
     "status": "Resolved",
@@ -126,7 +126,7 @@
     "action": ["review", "..."]
   },
   {
-    "id": "COMP-0001",
+    "id": "COMP0010",
     "subject": "Wrong item received",
     "description": "Received potatoes instead of onions.",
     "status": "Resolved",
@@ -140,7 +140,7 @@
     "action": ["review", "..."]
   },
   {
-    "id": "COMP-0001",
+    "id": "COMP0011",
     "subject": "Poor quality produce",
     "description": "Tomatoes were bruised and overripe.",
     "status": "Resolved",
