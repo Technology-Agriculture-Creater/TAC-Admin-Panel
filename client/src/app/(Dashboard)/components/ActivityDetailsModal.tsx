@@ -7,12 +7,14 @@ interface ActivityDetailsModalProps {
   isOpen: boolean;
   onClose: () => void;
   activityData: Activity;
+  actionButtons: React.ReactNode;
 }
 
 const ActivityDetailsModal: React.FC<ActivityDetailsModalProps> = ({
   isOpen,
   onClose,
   activityData,
+  actionButtons,
 }) => {
   if (!isOpen) return null;
 
@@ -296,41 +298,7 @@ const ActivityDetailsModal: React.FC<ActivityDetailsModalProps> = ({
 
         {/* Action Buttons */}
 
-        <div className="flex w-full space-x-4 mt-6">
-          {activityData.status === "Pending" && (
-            <>
-              <button className="border w-full border-blue-600 text-blue-600 px-6 py-2 rounded-md hover:bg-blue-50">
-                Escalate to Admin
-              </button>
-              <button className="bg-red-500 w-full text-white px-6 py-2 rounded-md hover:bg-red-600">
-                Reject
-              </button>
-              <button className="bg-green-500 w-full text-white px-6 py-2 rounded-md hover:bg-green-600">
-                Approve
-              </button>
-            </>
-          )}
-          {activityData.status === "Approved" && (
-            <>
-              <button className="border w-full border-blue-600 text-blue-600 px-6 py-2 rounded-md hover:bg-blue-50">
-                Delete
-              </button>
-              <button className="bg-red-500 w-full text-white px-6 py-2 rounded-md hover:bg-red-600">
-                Reject
-              </button>
-            </>
-          )}
-          {activityData.status === "Rejected" && (
-            <>
-              <button className="border w-full border-blue-600 text-blue-600 px-6 py-2 rounded-md hover:bg-blue-50">
-                Delete
-              </button>
-              <button className="bg-green-500 w-full text-white px-6 py-2 rounded-md hover:bg-green-600">
-                Retain
-              </button>
-            </>
-          )}
-        </div>
+        <div className="flex w-full space-x-4 mt-6">{actionButtons}</div>
       </div>
     </div>
   );
