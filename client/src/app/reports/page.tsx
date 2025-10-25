@@ -4,8 +4,22 @@ import BdaActivityReportCard from "../../components/BdaActivityReportCard";
 import CurrentStatisticChart from "../../components/CurrentStatisticChart";
 import DisputeAnalysisChart from "../../components/DisputeAnalysisChart";
 import reportsData from "../../data/Reports.json";
+import { useRouter } from "next/navigation";
 
 const ReportsPage = () => {
+  const router = useRouter();
+  const [selectedBda, setSelectedBda] = React.useState<
+    (typeof reportsData)[number] | null
+  >(null);
+
+  const handleCardClick = (bdaName: string, bdaId: string) => {
+    const bda = reportsData.find(
+      (report) => report.bdaName === bdaName && report.bdaId === bdaId
+    );
+    setSelectedBda(bda || null);
+    router.push(`/reports/${bdaName.replace(/ /g, "-")}`);
+  };
+
   const currentStatisticData = [
     {
       name: "Crops Registered",
@@ -142,10 +156,30 @@ const ReportsPage = () => {
               cropRegistrationsThisSeason={report.cropRegistrationsThisSeason}
               tradeActivities={report.tradeActivities}
               farmerDisputesComplaints={report.farmerDisputesComplaints}
+              onCardClick={handleCardClick}
             />
           ))}
         </div>
       </div>
+
+      {selectedBda && (
+        <div className="bg-white p-4 rounded-lg shadow-md mt-4">
+          <h2 className="text-xl font-semibold mb-4">
+            {selectedBda.bdaName} Profile
+          </h2>
+          <p>BDA ID: {selectedBda.bdaId}</p>
+          <p>Total Village Counts: {selectedBda.totalVillageCounts}</p>
+          <p>Total Farmer Counts: {selectedBda.totalFarmerCounts}</p>
+          <p>
+            Crop Registrations This Season:{" "}
+            {selectedBda.cropRegistrationsThisSeason}
+          </p>
+          <p>Trade Activities: {selectedBda.tradeActivities}</p>
+          <p>
+            Farmer Disputes/Complaints: {selectedBda.farmerDisputesComplaints}
+          </p>
+        </div>
+      )}
 
       {/* Charts section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-10">

@@ -9,6 +9,7 @@ interface BdaActivityReportCardProps {
   cropRegistrationsThisSeason: number;
   tradeActivities: number;
   farmerDisputesComplaints: number;
+  onCardClick: (bdaName: string, bdaId: string) => void;
 }
 
 const BdaActivityReportCard: React.FC<BdaActivityReportCardProps> = ({
@@ -19,9 +20,13 @@ const BdaActivityReportCard: React.FC<BdaActivityReportCardProps> = ({
   cropRegistrationsThisSeason,
   tradeActivities,
   farmerDisputesComplaints,
+  onCardClick,
 }) => {
   return (
-    <div className="bg-white p-4 rounded-lg shadow-md w-full">
+    <div
+      className="bg-white p-4 rounded-lg shadow-md w-full cursor-pointer"
+      onClick={() => onCardClick(bdaName, bdaId)}
+    >
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center">
           <Image
