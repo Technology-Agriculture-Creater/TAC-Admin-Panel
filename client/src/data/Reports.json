@@ -1,0 +1,102 @@
+[
+  {
+    "id": "1",
+    "bdaName": "Rajest Patil",
+    "bdaId": "BDAXXXX0001",
+    "totalVillageCounts": 220,
+    "totalFarmerCounts": 625,
+    "cropRegistrationsThisSeason": 80,
+    "tradeActivities": 25,
+    "farmerDisputesComplaints": 9
+  },
+  {
+    "id": "2",
+    "bdaName": "Rajest Patil",
+    "bdaId": "BDAXXXX0001",
+    "totalVillageCounts": 180,
+    "totalFarmerCounts": 458,
+    "cropRegistrationsThisSeason": 70,
+    "tradeActivities": 20,
+    "farmerDisputesComplaints": 5
+  },
+  {
+    "id": "3",
+    "bdaName": "Rajest Patil",
+    "bdaId": "BDAXXXX0001",
+    "totalVillageCounts": 155,
+    "totalFarmerCounts": 856,
+    "cropRegistrationsThisSeason": 65,
+    "tradeActivities": 17,
+    "farmerDisputesComplaints": 9
+  },
+  {
+    "id": "4",
+    "bdaName": "Rajest Patil",
+    "bdaId": "BDAXXXX0001",
+    "totalVillageCounts": 150,
+    "totalFarmerCounts": 400,
+    "cropRegistrationsThisSeason": 50,
+    "tradeActivities": 15,
+    "farmerDisputesComplaints": 10
+  },
+  {
+    "id": "5",
+    "bdaName": "Rajest Patil",
+    "bdaId": "BDAXXXX0001",
+    "totalVillageCounts": 210,
+    "totalFarmerCounts": 645,
+    "cropRegistrationsThisSeason": 95,
+    "tradeActivities": 35,
+    "farmerDisputesComplaints": 18
+  },
+  {
+    "id": "6",
+    "bdaName": "Rajest Patil",
+    "bdaId": "BDAXXXX0001",
+    "totalVillageCounts": 200,
+    "totalFarmerCounts": 658,
+    "cropRegistrationsThisSeason": 90,
+    "tradeActivities": 30,
+    "farmerDisputesComplaints": 15
+  },
+  {
+    "id": "7",
+    "bdaName": "Rajest Patil",
+    "bdaId": "BDAXXXX0001",
+    "totalVillageCounts": 160,
+    "totalFarmerCounts": 450,
+    "cropRegistrationsThisSeason": 60,
+    "tradeActivities": 22,
+    "farmerDisputesComplaints": 8
+  },
+  {
+    "id": "8",
+    "bdaName": "Rajest Patil",
+    "bdaId": "BDAXXXX0001",
+    "totalVillageCounts": 145,
+    "totalFarmerCounts": 390,
+    "cropRegistrationsThisSeason": 55,
+    "tradeActivities": 12,
+    "farmerDisputesComplaints": 7
+  },
+  {
+    "id": "9",
+    "bdaName": "Rajest Patil",
+    "bdaId": "BDAXXXX0001",
+    "totalVillageCounts": 175,
+    "totalFarmerCounts": 458,
+    "cropRegistrationsThisSeason": 85,
+    "tradeActivities": 18,
+    "farmerDisputesComplaints": 12
+  },
+  {
+    "id": "10",
+    "bdaName": "Rajest Patil",
+    "bdaId": "BDAXXXX0001",
+    "totalVillageCounts": 190,
+    "totalFarmerCounts": 530,
+    "cropRegistrationsThisSeason": 75,
+    "tradeActivities": 28,
+    "farmerDisputesComplaints": 20
+  }
+]
