@@ -56,25 +56,25 @@ const BdaActivityReportCard: React.FC<BdaActivityReportCardProps> = ({
       </div>
 
       <div className="grid grid-cols-2 gap-2 text-sm">
-        <div>
+        <div className="border-b-2 border-gray-200">
           <p className="text-gray-500">Total village counts:</p>
-          <p className="font-medium">{totalVillageCounts}</p>
+          <p className="font-medium text-2xl">{totalVillageCounts}</p>
         </div>
-        <div>
+        <div className="border-b-2 border-gray-200">
           <p className="text-gray-500">Total farmer counts:</p>
-          <p className="font-medium">{totalFarmerCounts}</p>
+          <p className="font-medium text-2xl">{totalFarmerCounts}</p>
         </div>
-        <div className="col-span-2 mt-2">
+        <div className="col-span-2 mt-2 flex items-center justify-between">
           <p className="text-gray-500">Crop Registrations this season:</p>
           <p className="font-medium text-blue-600">
             {cropRegistrationsThisSeason}
           </p>
         </div>
-        <div className="col-span-2">
+        <div className="col-span-2 flex items-center justify-between">
           <p className="text-gray-500">Trade activities:</p>
           <p className="font-medium text-blue-600">{tradeActivities}</p>
         </div>
-        <div className="col-span-2">
+        <div className="col-span-2 flex items-center justify-between">
           <p className="text-gray-500">Farmer Disputes/Complaints:</p>
           <p className="font-medium text-blue-600">
             {farmerDisputesComplaints}
