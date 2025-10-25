@@ -36,14 +36,7 @@ export interface Complaint {
   id: string;
   subject: string;
   description: string;
-  status:
-    | "Approved"
-    | "Pending"
-    | "Rejected"
-    | "Pending review"
-    | "In process"
-    | "Completed"
-    | "Disputed";
+  status: "Pending review" | "Resolved";
   date: string;
   farmer: {
     name: string;
@@ -95,6 +88,7 @@ export interface Activity {
     | "Pending review"
     | "In process"
     | "Completed"
+    | "Resolved"
     | "Disputed";
   farmerEvidence: string[];
   bdaName: string;

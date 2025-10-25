@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import { Complaint, Activity } from "../../../types";
 import ActivityDetailsModal from "../components/ActivityDetailsModal";
 
@@ -31,13 +31,7 @@ const ComplaintsTable: React.FC<ComplaintsTableProps> = ({
       notes: complaint.description || "",
       minBid: "N/A", // Default value
       maxBid: "N/A", // Default value
-      status: complaint.status as
-        | "Approved"
-        | "Pending"
-        | "Rejected"
-        | "In process"
-        | "Completed"
-        | "Disputed",
+      status: complaint.status as "Pending review" | "Resolved",
       farmerEvidence: [
         "/Images/veg.png",
         "/Images/veg.png",
@@ -60,17 +54,17 @@ const ComplaintsTable: React.FC<ComplaintsTableProps> = ({
     };
   };
 
-  const [currentActionType, setCurrentActionType] = useState<
-    "view" | "review" | null
-  >(null);
+  const [, setCurrentActionType] = useState<"view" | "review" | null>(null);
 
   const handleViewDetails = (
     complaint: Complaint,
     actionType: "view" | "review"
   ) => {
-    setSelectedActivity(mapComplaintToActivity(complaint));
+    const mappedActivity = mapComplaintToActivity(complaint);
+    setSelectedActivity(mappedActivity);
     setCurrentActionType(actionType);
     setIsModalOpen(true);
+    console.log("Selected Activity Status:", mappedActivity.status);
   };
 
   const handleCloseModal = () => {
@@ -78,23 +72,6 @@ const ComplaintsTable: React.FC<ComplaintsTableProps> = ({
     setSelectedActivity(null);
     setCurrentActionType(null);
   };
-
-  const actionButtons = useMemo(() => {
-    if (!selectedActivity || !currentActionType) return null;
-    if (currentActionType === "review") {
-      return (
-        <div className="flex justify-end space-x-2 p-4">
-          <button className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
-            Approve
-          </button>
-          <button className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
-            Reject
-          </button>
-        </div>
-      );
-    }
-    return null;
-  }, [selectedActivity, currentActionType]);
 
   if (data.length === 0) {
     return (
@@ -218,7 +195,30 @@ const ComplaintsTable: React.FC<ComplaintsTableProps> = ({
           isOpen={isModalOpen}
           onClose={handleCloseModal}
           activityData={selectedActivity}
-          actionButtons={actionButtons}
+          actionButtons={
+            <>
+              {selectedActivity.status === "Pending review" && (
+                <>
+                  <button className="border w-full border-blue-600 text-blue-600 px-6 py-2 rounded-md hover:bg-blue-50">
+                    Delete
+                  </button>
+                  <button className="bg-green-500 w-full text-white px-6 py-2 rounded-md hover:bg-green-600">
+                    Retain
+                  </button>
+                </>
+              )}
+              {selectedActivity.status === "Resolved" && (
+                <>
+                  <button className="border w-full border-blue-600 text-blue-600 px-6 py-2 rounded-md hover:bg-blue-50">
+                    Delete
+                  </button>
+                  <button className="bg-green-500 w-full text-white px-6 py-2 rounded-md hover:bg-green-600">
+                    Retain
+                  </button>
+                </>
+              )}
+            </>
+          }
         />
       )}
     </div>
