@@ -35,19 +35,27 @@ const ActivityDetailsModal: React.FC<ActivityDetailsModalProps> = ({
             <span className="text-xl font-semibold">{activityData.id}</span>
             <span
               className={`flex items-center text-sm ${
-                activityData.status === "Approved"
+                activityData.status === "Approved" ||
+                activityData.status === "Completed"
                   ? "text-green-600"
-                  : activityData.status === "Pending"
+                  : activityData.status === "Pending" ||
+                    activityData.status === "Pending review"
                   ? "text-yellow-600"
+                  : activityData.status === "In process"
+                  ? "text-blue-600"
                   : "text-red-600"
               }`}
             >
               <span
                 className={`h-2 w-2 rounded-full ${
-                  activityData.status === "Approved"
+                  activityData.status === "Approved" ||
+                  activityData.status === "Completed"
                     ? "bg-green-600"
-                    : activityData.status === "Pending"
+                    : activityData.status === "Pending" ||
+                      activityData.status === "Pending review"
                     ? "bg-yellow-600"
+                    : activityData.status === "In process"
+                    ? "bg-blue-600"
                     : "bg-red-600"
                 } mr-1`}
               ></span>{" "}
