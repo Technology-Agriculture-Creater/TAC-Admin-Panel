@@ -119,27 +119,26 @@ const ActivityDetailsModal: React.FC<ActivityDetailsModalProps> = ({
               <span className="text-gray-600">Max Bid:</span> ₹
               {activityData.maxBid}/Qtl
             </div>
-            {activityData.status === "Approved" &&
-              activityData.farmerEvidence && (
-                <div className="mb-6 rounded-lg bg-gray-100">
-                  <h3 className="mb-3 text-gray-600">
-                    Evidence Submitted by Farmer:
-                  </h3>
-                  <div className="flex gap-2">
-                    {activityData.farmerEvidence.map((image, index) => (
-                      <Image
-                        key={index}
-                        src={image}
-                        alt={`Farmer Evidence ${index + 1}`}
-                        height={0}
-                        width={0}
-                        sizes={"100vw"}
-                        className="w-24 h-24 object-cover rounded-md"
-                      />
-                    ))}
-                  </div>
+            {activityData.farmerEvidence && (
+              <div className="mb-6 rounded-lg bg-gray-100">
+                <h3 className="mb-3 text-gray-600">
+                  Evidence Submitted by Farmer:
+                </h3>
+                <div className="flex gap-2">
+                  {activityData.farmerEvidence.map((image, index) => (
+                    <Image
+                      key={index}
+                      src={image}
+                      alt={`Farmer Evidence ${index + 1}`}
+                      height={0}
+                      width={0}
+                      sizes={"100vw"}
+                      className="w-24 h-24 object-cover rounded-md"
+                    />
+                  ))}
                 </div>
-              )}
+              </div>
+            )}
           </div>
         </div>
 

@@ -10,47 +10,6 @@ interface ComplaintsTableProps {
   };
 }
 
-const mapComplaintToActivity = (complaint: Complaint): Activity => {
-  return {
-    id: complaint.id || Math.random().toString(36).substring(7),
-    farmerName: complaint.farmer?.name || "N/A",
-    village: complaint.village || "N/A",
-    crop: "N/A", // Default value as it's not in Complaint
-    grade: "N/A", // Default value
-    sowingDate: "N/A", // Default value
-    harvestExpected: "N/A", // Default value
-    notes: complaint.description || "",
-    minBid: "N/A", // Default value
-    maxBid: "N/A", // Default value
-    status: complaint.status as
-      | "Approved"
-      | "Pending"
-      | "Rejected"
-      | "In process"
-      | "Completed"
-      | "Disputed",
-    farmerEvidence: [
-      "/Images/veg.png",
-      "/Images/veg.png",
-      "/Images/veg.png",
-      "/Images/veg.png",
-    ], // Default empty array
-    bdaName: "N/A", // Default value
-    bdaEvidence: {
-      // Default values
-      cropConfirmed: false,
-      cropImage: "",
-      qualityConfirmed: false,
-      qualityImage: "",
-      locationConfirmed: false,
-      locationImage: "",
-      quantityConfirmed: false,
-      quantityImage: "",
-    },
-    remarks: "", // Default value
-  };
-};
-
 const ComplaintsTable: React.FC<ComplaintsTableProps> = ({
   data,
   getStatusInfo,
@@ -60,58 +19,82 @@ const ComplaintsTable: React.FC<ComplaintsTableProps> = ({
     null
   );
 
-  const handleViewDetails = (complaint: Complaint) => {
+  const mapComplaintToActivity = (complaint: Complaint): Activity => {
+    return {
+      id: complaint.id || Math.random().toString(36).substring(7),
+      farmerName: complaint.farmer?.name,
+      village: complaint.village,
+      crop: "N/A", // Default value as it's not in Complaint
+      grade: "N/A", // Default value
+      sowingDate: "N/A", // Default value
+      harvestExpected: "N/A", // Default value
+      notes: complaint.description || "",
+      minBid: "N/A", // Default value
+      maxBid: "N/A", // Default value
+      status: complaint.status as
+        | "Approved"
+        | "Pending"
+        | "Rejected"
+        | "In process"
+        | "Completed"
+        | "Disputed",
+      farmerEvidence: [
+        "/Images/veg.png",
+        "/Images/veg.png",
+        "/Images/veg.png",
+        "/Images/veg.png",
+      ], // Default empty array
+      bdaName: "N/A", // Default value
+      bdaEvidence: {
+        // Default values
+        cropConfirmed: false,
+        cropImage: "/Images/veg.png",
+        qualityConfirmed: false,
+        qualityImage: "/Images/veg.png",
+        locationConfirmed: false,
+        locationImage: "/Images/veg.png",
+        quantityConfirmed: false,
+        quantityImage: "/Images/veg.png",
+      },
+      remarks: "", // Default value
+    };
+  };
+
+  const [currentActionType, setCurrentActionType] = useState<
+    "view" | "review" | null
+  >(null);
+
+  const handleViewDetails = (
+    complaint: Complaint,
+    actionType: "view" | "review"
+  ) => {
     setSelectedActivity(mapComplaintToActivity(complaint));
+    setCurrentActionType(actionType);
     setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedActivity(null);
+    setCurrentActionType(null);
   };
 
   const actionButtons = useMemo(() => {
-    if (!selectedActivity) return null;
-
-    return selectedActivity.map((action) => {
-      if (action === "view") {
-        return (
-          <button
-            key={action}
-            onClick={() =>
-              handleViewDetails(selectedActivity as unknown as Complaint)
-            }
-            className="bg-blue-100 text-blue-600 hover:bg-blue-200 px-4 py-2 rounded-md text-sm"
-          >
-            View
+    if (!selectedActivity || !currentActionType) return null;
+    if (currentActionType === "review") {
+      return (
+        <div className="flex justify-end space-x-2 p-4">
+          <button className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+            Approve
           </button>
-        );
-      } else if (action === "review") {
-        return (
-          <button
-            key={action}
-            onClick={() =>
-              handleViewDetails(selectedActivity as unknown as Complaint)
-            }
-            className="bg-white text-gray-800 hover:bg-gray-100 border border-gray-300 px-4 py-2 rounded-md text-sm"
-          >
-            Review
+          <button className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+            Reject
           </button>
-        );
-      } else if (action === "...") {
-        return (
-          <button
-            key={action}
-            onClick={() => console.log(`${action} ${selectedActivity?.id}`)}
-            className="text-gray-600 hover:text-gray-900 px-4 py-2 rounded-md text-sm"
-          >
-            ...
-          </button>
-        );
-      }
-      return null;
-    });
-  }, [selectedActivity]);
+        </div>
+      );
+    }
+    return null;
+  }, [selectedActivity, currentActionType]);
 
   if (data.length === 0) {
     return (
@@ -211,15 +194,15 @@ const ComplaintsTable: React.FC<ComplaintsTableProps> = ({
               <td className="px-6 py-4 flex gap-4 whitespace-nowrap text-sm font-medium">
                 {complaint.action.includes("view") && (
                   <button
-                    onClick={() => handleViewDetails(complaint)}
+                    onClick={() => handleViewDetails(complaint, "view")}
                     className="text-blue-600 hover:text-blue-900 bg-blue-100 w-40 px-3 py-1 rounded-md"
                   >
-                    View Details
+                    View
                   </button>
                 )}
                 {complaint.action.includes("review") && (
                   <button
-                    onClick={() => handleViewDetails(complaint)}
+                    onClick={() => handleViewDetails(complaint, "review")}
                     className="text-gray-600 hover:text-gray-900 bg-white border w-40 border-gray-300 px-3 py-1 rounded-md"
                   >
                     Review
@@ -234,7 +217,7 @@ const ComplaintsTable: React.FC<ComplaintsTableProps> = ({
         <ActivityDetailsModal
           isOpen={isModalOpen}
           onClose={handleCloseModal}
-          activity={selectedActivity}
+          activityData={selectedActivity}
           actionButtons={actionButtons}
         />
       )}
