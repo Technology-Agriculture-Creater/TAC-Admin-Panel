@@ -1,12 +1,13 @@
 "use client";
 import React from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import reportsData from "../../../data/Reports.json";
 import Image from "next/image";
-import { Phone, Calendar, Mail, Home, MapPin } from "lucide-react";
+import { Phone, Calendar, Mail, Home, MapPin, Reply } from "lucide-react";
 
 const BdaProfilePage = () => {
   const params = useParams();
+  const router = useRouter();
   const bdaNameFromUrl = params.bdaName as string;
 
   const bda = reportsData.find(
@@ -19,6 +20,15 @@ const BdaProfilePage = () => {
 
   return (
     <div className="p-4">
+      <div className="bg-white p-4 rounded-lg shadow-md mb-4 flex items-center">
+        <button
+          onClick={() => router.push("/reports")}
+          className="mr-2 p-2 rounded-md hover:bg-gray-100  border-2 border-gray-500"
+        >
+          <Reply size={20} className="text-blue-500" />
+        </button>
+        <h2 className="text-xl font-semibold">BDA Activity report</h2>
+      </div>
       <div className="bg-white p-4 rounded-lg shadow-md">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center">
@@ -69,7 +79,6 @@ const BdaProfilePage = () => {
                 </div>
               </div>
             </div>
-            <p className="text-gray-600 text-[0.2em]">Performance score</p>
           </div>
         </div>
         <div className="space-y-2">
