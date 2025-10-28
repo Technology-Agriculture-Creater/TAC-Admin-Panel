@@ -185,5 +185,22 @@
     "taluka": "Kuhi",
     "raisedOn": "12 Sept, 2025",
     "complaintId": "COMP0011"
+  },
+  {
+    "id": "COMP0012",
+    "subject": "Application Bug",
+    "description": "The application crashed unexpectedly.",
+    "status": "Pending review",
+    "date": "13 Sept, 2025",
+    "farmer": {
+      "name": "New Farmer",
+      "id": "TACXXXX0002"
+    },
+    "issueType": "App Issue",
+    "village": "New Village",
+    "action": ["view"],
+    "taluka": "New Taluka",
+    "raisedOn": "13 Sept, 2025",
+    "complaintId": "COMP0012"
   }
 ]

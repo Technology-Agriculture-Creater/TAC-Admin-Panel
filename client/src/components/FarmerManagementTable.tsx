@@ -170,7 +170,7 @@ const FarmerManagementTable: React.FC = () => {
         if (activeTab === "totalTradeFacilitated") {
           const tradeItem = item;
           return (
-            <span className="px-10 py-3 w-full bg-green-100 rounded-md">
+            <span className="px-10 py-3 bg-green-100 rounded-md">
               <div>{`${tradeItem?.seller || "N/A"}`}</div>
               <div className="text-xs text-gray-500">{`${
                 tradeItem?.sellerId || "N/A"
@@ -179,7 +179,7 @@ const FarmerManagementTable: React.FC = () => {
           );
         }
         return (
-          <span className="px-10 py-3 w-full bg-green-100 rounded-md">
+          <span className="px-10 py-3 bg-green-100 rounded-md">
             {`${item?.seller || "N/A"}`}
           </span>
         );
@@ -187,7 +187,7 @@ const FarmerManagementTable: React.FC = () => {
         if (activeTab === "totalTradeFacilitated") {
           const tradeItem = item;
           return (
-            <span className="px-10 py-3 w-full bg-purple-100 rounded-md">
+            <span className="px-10 py-3 bg-purple-100 rounded-md">
               <div>{`${tradeItem?.buyer || "N/A"}`}</div>
               <div className="text-xs text-gray-500">{`${
                 tradeItem?.buyerType || "N/A"
@@ -196,14 +196,18 @@ const FarmerManagementTable: React.FC = () => {
           );
         }
         return (
-          <span className="px-10 py-3 w-full bg-purple-100 rounded-md">
+          <span className="px-10 py-3 bg-purple-100 rounded-md">
             {`${item?.buyer || "N/A"}`}
           </span>
         );
       case "Complaint ID":
         return item.complaintId || "N/A";
       case "Issue":
-        return item.issue || "N/A";
+        return (
+          <span className="px-10 py-3 w-20 bg-red-100 text-red-600 rounded-md">
+            {item?.issueType || "N/A"}
+          </span>
+        );
       case "Raised on":
         return item.raisedOn
           ? new Date(item.raisedOn).toLocaleDateString()
@@ -222,14 +226,10 @@ const FarmerManagementTable: React.FC = () => {
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                  d="M8.66732 6C8.66732 6.70725 8.38637 7.38552 7.88627 7.88562C7.38617 8.38572 6.7079 8.66667 6.00065 8.66667C5.29341 8.66667 4.61513 8.38572 4.11503 7.88562C3.61494 7.38552 3.33398 6.70725 3.33398 6C3.33398 5.29276 3.61494 4.61448 4.11503 4.11438C4.61513 3.61429 5.29341 3.33334 6.00065 3.33334C6.7079 3.33334 7.38617 3.61429 7.88627 4.11438C8.38637 4.61448 8.66732 5.29276 8.66732 6Z"
-                  fill="#3F9E5F"
-                />
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M6 10.6667C6.61284 10.6667 7.21967 10.546 7.78586 10.3114C8.35204 10.0769 8.86649 9.73317 9.29983 9.29983C9.73317 8.86649 10.0769 8.35204 10.3114 7.78586C10.546 7.21967 10.6667 6.61284 10.6667 6C10.6667 5.38716 10.546 4.78033 10.3114 4.21414C10.0769 3.64796 9.73317 3.13351 9.29983 2.70017C8.86649 2.26683 8.35204 1.92308 7.78586 1.68856C7.21967 1.45404 6.61284 1.33333 6 1.33333C4.76232 1.33333 3.57534 1.825 2.70017 2.70017C1.825 3.57534 1.33333 4.76232 1.33333 6C1.33333 7.23768 1.825 8.42466 2.70017 9.29983C3.57534 10.175 4.76232 10.6667 6 10.6667ZM6 12C6.78793 12 7.56815 11.8448 8.2961 11.5433C9.02405 11.2417 9.68549 10.7998 10.2426 10.2426C10.7998 9.68549 11.2417 9.02405 11.5433 8.2961C11.8448 7.56815 12 6.78793 12 6C12 5.21207 11.8448 4.43185 11.5433 3.7039C11.2417 2.97595 10.7998 2.31451 10.2426 1.75736C9.68549 1.20021 9.02405 0.758251 8.2961 0.456723C7.56815 0.155195 6.78793 -1.17411e-08 6 0C4.4087 2.37122e-08 2.88258 0.632141 1.75736 1.75736C0.632141 2.88258 0 4.4087 0 6C0 7.5913 0.632141 9.11742 1.75736 10.2426C2.88258 11.3679 4.4087 12 6 12Z"
-                  fill="#3F9E5F"
+                  d="M10 0H2C0.89543 0 0 0.89543 0 2V10C0 11.1046 0.89543 12 2 12H10C11.1046 12 12 11.1046 12 10V2C12 0.89543 11.1046 0 10 0ZM8.5 4L5 7.5L3.5 6L4.5 5L5 5.5L7.5 3L8.5 4Z"
+                  fill="#10B981"
+                  fillRule="evenodd"
+                  clipRule="evenodd"
                 />
               </svg>
             )}
@@ -272,14 +272,14 @@ const FarmerManagementTable: React.FC = () => {
                 <path
                   d="M7 7.99984L10.258 10.4438C10.4598 10.5952 10.7114 10.6647 10.9624 10.6384C11.2133 10.612 11.445 10.4918 11.611 10.3018L18 2.99984"
                   stroke="#3F9E5F"
-                  stroke-width="2"
-                  stroke-linecap="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
                 />
                 <path
                   d="M19 9.99984C19 11.8804 18.411 13.7137 17.3157 15.2423C16.2203 16.7708 14.6736 17.9179 12.8929 18.5224C11.1122 19.1269 9.18685 19.1583 7.3873 18.6124C5.58776 18.0665 4.00442 16.9706 2.85967 15.4787C1.71492 13.9867 1.06627 12.1736 1.00481 10.2941C0.943352 8.41461 1.47218 6.56305 2.51702 4.9995C3.56187 3.43595 5.07023 2.23896 6.83027 1.57665C8.5903 0.914347 10.5136 0.81999 12.33 1.30684"
                   stroke="#3F9E5F"
-                  stroke-width="2"
-                  stroke-linecap="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
                 />
               </svg>
             )}
@@ -495,7 +495,7 @@ const FarmerManagementTable: React.FC = () => {
                   onClick={() => handlePageChange(i + 1)}
                   className={`relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium ${
                     currentPage === i + 1
-                      ? "z-10 bg-blue-500 border-blue-500 text-blue-600"
+                      ? "z-10 bg-blue-50 border-blue-500 text-blue-600"
                       : "text-gray-700 hover:bg-gray-50"
                   }`}
                   variant="outline"

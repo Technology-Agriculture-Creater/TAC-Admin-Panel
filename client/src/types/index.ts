@@ -19,6 +19,7 @@ export interface FarmerData {
   complaintId?: string;
   issue?: string;
   raisedOn?: string;
+  issueType?: string;
 }
 
 export interface CropApproval {
