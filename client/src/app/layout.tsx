@@ -22,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${roboto.variable} antialiased`}>
+      <body className={`${roboto.variable} antialiased overflow-hidden`}>
         <ClientLayoutWrapper>{children}</ClientLayoutWrapper>
       </body>
     </html>
