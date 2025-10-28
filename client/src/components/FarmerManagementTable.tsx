@@ -35,18 +35,12 @@ interface FarmerData {
   farmerName?: string; // Added to accommodate FarmersOnboarded.json, CropsRejected.json, CropsAwaitingApproval.json
 }
 
-interface Tab {
-  id: string;
-  name: string;
-  data: FarmerData[];
-}
-
 const FarmerManagementTable: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState("totalFarmersRegistered");
 
-  const tabs: Tab[] = useMemo(() => [
+  const tabs = () => [
     {
       id: "totalFarmersRegistered",
       name: "Total Farmers Registered",
@@ -72,12 +66,12 @@ const FarmerManagementTable: React.FC = () => {
       name: "Total Crops Awaiting Approval",
       data: CropsAwaitingApprovalData,
     },
-  ]);
+  ];
 
   const activeTabData = useMemo(() => {
-    const currentTab = tabs.find((tab) => tab.id === activeTab);
+    const currentTab = tabs().find((tab) => tab.id === activeTab);
     return currentTab ? currentTab.data : [];
-  }, [activeTab, tabs]);
+  }, [activeTab]);
 
   const filteredData = useMemo(() => {
     return activeTabData.filter((item) => {
@@ -106,7 +100,7 @@ const FarmerManagementTable: React.FC = () => {
   return (
     <div className=" bg-white p-4 mt-8 rounded-lg shadow-md">
       <div className="flex items-center mb-8 justify-between border-b border-gray-200 w-full">
-        {tabs.map((tab) => (
+        {tabs().map((tab) => (
           <div
             key={tab.id}
             className={`p-4 cursor-pointer text-center ${
