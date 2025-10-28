@@ -1,0 +1,82 @@
+[
+  {
+    "id": "1",
+    "bdaId": "BDAXXXXX001",
+    "farmerName": "Rishi Mehta",
+    "village": "Kuhi",
+    "onboardingDate": "2023-01-15",
+    "status": "Active"
+  },
+  {
+    "id": "2",
+    "bdaId": "BDAXXXXX001",
+    "farmerName": "Aarav Singh",
+    "village": "Bharat",
+    "onboardingDate": "2023-02-20",
+    "status": "Active"
+  },
+  {
+    "id": "3",
+    "bdaId": "BDAXXXXX001",
+    "farmerName": "Nisha Reddy",
+    "village": "Ludhiana",
+    "onboardingDate": "2023-03-10",
+    "status": "Active"
+  },
+  {
+    "id": "4",
+    "bdaId": "BDAXXXXX001",
+    "farmerName": "Vikram Joshi",
+    "village": "Delhi",
+    "onboardingDate": "2023-04-05",
+    "status": "Active"
+  },
+  {
+    "id": "5",
+    "bdaId": "BDAXXXXX001",
+    "farmerName": "Meera Nair",
+    "village": "Chennai",
+    "onboardingDate": "2023-05-12",
+    "status": "Active"
+  },
+  {
+    "id": "6",
+    "bdaId": "BDAXXXXX001",
+    "farmerName": "Suresh Pillai",
+    "village": "Kochi",
+    "onboardingDate": "2023-06-18",
+    "status": "Active"
+  },
+  {
+    "id": "7",
+    "bdaId": "BDAXXXXX001",
+    "farmerName": "Deepak Rao",
+    "village": "Mumbai",
+    "onboardingDate": "2023-07-22",
+    "status": "Active"
+  },
+  {
+    "id": "8",
+    "bdaId": "BDAXXXXX001",
+    "farmerName": "Riya Chatterjee",
+    "village": "Kolkata",
+    "onboardingDate": "2023-08-01",
+    "status": "Active"
+  },
+  {
+    "id": "9",
+    "bdaId": "BDAXXXXX001",
+    "farmerName": "Prakash Kumar",
+    "village": "Hyderabad",
+    "onboardingDate": "2023-09-09",
+    "status": "Active"
+  },
+  {
+    "id": "10",
+    "bdaId": "BDAXXXXX001",
+    "farmerName": "Sangeeta Devi",
+    "village": "Bangalore",
+    "onboardingDate": "2023-10-17",
+    "status": "Active"
+  }
+]

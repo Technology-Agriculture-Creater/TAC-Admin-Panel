@@ -1,122 +1,122 @@
 [
   {
-    "id": "TAXX0000011",
-    "name": "Noah Smith",
-    "taluka": "Khamla",
-    "village": "Nandgaon",
-    "contact": "9876543213",
-    "status": "Active"
+    "id": "1",
+    "bdaId": "BDAXXXX0001",
+    "name": "Rajest Patil",
+    "cropQty": "Tomatoes - 15 Quintals",
+    "village": "Kuhi",
+    "status": "Approved"
   },
   {
-    "id": "TAXX0000012",
-    "name": "Olivia Jones",
-    "taluka": "Mowad",
-    "village": "Nandura",
-    "contact": "9876543214",
-    "status": "Active"
+    "id": "2",
+    "bdaId": "BDAXXXX0002",
+    "name": "Anika Sharma",
+    "cropQty": "Potatoes - 20 Quintals",
+    "village": "Sangli",
+    "status": "Approved"
   },
   {
-    "id": "TAXX0000013",
-    "name": "James Miller",
-    "taluka": "Nandgaon",
-    "village": "Nawabpur",
-    "contact": "9876543215",
-    "status": "Active"
+    "id": "3",
+    "bdaId": "BDAXXXX0003",
+    "name": "Vikas Rao",
+    "cropQty": "Onions - 10 Quintals",
+    "village": "Pune",
+    "status": "Approved"
   },
   {
-    "id": "TAXX0000014",
-    "name": "Ava Davis",
-    "taluka": "Borgaon",
-    "village": "Mundhegaon",
-    "contact": "9876543216",
-    "status": "Active"
+    "id": "4",
+    "bdaId": "BDAXXXX0004",
+    "name": "Sneha Desai",
+    "cropQty": "Carrots - 12 Quintals",
+    "village": "Nagpur",
+    "status": "Approved"
   },
   {
-    "id": "TAXX0000015",
-    "name": "Sophia Garcia",
-    "taluka": "Deoli",
-    "village": "Wadali",
-    "contact": "9876543217",
-    "status": "Active"
+    "id": "5",
+    "bdaId": "BDAXXXX0005",
+    "name": "Anil Verma",
+    "cropQty": "Spinach - 5 Quintals",
+    "village": "Mumbai",
+    "status": "Approved"
   },
   {
-    "id": "TAXX0000016",
-    "name": "Mason Martinez",
-    "taluka": "Kharbi",
-    "village": "Pimpalgaon",
-    "contact": "9876543218",
-    "status": "Active"
+    "id": "6",
+    "bdaId": "BDAXXXX0006",
+    "name": "Priya Singh",
+    "cropQty": "Cucumbers - 8 Quintals",
+    "village": "Aurangabad",
+    "status": "Approved"
   },
   {
-    "id": "TAXX0000017",
-    "name": "Lucas Hernandez",
-    "taluka": "Sukali",
-    "village": "Khursapar",
-    "contact": "9876543219",
-    "status": "Active"
+    "id": "7",
+    "bdaId": "BDAXXXX0007",
+    "name": "Karan Joshi",
+    "cropQty": "Peppers - 6 Quintals",
+    "village": "Thane",
+    "status": "Approved"
   },
   {
-    "id": "TAXX0000018",
-    "name": "Mia Wilson",
-    "taluka": "Wadhona",
-    "village": "Umred",
-    "contact": "9876543220",
-    "status": "Active"
+    "id": "8",
+    "bdaId": "BDAXXXX0008",
+    "name": "Deepa Nair",
+    "cropQty": "Eggplants - 9 Quintals",
+    "village": "Nashik",
+    "status": "Approved"
   },
   {
-    "id": "TAXX0000019",
-    "name": "Ethan Brown",
-    "taluka": "Bhiwapur",
-    "village": "Adegaon",
-    "contact": "9876543221",
-    "status": "Active"
+    "id": "9",
+    "bdaId": "BDAXXXX0009",
+    "name": "Rahul Sharma",
+    "cropQty": "Wheat - 20 Quintals",
+    "village": "Indore",
+    "status": "Approved"
   },
   {
-    "id": "TAXX0000020",
-    "name": "Isabella Taylor",
-    "taluka": "Kuhi",
-    "village": "Chicholi",
-    "contact": "9876543222",
-    "status": "Active"
+    "id": "10",
+    "bdaId": "BDAXXXX0010",
+    "name": "Pooja Singh",
+    "cropQty": "Rice - 25 Quintals",
+    "village": "Bhopal",
+    "status": "Approved"
   },
   {
-    "id": "TAXX0000021",
-    "name": "Liam Wilson",
-    "taluka": "Kamptee",
-    "village": "Kanhan",
-    "contact": "9876543223",
-    "status": "Active"
+    "id": "11",
+    "bdaId": "BDAXXXX0011",
+    "name": "Amit Kumar",
+    "cropQty": "Corn - 18 Quintals",
+    "village": "Ujjain",
+    "status": "Approved"
   },
   {
-    "id": "TAXX0000022",
-    "name": "Charlotte Davis",
-    "taluka": "Parseoni",
-    "village": "Gondegaon",
-    "contact": "9876543224",
-    "status": "Active"
+    "id": "12",
+    "bdaId": "BDAXXXX0012",
+    "name": "Deepika Devi",
+    "cropQty": "Soybean - 22 Quintals",
+    "village": "Dewas",
+    "status": "Approved"
   },
   {
-    "id": "TAXX0000023",
-    "name": "Benjamin Miller",
-    "taluka": "Ramtek",
-    "village": "Khindsi",
-    "contact": "9876543225",
-    "status": "Active"
+    "id": "13",
+    "bdaId": "BDAXXXX0013",
+    "name": "Suresh Yadav",
+    "cropQty": "Sugarcane - 50 Quintals",
+    "village": "Sehore",
+    "status": "Approved"
   },
   {
-    "id": "TAXX0000024",
-    "name": "Amelia Garcia",
-    "taluka": "Mouda",
-    "village": "Koradi",
-    "contact": "9876543226",
-    "status": "Active"
+    "id": "14",
+    "bdaId": "BDAXXXX0014",
+    "name": "Anita Gupta",
+    "cropQty": "Cotton - 10 Quintals",
+    "village": "Raisen",
+    "status": "Approved"
   },
   {
-    "id": "TAXX0000025",
-    "name": "Jacob Smith",
-    "taluka": "Hingna",
-    "village": "Wadi",
-    "contact": "9876543227",
-    "status": "Active"
+    "id": "15",
+    "bdaId": "BDAXXXX0015",
+    "name": "Vikas Sharma",
+    "cropQty": "Groundnut - 12 Quintals",
+    "village": "Vidisha",
+    "status": "Approved"
   }
 ]
