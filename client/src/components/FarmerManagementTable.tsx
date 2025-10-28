@@ -192,6 +192,7 @@ const FarmerManagementTable: React.FC = () => {
           ? new Date(item.raisedOn).toLocaleDateString()
           : "N/A";
       case "Status":
+        console.log(item);
         return (
           <span
             className={`px-2 inline-flex items-center text-xs leading-5 font-semibold rounded-full ${
@@ -201,24 +202,27 @@ const FarmerManagementTable: React.FC = () => {
             }`}
           >
             {item.status === "Active" && (
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 12 12"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M8.66732 6C8.66732 6.70725 8.38637 7.38552 7.88627 7.88562C7.38617 8.38572 6.7079 8.66667 6.00065 8.66667C5.29341 8.66667 4.61513 8.38572 4.11503 7.88562C3.61494 7.38552 3.33398 6.70725 3.33398 6C3.33398 5.29276 3.61494 4.61448 4.11503 4.11438C4.61513 3.61429 5.29341 3.33334 6.00065 3.33334C6.7079 3.33334 7.38617 3.61429 7.88627 4.11438C8.38637 4.61448 8.66732 5.29276 8.66732 6Z"
-                  fill="#3F9E5F"
-                />
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M6 10.6667C6.61284 10.6667 7.21967 10.546 7.78586 10.3114C8.35204 10.0769 8.86649 9.73317 9.29983 9.29983C9.73317 8.86649 10.0769 8.35204 10.3114 7.78586C10.546 7.21967 10.6667 6.61284 10.6667 6C10.6667 5.38716 10.546 4.78033 10.3114 4.21414C10.0769 3.64796 9.73317 3.13351 9.29983 2.70017C8.86649 2.26683 8.35204 1.92308 7.78586 1.68856C7.21967 1.45404 6.61284 1.33333 6 1.33333C4.76232 1.33333 3.57534 1.825 2.70017 2.70017C1.825 3.57534 1.33333 4.76232 1.33333 6C1.33333 7.23768 1.825 8.42466 2.70017 9.29983C3.57534 10.175 4.76232 10.6667 6 10.6667ZM6 12C6.78793 12 7.56815 11.8448 8.2961 11.5433C9.02405 11.2417 9.68549 10.7998 10.2426 10.2426C10.7998 9.68549 11.2417 9.02405 11.5433 8.2961C11.8448 7.56815 12 6.78793 12 6C12 5.21207 11.8448 4.43185 11.5433 3.7039C11.2417 2.97595 10.7998 2.31451 10.2426 1.75736C9.68549 1.20021 9.02405 0.758251 8.2961 0.456723C7.56815 0.155195 6.78793 -1.17411e-08 6 0C4.4087 2.37122e-08 2.88258 0.632141 1.75736 1.75736C0.632141 2.88258 0 4.4087 0 6C0 7.5913 0.632141 9.11742 1.75736 10.2426C2.88258 11.3679 4.4087 12 6 12Z"
-                  fill="#3F9E5F"
-                />
-              </svg>
+              <div>
+                <span className="mr-1">Active123</span>
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 12 12"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M8.66732 6C8.66732 6.70725 8.38637 7.38552 7.88627 7.88562C7.38617 8.38572 6.7079 8.66667 6.00065 8.66667C5.29341 8.66667 4.61513 8.38572 4.11503 7.88562C3.61494 7.38552 3.33398 6.70725 3.33398 6C3.33398 5.29276 3.61494 4.61448 4.11503 4.11438C4.61513 3.61429 5.29341 3.33334 6.00065 3.33334C6.7079 3.33334 7.38617 3.61429 7.88627 4.11438C8.38637 4.61448 8.66732 5.29276 8.66732 6Z"
+                    fill="#3F9E5F"
+                  />
+                  <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M6 10.6667C6.61284 10.6667 7.21967 10.546 7.78586 10.3114C8.35204 10.0769 8.86649 9.73317 9.29983 9.29983C9.73317 8.86649 10.0769 8.35204 10.3114 7.78586C10.546 7.21967 10.6667 6.61284 10.6667 6C10.6667 5.38716 10.546 4.78033 10.3114 4.21414C10.0769 3.64796 9.73317 3.13351 9.29983 2.70017C8.86649 2.26683 8.35204 1.92308 7.78586 1.68856C7.21967 1.45404 6.61284 1.33333 6 1.33333C4.76232 1.33333 3.57534 1.825 2.70017 2.70017C1.825 3.57534 1.33333 4.76232 1.33333 6C1.33333 7.23768 1.825 8.42466 2.70017 9.29983C3.57534 10.175 4.76232 10.6667 6 10.6667ZM6 12C6.78793 12 7.56815 11.8448 8.2961 11.5433C9.02405 11.2417 9.68549 10.7998 10.2426 10.2426C10.7998 9.68549 11.2417 9.02405 11.5433 8.2961C11.8448 7.56815 12 6.78793 12 6C12 5.21207 11.8448 4.43185 11.5433 3.7039C11.2417 2.97595 10.7998 2.31451 10.2426 1.75736C9.68549 1.20021 9.02405 0.758251 8.2961 0.456723C7.56815 0.155195 6.78793 -1.17411e-08 6 0C4.4087 2.37122e-08 2.88258 0.632141 1.75736 1.75736C0.632141 2.88258 0 4.4087 0 6C0 7.5913 0.632141 9.11742 1.75736 10.2426C2.88258 11.3679 4.4087 12 6 12Z"
+                    fill="#3F9E5F"
+                  />
+                </svg>
+              </div>
             )}
             {item.status === "Approved" && (
               <svg
@@ -294,6 +298,13 @@ const FarmerManagementTable: React.FC = () => {
               >
                 View profile
               </a>
+            ) : activeTab === "totalComplaintResolved" ? (
+              <a
+                href="#"
+                className="text-blue-600 hover:text-blue-900 mr-2 px-2 py-2 border-2 border-blue-400 rounded-md"
+              >
+                Review
+              </a>
             ) : (
               <>
                 <a
@@ -302,20 +313,20 @@ const FarmerManagementTable: React.FC = () => {
                 >
                   View
                 </a>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="h-8 w-8 p-0">
-                      <span className="sr-only">Open menu</span>
-                      <MoreHorizontal className="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem>Edit</DropdownMenuItem>
-                    <DropdownMenuItem>Delete</DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
               </>
             )}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="h-8 w-8 p-0">
+                  <span className="sr-only">Open menu</span>
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem>Edit</DropdownMenuItem>
+                <DropdownMenuItem>Delete</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </>
         );
       default:
@@ -475,7 +486,7 @@ const FarmerManagementTable: React.FC = () => {
                   onClick={() => handlePageChange(i + 1)}
                   className={`relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium ${
                     currentPage === i + 1
-                      ? "z-10 bg-blue-500 border-blue-500 text-blue-600"
+                      ? "z-10 bg-blue-50 border-blue-500 text-blue-600"
                       : "text-gray-700 hover:bg-gray-50"
                   }`}
                   variant="outline"
