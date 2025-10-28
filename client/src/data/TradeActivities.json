@@ -9,8 +9,9 @@
     "village": "Kuhi",
     "buyer": "Yash Gupta",
     "buyerType": "Commercial Buyer",
-    "status": "Pending review",
-    "action": ["view", "review"]
+    "status": "Completed",
+    "action": ["view", "review"],
+    "seller": "Rajest Patil"
   },
   {
     "id": "2",
@@ -22,8 +23,9 @@
     "village": "Nagpur",
     "buyer": "Rohit Singh",
     "buyerType": "Retail Buyer",
-    "status": "In process",
-    "action": ["view", "review"]
+    "status": "Completed",
+    "action": ["view", "review"],
+    "seller": "Rajest Patil"
   },
   {
     "id": "3",
@@ -36,7 +38,8 @@
     "buyer": "Nisha Agarwal",
     "buyerType": "Wholesale Buyer",
     "status": "Completed",
-    "action": ["view", "review"]
+    "action": ["view", "review"],
+    "seller": "Rajest Patil"
   },
   {
     "id": "4",
@@ -48,8 +51,9 @@
     "village": "Indore",
     "buyer": "Rahul Mehta",
     "buyerType": "Commercial Buyer",
-    "status": "Disputed",
-    "action": ["view", "review"]
+    "status": "Completed",
+    "action": ["view", "review"],
+    "seller": "Rajest Patil"
   },
   {
     "id": "5",
@@ -61,8 +65,9 @@
     "village": "Delhi",
     "buyer": "Sonia Verma",
     "buyerType": "Retail Buyer",
-    "status": "Pending review",
-    "action": ["view", "review"]
+    "status": "Completed",
+    "action": ["view", "review"],
+    "seller": "Rajest Patil"
   },
   {
     "id": "6",
@@ -74,8 +79,9 @@
     "village": "Pune",
     "buyer": "Vikas Sharma",
     "buyerType": "Wholesale Buyer",
-    "status": "In process",
-    "action": ["view", "review"]
+    "status": "Completed",
+    "action": ["view", "review"],
+    "seller": "Rajest Patil"
   },
   {
     "id": "7",
@@ -88,7 +94,8 @@
     "buyer": "Yash Gupta",
     "buyerType": "Commercial Buyer",
     "status": "Completed",
-    "action": ["view", "review"]
+    "action": ["view", "review"],
+    "seller": "Rajest Patil"
   },
   {
     "id": "8",
@@ -100,8 +107,9 @@
     "village": "Kuhi",
     "buyer": "Yash Gupta",
     "buyerType": "Commercial Buyer",
-    "status": "Disputed",
-    "action": ["view", "review"]
+    "status": "Completed",
+    "action": ["view", "review"],
+    "seller": "Rajest Patil"
   },
   {
     "id": "9",
@@ -113,8 +121,9 @@
     "village": "Kuhi",
     "buyer": "Yash Gupta",
     "buyerType": "Commercial Buyer",
-    "status": "Pending review",
-    "action": ["view", "review"]
+    "status": "Completed",
+    "action": ["view", "review"],
+    "seller": "Rajest Patil"
   },
   {
     "id": "10",
@@ -126,7 +135,8 @@
     "village": "Kuhi",
     "buyer": "Yash Gupta",
     "buyerType": "Commercial Buyer",
-    "status": "In process",
-    "action": ["view", "review"]
+    "status": "Completed",
+    "action": ["view", "review"],
+    "seller": "Rajest Patil"
   }
 ]

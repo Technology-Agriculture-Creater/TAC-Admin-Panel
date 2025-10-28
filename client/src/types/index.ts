@@ -1,3 +1,19 @@
+export interface FarmerData {
+  id: string;
+  bdaId?: string;
+  name: string;
+  cropQty?: string;
+  village: string;
+  status: string;
+  number?: string;
+  farmer?: string;
+  bda?: {
+    name: string;
+    id: string;
+  };
+  taluka?: string;
+}
+
 export interface CropApproval {
   id: string;
   bda: {
@@ -30,6 +46,7 @@ export interface TradeActivity {
     | "Completed"
     | "Disputed";
   action: string[];
+  seller?: string;
 }
 
 export interface Complaint {
@@ -45,6 +62,9 @@ export interface Complaint {
   issueType: string;
   village: string;
   action: string[];
+  taluka?: string;
+  raisedOn?: string;
+  complaintId?: string;
 }
 
 export interface Dispute {

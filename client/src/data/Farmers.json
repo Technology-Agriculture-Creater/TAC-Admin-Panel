@@ -6,7 +6,8 @@
     "cropQty": "Tomatoes - 15 Quintals",
     "village": "Kuhi",
     "status": "Active",
-    "number": "9876543210"
+    "number": "9876543210",
+    "taluka": "Nagpur"
   },
   {
     "id": "2",
@@ -15,7 +16,8 @@
     "cropQty": "Potatoes - 20 Quintals",
     "village": "Sangli",
     "status": "Active",
-    "number": "9876543210"
+    "number": "9876543210",
+    "taluka": "Sangli"
   },
   {
     "id": "3",
@@ -24,7 +26,8 @@
     "cropQty": "Onions - 10 Quintals",
     "village": "Pune",
     "status": "Active",
-    "number": "9876543210"
+    "number": "9876543210",
+    "taluka": "Pune"
   },
   {
     "id": "4",
@@ -33,7 +36,8 @@
     "cropQty": "Carrots - 12 Quintals",
     "village": "Nagpur",
     "status": "Active",
-    "number": "9876543210"
+    "number": "9876543210",
+    "taluka": "Nagpur"
   },
   {
     "id": "5",
@@ -42,7 +46,8 @@
     "cropQty": "Spinach - 5 Quintals",
     "village": "Mumbai",
     "status": "Active",
-    "number": "9876543210"
+    "number": "9876543210",
+    "taluka": "Mumbai"
   },
   {
     "id": "6",
@@ -51,7 +56,8 @@
     "cropQty": "Cucumbers - 8 Quintals",
     "village": "Aurangabad",
     "status": "Active",
-    "number": "9876543210"
+    "number": "9876543210",
+    "taluka": "Aurangabad"
   },
   {
     "id": "7",
@@ -60,7 +66,8 @@
     "cropQty": "Peppers - 6 Quintals",
     "village": "Thane",
     "status": "Active",
-    "number": "9876543210"
+    "number": "9876543210",
+    "taluka": "Thane"
   },
   {
     "id": "8",
@@ -69,7 +76,8 @@
     "cropQty": "Eggplants - 9 Quintals",
     "village": "Nashik",
     "status": "Active",
-    "number": "9876543210"
+    "number": "9876543210",
+    "taluka": "Nashik"
   },
   {
     "id": "9",
@@ -78,7 +86,8 @@
     "cropQty": "Wheat - 20 Quintals",
     "village": "Indore",
     "status": "Active",
-    "number": "9876543210"
+    "number": "9876543210",
+    "taluka": "Indore"
   },
   {
     "id": "10",
@@ -87,7 +96,8 @@
     "cropQty": "Rice - 25 Quintals",
     "village": "Bhopal",
     "status": "Active",
-    "number": "9876543210"
+    "number": "9876543210",
+    "taluka": "Bhopal"
   },
   {
     "id": "11",
@@ -96,7 +106,8 @@
     "cropQty": "Corn - 18 Quintals",
     "village": "Ujjain",
     "status": "Active",
-    "number": "9876543210"
+    "number": "9876543210",
+    "taluka": "Ujjain"
   },
   {
     "id": "12",
@@ -105,7 +116,8 @@
     "cropQty": "Soybean - 22 Quintals",
     "village": "Dewas",
     "status": "Active",
-    "number": "9876543210"
+    "number": "9876543210",
+    "taluka": "Dewas"
   },
   {
     "id": "13",
@@ -114,7 +126,8 @@
     "cropQty": "Sugarcane - 50 Quintals",
     "village": "Sehore",
     "status": "Active",
-    "number": "9876543210"
+    "number": "9876543210",
+    "taluka": "Sehore"
   },
   {
     "id": "14",
@@ -123,7 +136,8 @@
     "cropQty": "Cotton - 10 Quintals",
     "village": "Raisen",
     "status": "Active",
-    "number": "9876543210"
+    "number": "9876543210",
+    "taluka": "Raisen"
   },
   {
     "id": "15",
@@ -132,6 +146,7 @@
     "cropQty": "Groundnut - 12 Quintals",
     "village": "Vidisha",
     "status": "Active",
-    "number": "9876543210"
+    "number": "9876543210",
+    "taluka": "Vidisha"
   }
 ]

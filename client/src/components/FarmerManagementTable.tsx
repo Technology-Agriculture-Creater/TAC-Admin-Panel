@@ -11,9 +11,8 @@ import {
 } from "./ui/dropdown-menu";
 import FarmersData from "../data/Farmers.json";
 import ReportCropApprovalData from "../data/reportcropapproval.json";
-import FarmersOnboardedData from "../data/FarmersOnboarded.json";
-import CropsRejectedData from "../data/CropsRejected.json";
-import CropsAwaitingApprovalData from "../data/CropsAwaitingApproval.json";
+import TradeActivitiesData from "../data/TradeActivities.json";
+import ComplaintsData from "../data/Complaints.json";
 import { MoreHorizontal, Search } from "lucide-react";
 import Image from "next/image";
 
@@ -54,19 +53,14 @@ const FarmerManagementTable: React.FC = () => {
       data: ReportCropApprovalData,
     },
     {
-      id: "totalFarmersOnboarded",
-      name: "Total Farmers Onboarded",
-      data: FarmersOnboardedData,
+      id: "totalTradeFacilitated",
+      name: "Total Trade Facilitated",
+      data: TradeActivitiesData,
     },
     {
-      id: "totalCropsRejected",
-      name: "Total Crops Rejected",
-      data: CropsRejectedData,
-    },
-    {
-      id: "totalCropsAwaitingApproval",
-      name: "Total Crops Awaiting Approval",
-      data: CropsAwaitingApprovalData,
+      id: "totalComplaintResolved",
+      name: "Total Complaint Resolved",
+      data: ComplaintsData,
     },
   ];
 
@@ -79,12 +73,19 @@ const FarmerManagementTable: React.FC = () => {
     return activeTabData.filter((item) => {
       const farmerName =
         (item as { name?: string }).name ||
-        (item as { farmer?: string }).farmer ||
+        (item as { farmer?: { name: string } }).farmer?.name ||
         (item as { farmerName?: string }).farmerName ||
         "";
-      return farmerName.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesSearchTerm = farmerName
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+
+      if (activeTab === "totalComplaintResolved") {
+        return matchesSearchTerm && item.status === "Resolved";
+      }
+      return matchesSearchTerm;
     });
-  }, [activeTabData, searchTerm]);
+  }, [activeTabData, searchTerm, activeTab]);
 
   const itemsPerPage = 10;
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
@@ -104,14 +105,26 @@ const FarmerManagementTable: React.FC = () => {
       case "totalFarmersRegistered":
         return [
           "Farmer",
-          "Crop/Qty",
+          "Taluka",
           "Village",
           "Contact",
-          "Status",
+          "Account Status",
           "Actions",
         ];
       case "totalCropsVerified":
         return ["Farmer", "Crop/Qty", "Village", "Status", "Actions"];
+      case "totalTradeFacilitated":
+        return ["Farmer", "Seller", "Village", "Buyer", "Status", "Actions"];
+      case "totalComplaintResolved":
+        return [
+          "Complaint ID",
+          "Farmer",
+          "Taluka",
+          "Issue",
+          "Raised on",
+          "Status",
+          "Actions",
+        ];
       case "totalFarmersOnboarded":
         return ["Farmer", "BDA ID", "Village", "Status", "Actions"];
       case "totalCropsRejected":
@@ -123,7 +136,11 @@ const FarmerManagementTable: React.FC = () => {
     }
   };
 
-  const renderTableCell = (item: FarmerData, header: string) => {
+  const renderTableCell = (
+    item: FarmerData,
+    header: string,
+    activeTab: string
+  ) => {
     switch (header) {
       case "Farmer":
         return (
@@ -139,7 +156,9 @@ const FarmerManagementTable: React.FC = () => {
             </div>
             <div className="ml-4 flex flex-col items-start">
               <div className="text-sm font-medium text-gray-900">
-                {item.farmer || item.name}
+                {typeof item.farmer === "object" && item.farmer !== null
+                  ? item.farmer.name
+                  : item.farmer || item.name}
               </div>
               <div className="text-sm text-gray-500">
                 BDA ID: {item.bda?.id || item.bdaId}
@@ -147,12 +166,48 @@ const FarmerManagementTable: React.FC = () => {
             </div>
           </div>
         );
+      case "Taluka":
+        return item.taluka || "N/A";
+      case "Account Status":
+        return (
+          <span
+            className={`px-2 inline-flex items-center text-xs leading-5 font-semibold rounded-full ${
+              item.status === "Active"
+                ? "bg-green-100 text-green-800"
+                : "bg-red-100 text-red-800"
+            }`}
+          >
+            <span> {item.status}</span>
+          </span>
+        );
       case "Crop/Qty":
-        return item.cropQty;
+        return (
+          <span className="px-10 py-3 w-20 bg-yellow-100 rounded-md">
+            {item.cropQty}
+          </span>
+        );
       case "Village":
         return item.village;
       case "Contact":
         return item.number;
+      case "Seller":
+        return (
+          <span className="px-10 py-3 w-20 bg-green-100 rounded-md">
+            {`${item.seller || "N/A"}`}
+          </span>
+        );
+      case "Buyer":
+        return (
+          <span className="px-10 py-3 w-20 bg-purple-100 rounded-md">
+            {`${item.buyer || "N/A"}`}
+          </span>
+        );
+      case "Complaint ID":
+        return item.complaintId || "N/A";
+      case "Issue":
+        return item.issue || "N/A";
+      case "Raised on":
+        return new Date(item.raisedOn).toLocaleDateString() || "N/A";
       case "Status":
         return (
           <span
@@ -163,30 +218,58 @@ const FarmerManagementTable: React.FC = () => {
                 ? "bg-yellow-100 text-yellow-800"
                 : item.status === "Rejected"
                 ? "bg-red-100 text-red-800"
-                : "bg-gray-100 text-gray-800"
+                : "bg-green-100 text-green-800"
             }`}
           >
             {item.status === "Active" && (
               <svg
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
+                width="12"
+                height="12"
+                viewBox="0 0 12 12"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                  d="M10.6673 8C10.6673 8.70725 10.3864 9.38552 9.88627 9.88562C9.38617 10.3857 8.7079 10.6667 8.00065 10.6667C7.29341 10.6667 6.61513 10.3857 6.11503 9.88562C5.61494 9.38552 5.33398 8.70725 5.33398 8C5.33398 7.29276 5.61494 6.61448 6.11503 6.11438C6.61513 5.61429 7.29341 5.33334 8.00065 5.33334C8.7079 5.33334 9.38617 5.61429 9.88627 6.11438C10.3864 6.61448 10.6673 7.29276 10.6673 8Z"
+                  d="M8.66732 6C8.66732 6.70725 8.38637 7.38552 7.88627 7.88562C7.38617 8.38572 6.7079 8.66667 6.00065 8.66667C5.29341 8.66667 4.61513 8.38572 4.11503 7.88562C3.61494 7.38552 3.33398 6.70725 3.33398 6C3.33398 5.29276 3.61494 4.61448 4.11503 4.11438C4.61513 3.61429 5.29341 3.33334 6.00065 3.33334C6.7079 3.33334 7.38617 3.61429 7.88627 4.11438C8.38637 4.61448 8.66732 5.29276 8.66732 6Z"
                   fill="#3F9E5F"
                 />
                 <path
                   fill-rule="evenodd"
                   clip-rule="evenodd"
-                  d="M8 12.6667C8.61284 12.6667 9.21967 12.546 9.78586 12.3114C10.352 12.0769 10.8665 11.7332 11.2998 11.2998C11.7332 10.8665 12.0769 10.352 12.3114 9.78586C12.546 9.21967 12.6667 8.61284 12.6667 8C12.6667 7.38716 12.546 6.78033 12.3114 6.21414C12.0769 5.64796 11.7332 5.13351 11.2998 4.70017C10.8665 4.26683 10.352 3.92308 9.78586 3.68856C9.21967 3.45404 8.61284 3.33333 8 3.33333C6.76232 3.33333 5.57534 3.825 4.70017 4.70017C3.825 5.57534 3.33333 6.76232 3.33333 8C3.33333 9.23768 3.825 10.4247 4.70017 11.2998C5.57534 12.175 6.76232 12.6667 8 12.6667ZM8 14C8.78793 14 9.56815 13.8448 10.2961 13.5433C11.0241 13.2417 11.6855 12.7998 12.2426 12.2426C12.7998 11.6855 13.2417 11.0241 13.5433 10.2961C13.8448 9.56815 14 8.78793 14 8C14 7.21207 13.8448 6.43185 13.5433 5.7039C13.2417 4.97595 12.7998 4.31451 12.2426 3.75736C11.6855 3.20021 11.0241 2.75825 10.2961 2.45672C9.56815 2.15519 8.78793 2 8 2C6.4087 2 4.88258 2.63214 3.75736 3.75736C2.63214 4.88258 2 6.4087 2 8C2 9.5913 2.63214 11.1174 3.75736 12.2426C4.88258 13.3679 6.4087 14 8 14Z"
+                  d="M6 10.6667C6.61284 10.6667 7.21967 10.546 7.78586 10.3114C8.35204 10.0769 8.86649 9.73317 9.29983 9.29983C9.73317 8.86649 10.0769 8.35204 10.3114 7.78586C10.546 7.21967 10.6667 6.61284 10.6667 6C10.6667 5.38716 10.546 4.78033 10.3114 4.21414C10.0769 3.64796 9.73317 3.13351 9.29983 2.70017C8.86649 2.26683 8.35204 1.92308 7.78586 1.68856C7.21967 1.45404 6.61284 1.33333 6 1.33333C4.76232 1.33333 3.57534 1.825 2.70017 2.70017C1.825 3.57534 1.33333 4.76232 1.33333 6C1.33333 7.23768 1.825 8.42466 2.70017 9.29983C3.57534 10.175 4.76232 10.6667 6 10.6667ZM6 12C6.78793 12 7.56815 11.8448 8.2961 11.5433C9.02405 11.2417 9.68549 10.7998 10.2426 10.2426C10.7998 9.68549 11.2417 9.02405 11.5433 8.2961C11.8448 7.56815 12 6.78793 12 6C12 5.21207 11.8448 4.43185 11.5433 3.7039C11.2417 2.97595 10.7998 2.31451 10.2426 1.75736C9.68549 1.20021 9.02405 0.758251 8.2961 0.456723C7.56815 0.155195 6.78793 -1.17411e-08 6 0C4.4087 2.37122e-08 2.88258 0.632141 1.75736 1.75736C0.632141 2.88258 0 4.4087 0 6C0 7.5913 0.632141 9.11742 1.75736 10.2426C2.88258 11.3679 4.4087 12 6 12Z"
                   fill="#3F9E5F"
                 />
               </svg>
             )}
-            {item.status}
+            {item.status === "Approved" && (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="13"
+                height="16"
+                viewBox="0 0 13 16"
+                fill="none"
+              >
+                <path
+                  d="M5.16667 11.3327L2.5 8.66602L3.44 7.72602L5.16667 9.44602L9.56 5.05268L10.5 5.99935M6.5 0.666016L0.5 3.33268V7.33268C0.5 11.0327 3.06 14.4927 6.5 15.3327C9.94 14.4927 12.5 11.0327 12.5 7.33268V3.33268L6.5 0.666016Z"
+                  fill="#3F9E5F"
+                />
+              </svg>
+            )}
+            {item.status === "Completed" && (
+              <svg
+                width="12"
+                height="14"
+                viewBox="0 0 12 14"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M4.66667 10.6667L2 8L2.94 7.06L4.66667 8.78L9.06 4.38667L10 5.33333M6 1.33333C6.17681 1.33333 6.34638 1.40357 6.4714 1.5286C6.59643 1.65362 6.66667 1.82319 6.66667 2C6.66667 2.17681 6.59643 2.34638 6.4714 2.4714C6.34638 2.59643 6.17681 2.66667 6 2.66667C5.82319 2.66667 5.65362 2.59643 5.5286 2.4714C5.40357 2.34638 5.33333 2.17681 5.33333 2C5.33333 1.82319 5.40357 1.65362 5.5286 1.5286C5.65362 1.40357 5.82319 1.33333 6 1.33333ZM10.6667 1.33333H7.88C7.6 0.56 6.86667 0 6 0C5.13333 0 4.4 0.56 4.12 1.33333H1.33333C0.979711 1.33333 0.640573 1.47381 0.390524 1.72386C0.140476 1.97391 0 2.31304 0 2.66667V12C0 12.3536 0.140476 12.6928 0.390524 12.9428C0.640573 13.1929 0.979711 13.3333 1.33333 13.3333H10.6667C11.0203 13.3333 11.3594 13.1929 11.6095 12.9428C11.8595 12.6928 12 12.3536 12 12V2.66667C12 2.31304 11.8595 1.97391 11.6095 1.72386C11.3594 1.47381 11.0203 1.33333 10.6667 1.33333Z"
+                  fill="#3F9E5F"
+                />
+              </svg>
+            )}
+            <span className="pl-2">{item.status}</span>
           </span>
         );
       case "BDA":
@@ -202,26 +285,37 @@ const FarmerManagementTable: React.FC = () => {
         return item.bdaId;
       case "Actions":
         return (
-          <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-            <a
-              href="#"
-              className="text-blue-600 hover:text-blue-900 mr-2 px-2 py-2 border-2 border-blue-400 rounded-md"
-            >
-              View profile
-            </a>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="h-8 w-8 p-0">
-                  <span className="sr-only">Open menu</span>
-                  <MoreHorizontal className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem>Edit</DropdownMenuItem>
-                <DropdownMenuItem>Delete</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </td>
+          <>
+            {activeTab === "totalFarmersRegistered" ? (
+              <a
+                href={`/farmers/${item.id}`}
+                className="text-blue-600 hover:text-blue-900 mr-2 px-2 py-2 border-2 border-blue-400 rounded-md"
+              >
+                View profile
+              </a>
+            ) : (
+              <>
+                <a
+                  href="#"
+                  className="text-blue-600 hover:text-blue-900 mr-2 px-2 py-2 border-2 border-blue-400 rounded-md"
+                >
+                  View
+                </a>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="h-8 w-8 p-0">
+                      <span className="sr-only">Open menu</span>
+                      <MoreHorizontal className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem>Edit</DropdownMenuItem>
+                    <DropdownMenuItem>Delete</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </>
+            )}
+          </>
         );
       default:
         return null;
@@ -320,7 +414,7 @@ const FarmerManagementTable: React.FC = () => {
                     key={header}
                     className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center"
                   >
-                    {renderTableCell(item as FarmerData, header)}
+                    {renderTableCell(item as FarmerData, header, activeTab)}
                   </td>
                 ))}
               </tr>
