@@ -320,7 +320,7 @@ const FarmerManagementTable: React.FC = () => {
                     key={header}
                     className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center"
                   >
-                    {renderTableCell(item, header)}
+                    {renderTableCell(item as FarmerData, header)}
                   </td>
                 ))}
               </tr>
