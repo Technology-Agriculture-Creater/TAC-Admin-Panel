@@ -15,26 +15,7 @@ import TradeActivitiesData from "../data/TradeActivities.json";
 import ComplaintsData from "../data/Complaints.json";
 import { MoreHorizontal, Search } from "lucide-react";
 import Image from "next/image";
-
-interface FarmerData {
-  id?: string;
-  name?: string;
-  bdaId?: string;
-  village: string;
-  status:
-    | "Approved"
-    | "Pending"
-    | "Rejected"
-    | "Active"
-    | "Completed"
-    | "Resolved"
-    | "Awaiting approval";
-  farmer?: string;
-  bda?: { name: string; id: string };
-  farmerName?: string; // Added to accommodate FarmersOnboarded.json, CropsRejected.json, CropsAwaitingApproval.json
-  number?: string;
-  cropQty?: string;
-}
+import { FarmerData } from "../../src/types";
 
 const FarmerManagementTable: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -193,13 +174,13 @@ const FarmerManagementTable: React.FC = () => {
       case "Seller":
         return (
           <span className="px-10 py-3 w-20 bg-green-100 rounded-md">
-            {`${item.seller || "N/A"}`}
+            {`${item?.seller || "N/A"}`}
           </span>
         );
       case "Buyer":
         return (
           <span className="px-10 py-3 w-20 bg-purple-100 rounded-md">
-            {`${item.buyer || "N/A"}`}
+            {`${item?.buyer || "N/A"}`}
           </span>
         );
       case "Complaint ID":
@@ -207,17 +188,15 @@ const FarmerManagementTable: React.FC = () => {
       case "Issue":
         return item.issue || "N/A";
       case "Raised on":
-        return new Date(item.raisedOn).toLocaleDateString() || "N/A";
+        return item.raisedOn
+          ? new Date(item.raisedOn).toLocaleDateString()
+          : "N/A";
       case "Status":
         return (
           <span
             className={`px-2 inline-flex items-center text-xs leading-5 font-semibold rounded-full ${
               item.status === "Active"
                 ? "bg-green-100 text-green-800"
-                : item.status === "Pending"
-                ? "bg-yellow-100 text-yellow-800"
-                : item.status === "Rejected"
-                ? "bg-red-100 text-red-800"
                 : "bg-green-100 text-green-800"
             }`}
           >
@@ -266,6 +245,28 @@ const FarmerManagementTable: React.FC = () => {
                 <path
                   d="M4.66667 10.6667L2 8L2.94 7.06L4.66667 8.78L9.06 4.38667L10 5.33333M6 1.33333C6.17681 1.33333 6.34638 1.40357 6.4714 1.5286C6.59643 1.65362 6.66667 1.82319 6.66667 2C6.66667 2.17681 6.59643 2.34638 6.4714 2.4714C6.34638 2.59643 6.17681 2.66667 6 2.66667C5.82319 2.66667 5.65362 2.59643 5.5286 2.4714C5.40357 2.34638 5.33333 2.17681 5.33333 2C5.33333 1.82319 5.40357 1.65362 5.5286 1.5286C5.65362 1.40357 5.82319 1.33333 6 1.33333ZM10.6667 1.33333H7.88C7.6 0.56 6.86667 0 6 0C5.13333 0 4.4 0.56 4.12 1.33333H1.33333C0.979711 1.33333 0.640573 1.47381 0.390524 1.72386C0.140476 1.97391 0 2.31304 0 2.66667V12C0 12.3536 0.140476 12.6928 0.390524 12.9428C0.640573 13.1929 0.979711 13.3333 1.33333 13.3333H10.6667C11.0203 13.3333 11.3594 13.1929 11.6095 12.9428C11.8595 12.6928 12 12.3536 12 12V2.66667C12 2.31304 11.8595 1.97391 11.6095 1.72386C11.3594 1.47381 11.0203 1.33333 10.6667 1.33333Z"
                   fill="#3F9E5F"
+                />
+              </svg>
+            )}
+            {item.status === "Resolved" && (
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7 7.99984L10.258 10.4438C10.4598 10.5952 10.7114 10.6647 10.9624 10.6384C11.2133 10.612 11.445 10.4918 11.611 10.3018L18 2.99984"
+                  stroke="#3F9E5F"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M19 9.99984C19 11.8804 18.411 13.7137 17.3157 15.2423C16.2203 16.7708 14.6736 17.9179 12.8929 18.5224C11.1122 19.1269 9.18685 19.1583 7.3873 18.6124C5.58776 18.0665 4.00442 16.9706 2.85967 15.4787C1.71492 13.9867 1.06627 12.1736 1.00481 10.2941C0.943352 8.41461 1.47218 6.56305 2.51702 4.9995C3.56187 3.43595 5.07023 2.23896 6.83027 1.57665C8.5903 0.914347 10.5136 0.81999 12.33 1.30684"
+                  stroke="#3F9E5F"
+                  stroke-width="2"
+                  stroke-linecap="round"
                 />
               </svg>
             )}
@@ -474,7 +475,7 @@ const FarmerManagementTable: React.FC = () => {
                   onClick={() => handlePageChange(i + 1)}
                   className={`relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium ${
                     currentPage === i + 1
-                      ? "z-10 bg-blue-50 border-blue-500 text-blue-600"
+                      ? "z-10 bg-blue-500 border-blue-500 text-blue-600"
                       : "text-gray-700 hover:bg-gray-50"
                   }`}
                   variant="outline"

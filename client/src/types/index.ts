@@ -6,12 +6,17 @@ export interface FarmerData {
   village: string;
   status: string;
   number?: string;
-  farmer?: string;
+  farmer?: string | { name: string; id: string };
   bda?: {
     name: string;
     id: string;
   };
   taluka?: string;
+  seller?: string | { name: string; id: string };
+  buyer?: string | { name: string; id: string };
+  complaintId?: string;
+  issue?: string;
+  raisedOn?: string;
 }
 
 export interface CropApproval {
