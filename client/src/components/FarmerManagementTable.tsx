@@ -137,7 +137,9 @@ const FarmerManagementTable: React.FC = () => {
                   : item.farmer || item.name}
               </div>
               <div className="text-sm text-gray-500">
-                BDA ID: {item.bda?.id || item.bdaId}
+                {activeTab === "totalComplaintResolved"
+                  ? `${item.id}`
+                  : `BDA ID: ${item.bda?.id || item.bdaId}`}
               </div>
             </div>
           </div>
