@@ -17,23 +17,6 @@ import CropsAwaitingApprovalData from "../data/CropsAwaitingApproval.json";
 import { MoreHorizontal, Search } from "lucide-react";
 import Image from "next/image";
 
-interface FarmerData {
-  id?: string;
-  name?: string;
-  bdaId?: string;
-  village: string;
-  status:
-    | "Approved"
-    | "Pending"
-    | "Rejected"
-    | "Active"
-    | "Completed"
-    | "Resolved"
-    | "Awaiting approval";
-  farmer?: string;
-  bda?: { name: string; id: string };
-}
-
 const FarmerManagementTable: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
@@ -70,11 +53,14 @@ const FarmerManagementTable: React.FC = () => {
   const activeTabData = useMemo(() => {
     const currentTab = tabs.find((tab) => tab.id === activeTab);
     return currentTab ? currentTab.data : [];
-  }, [activeTab]);
+  }, []);
 
   const filteredData = useMemo(() => {
     return activeTabData.filter((item) => {
-      const farmerName = item.name || item.farmer || "";
+      const farmerName =
+        (item as { name?: string }).name ||
+        (item as { farmer?: string }).farmer ||
+        "";
       return farmerName.toLowerCase().includes(searchTerm.toLowerCase());
     });
   }, [activeTabData, searchTerm]);
@@ -89,23 +75,6 @@ const FarmerManagementTable: React.FC = () => {
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
-    }
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status.toLowerCase()) {
-      case "approved":
-        return "text-blue-500";
-      case "active":
-        return "text-blue-500";
-      case "completed":
-        return "text-green-500";
-      case "resolved":
-        return "text-green-500";
-      case "awaiting approval":
-        return "bg-yellow-100 text-yellow-800";
-      default:
-        return "text-gray-500";
     }
   };
 
