@@ -308,7 +308,7 @@ const FarmerManagementTable: React.FC = () => {
             ) : activeTab === "totalComplaintResolved" ? (
               <a
                 href="#"
-                className="text-blue-600 hover:text-blue-900 mr-2 px-2 py-2 border-2 border-blue-400 rounded-md"
+                className="text-gray-600 hover:text-gray-900 mr-2 px-10 py-2 border-2 border-gray-400 rounded-md"
               >
                 Review
               </a>
@@ -316,7 +316,7 @@ const FarmerManagementTable: React.FC = () => {
               <>
                 <a
                   href="#"
-                  className="text-blue-600 hover:text-blue-900 mr-2 px-2 py-2 border-2 border-blue-400 rounded-md"
+                  className="text-gray-600 hover:text-gray-900 mr-2 px-14 py-2 border-2 border-gray-400 rounded-md"
                 >
                   View
                 </a>
@@ -324,7 +324,11 @@ const FarmerManagementTable: React.FC = () => {
             )}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="h-8 w-8 p-0">
+                <Button
+                  variant="ghost"
+                  className="h-8 w-8 p-0 bg-gray-200 text-gray-900 px-4 py-2 rounded-md"
+                >
+                  ...
                   <span className="sr-only">Open menu</span>
                   <MoreHorizontal className="h-4 w-4" />
                 </Button>
@@ -493,7 +497,7 @@ const FarmerManagementTable: React.FC = () => {
                   onClick={() => handlePageChange(i + 1)}
                   className={`relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium ${
                     currentPage === i + 1
-                      ? "z-10 bg-blue-500 border-blue-500 text-blue-600"
+                      ? "z-10 bg-blue-50 border-blue-500 text-blue-600"
                       : "text-gray-700 hover:bg-gray-50"
                   }`}
                   variant="outline"
