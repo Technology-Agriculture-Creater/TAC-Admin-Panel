@@ -168,14 +168,13 @@ const FarmerManagementTable: React.FC = () => {
         return item.number;
       case "Seller":
         if (activeTab === "totalTradeFacilitated") {
-          const tradeItem = item;
           return (
-            <span className="px-10 py-3 bg-green-100 rounded-md">
-              <div>{`${tradeItem?.seller || "N/A"}`}</div>
+            <div className="px-10 py-3 bg-green-100 rounded-md">
+              <div>{`${item?.seller || "N/A"}`}</div>
               <div className="text-xs text-gray-500">{`${
-                tradeItem?.sellerId || "N/A"
+                item?.sellerId || "N/A"
               }`}</div>
-            </span>
+            </div>
           );
         }
         return (
@@ -185,14 +184,13 @@ const FarmerManagementTable: React.FC = () => {
         );
       case "Buyer":
         if (activeTab === "totalTradeFacilitated") {
-          const tradeItem = item;
           return (
-            <span className="px-10 py-3 bg-purple-100 rounded-md">
-              <div>{`${tradeItem?.buyer || "N/A"}`}</div>
+            <div className="px-10 py-3 bg-purple-100 rounded-md">
+              <div>{`${item?.buyer || "N/A"}`}</div>
               <div className="text-xs text-gray-500">{`${
-                tradeItem?.buyerType || "N/A"
+                item?.buyerType || "N/A"
               }`}</div>
-            </span>
+            </div>
           );
         }
         return (
@@ -495,7 +493,7 @@ const FarmerManagementTable: React.FC = () => {
                   onClick={() => handlePageChange(i + 1)}
                   className={`relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium ${
                     currentPage === i + 1
-                      ? "z-10 bg-blue-50 border-blue-500 text-blue-600"
+                      ? "z-10 bg-blue-500 border-blue-500 text-blue-600"
                       : "text-gray-700 hover:bg-gray-50"
                   }`}
                   variant="outline"
