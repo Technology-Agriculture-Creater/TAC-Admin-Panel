@@ -130,7 +130,9 @@ const FarmerManagementTable: React.FC = () => {
             </div>
             <div className="ml-4 flex flex-col items-start">
               <div className="text-sm font-medium text-gray-900">
-                {typeof item.farmer === "object" && item.farmer !== null
+                {activeTab === "totalCropsVerified"
+                  ? item.bda?.name
+                  : typeof item.farmer === "object" && item.farmer !== null
                   ? item.farmer.name
                   : item.farmer || item.name}
               </div>
@@ -165,14 +167,36 @@ const FarmerManagementTable: React.FC = () => {
       case "Contact":
         return item.number;
       case "Seller":
+        if (activeTab === "totalTradeFacilitated") {
+          const tradeItem = item;
+          return (
+            <span className="px-10 py-3 w-full bg-green-100 rounded-md">
+              <div>{`${tradeItem?.seller || "N/A"}`}</div>
+              <div className="text-xs text-gray-500">{`${
+                tradeItem?.sellerId || "N/A"
+              }`}</div>
+            </span>
+          );
+        }
         return (
-          <span className="px-10 py-3 w-20 bg-green-100 rounded-md">
+          <span className="px-10 py-3 w-full bg-green-100 rounded-md">
             {`${item?.seller || "N/A"}`}
           </span>
         );
       case "Buyer":
+        if (activeTab === "totalTradeFacilitated") {
+          const tradeItem = item;
+          return (
+            <span className="px-10 py-3 w-full bg-purple-100 rounded-md">
+              <div>{`${tradeItem?.buyer || "N/A"}`}</div>
+              <div className="text-xs text-gray-500">{`${
+                tradeItem?.buyerType || "N/A"
+              }`}</div>
+            </span>
+          );
+        }
         return (
-          <span className="px-10 py-3 w-20 bg-purple-100 rounded-md">
+          <span className="px-10 py-3 w-full bg-purple-100 rounded-md">
             {`${item?.buyer || "N/A"}`}
           </span>
         );
@@ -471,7 +495,7 @@ const FarmerManagementTable: React.FC = () => {
                   onClick={() => handlePageChange(i + 1)}
                   className={`relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium ${
                     currentPage === i + 1
-                      ? "z-10 bg-blue-50 border-blue-500 text-blue-600"
+                      ? "z-10 bg-blue-500 border-blue-500 text-blue-600"
                       : "text-gray-700 hover:bg-gray-50"
                   }`}
                   variant="outline"

@@ -11,7 +11,8 @@
     "buyerType": "Commercial Buyer",
     "status": "Completed",
     "action": ["view", "review"],
-    "seller": "Rajest Patil"
+    "seller": "Rajest Patil",
+    "sellerId": "TACXXXX0001"
   },
   {
     "id": "2",
@@ -25,7 +26,8 @@
     "buyerType": "Retail Buyer",
     "status": "Completed",
     "action": ["view", "review"],
-    "seller": "Rajest Patil"
+    "seller": "Rajest Patil",
+    "sellerId": "TACXXXX0001"
   },
   {
     "id": "3",
@@ -39,7 +41,8 @@
     "buyerType": "Wholesale Buyer",
     "status": "Completed",
     "action": ["view", "review"],
-    "seller": "Rajest Patil"
+    "seller": "Rajest Patil",
+    "sellerId": "TACXXXX0001"
   },
   {
     "id": "4",
@@ -53,7 +56,8 @@
     "buyerType": "Commercial Buyer",
     "status": "Completed",
     "action": ["view", "review"],
-    "seller": "Rajest Patil"
+    "seller": "Rajest Patil",
+    "sellerId": "TACXXXX0001"
   },
   {
     "id": "5",
@@ -67,7 +71,8 @@
     "buyerType": "Retail Buyer",
     "status": "Completed",
     "action": ["view", "review"],
-    "seller": "Rajest Patil"
+    "seller": "Rajest Patil",
+    "sellerId": "TACXXXX0001"
   },
   {
     "id": "6",
@@ -81,7 +86,8 @@
     "buyerType": "Wholesale Buyer",
     "status": "Completed",
     "action": ["view", "review"],
-    "seller": "Rajest Patil"
+    "seller": "Rajest Patil",
+    "sellerId": "TACXXXX0001"
   },
   {
     "id": "7",
@@ -95,7 +101,8 @@
     "buyerType": "Commercial Buyer",
     "status": "Completed",
     "action": ["view", "review"],
-    "seller": "Rajest Patil"
+    "seller": "Rajest Patil",
+    "sellerId": "TACXXXX0001"
   },
   {
     "id": "8",
@@ -109,7 +116,8 @@
     "buyerType": "Commercial Buyer",
     "status": "Completed",
     "action": ["view", "review"],
-    "seller": "Rajest Patil"
+    "seller": "Rajest Patil",
+    "sellerId": "TACXXXX0001"
   },
   {
     "id": "9",
@@ -123,7 +131,8 @@
     "buyerType": "Commercial Buyer",
     "status": "Completed",
     "action": ["view", "review"],
-    "seller": "Rajest Patil"
+    "seller": "Rajest Patil",
+    "sellerId": "TACXXXX0001"
   },
   {
     "id": "10",
@@ -137,6 +146,7 @@
     "buyerType": "Commercial Buyer",
     "status": "Completed",
     "action": ["view", "review"],
-    "seller": "Rajest Patil"
+    "seller": "Rajest Patil",
+    "sellerId": "TACXXXX0001"
   }
 ]

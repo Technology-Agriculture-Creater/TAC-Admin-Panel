@@ -13,7 +13,9 @@ export interface FarmerData {
   };
   taluka?: string;
   seller?: string | { name: string; id: string };
+  sellerId?: string;
   buyer?: string | { name: string; id: string };
+  buyerType?: string;
   complaintId?: string;
   issue?: string;
   raisedOn?: string;
@@ -52,6 +54,7 @@ export interface TradeActivity {
     | "Disputed";
   action: string[];
   seller?: string;
+  sellerId?: string;
 }
 
 export interface Complaint {
