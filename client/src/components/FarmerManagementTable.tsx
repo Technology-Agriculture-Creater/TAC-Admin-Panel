@@ -17,12 +17,36 @@ import CropsAwaitingApprovalData from "../data/CropsAwaitingApproval.json";
 import { MoreHorizontal, Search } from "lucide-react";
 import Image from "next/image";
 
+interface FarmerData {
+  id?: string;
+  name?: string;
+  bdaId?: string;
+  village: string;
+  status:
+    | "Approved"
+    | "Pending"
+    | "Rejected"
+    | "Active"
+    | "Completed"
+    | "Resolved"
+    | "Awaiting approval";
+  farmer?: string;
+  bda?: { name: string; id: string };
+  farmerName?: string; // Added to accommodate FarmersOnboarded.json, CropsRejected.json, CropsAwaitingApproval.json
+}
+
+interface Tab {
+  id: string;
+  name: string;
+  data: FarmerData[];
+}
+
 const FarmerManagementTable: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState("totalFarmersRegistered");
 
-  const tabs = [
+  const tabs: Tab[] = useMemo(() => [
     {
       id: "totalFarmersRegistered",
       name: "Total Farmers Registered",
@@ -48,18 +72,19 @@ const FarmerManagementTable: React.FC = () => {
       name: "Total Crops Awaiting Approval",
       data: CropsAwaitingApprovalData,
     },
-  ];
+  ]);
 
   const activeTabData = useMemo(() => {
     const currentTab = tabs.find((tab) => tab.id === activeTab);
     return currentTab ? currentTab.data : [];
-  }, []);
+  }, [activeTab, tabs]);
 
   const filteredData = useMemo(() => {
     return activeTabData.filter((item) => {
       const farmerName =
         (item as { name?: string }).name ||
         (item as { farmer?: string }).farmer ||
+        (item as { farmerName?: string }).farmerName ||
         "";
       return farmerName.toLowerCase().includes(searchTerm.toLowerCase());
     });
@@ -224,7 +249,7 @@ const FarmerManagementTable: React.FC = () => {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-center">
                   <span
-                    className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                    className={`px-2 inline-flex items-center text-xs leading-5 font-semibold rounded-full ${
                       item.status === "Active"
                         ? "bg-green-100 text-green-800"
                         : item.status === "Pending"
@@ -232,6 +257,26 @@ const FarmerManagementTable: React.FC = () => {
                         : "bg-red-100 text-red-800"
                     }`}
                   >
+                    {item.status === "Active" && (
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M10.6673 8C10.6673 8.70725 10.3864 9.38552 9.88627 9.88562C9.38617 10.3857 8.7079 10.6667 8.00065 10.6667C7.29341 10.6667 6.61513 10.3857 6.11503 9.88562C5.61494 9.38552 5.33398 8.70725 5.33398 8C5.33398 7.29276 5.61494 6.61448 6.11503 6.11438C6.61513 5.61429 7.29341 5.33334 8.00065 5.33334C8.7079 5.33334 9.38617 5.61429 9.88627 6.11438C10.3864 6.61448 10.6673 7.29276 10.6673 8Z"
+                          fill="#3F9E5F"
+                        />
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M8 12.6667C8.61284 12.6667 9.21967 12.546 9.78586 12.3114C10.352 12.0769 10.8665 11.7332 11.2998 11.2998C11.7332 10.8665 12.0769 10.352 12.3114 9.78586C12.546 9.21967 12.6667 8.61284 12.6667 8C12.6667 7.38716 12.546 6.78033 12.3114 6.21414C12.0769 5.64796 11.7332 5.13351 11.2998 4.70017C10.8665 4.26683 10.352 3.92308 9.78586 3.68856C9.21967 3.45404 8.61284 3.33333 8 3.33333C6.76232 3.33333 5.57534 3.825 4.70017 4.70017C3.825 5.57534 3.33333 6.76232 3.33333 8C3.33333 9.23768 3.825 10.4247 4.70017 11.2998C5.57534 12.175 6.76232 12.6667 8 12.6667ZM8 14C8.78793 14 9.56815 13.8448 10.2961 13.5433C11.0241 13.2417 11.6855 12.7998 12.2426 12.2426C12.7998 11.6855 13.2417 11.0241 13.5433 10.2961C13.8448 9.56815 14 8.78793 14 8C14 7.21207 13.8448 6.43185 13.5433 5.7039C13.2417 4.97595 12.7998 4.31451 12.2426 3.75736C11.6855 3.20021 11.0241 2.75825 10.2961 2.45672C9.56815 2.15519 8.78793 2 8 2C6.4087 2 4.88258 2.63214 3.75736 3.75736C2.63214 4.88258 2 6.4087 2 8C2 9.5913 2.63214 11.1174 3.75736 12.2426C4.88258 13.3679 6.4087 14 8 14Z"
+                          fill="#3F9E5F"
+                        />
+                      </svg>
+                    )}
                     {item.status}
                   </span>
                 </td>
@@ -312,7 +357,7 @@ const FarmerManagementTable: React.FC = () => {
                   onClick={() => handlePageChange(i + 1)}
                   className={`relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium ${
                     currentPage === i + 1
-                      ? "z-10 bg-green-50 border-green-500 text-green-600"
+                      ? "z-10 bg-blue-50 border-blue-500 text-blue-600"
                       : "text-gray-700 hover:bg-gray-50"
                   }`}
                   variant="outline"
