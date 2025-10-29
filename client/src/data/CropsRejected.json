@@ -1,0 +1,47 @@
+[
+  {
+    "id": "1",
+    "bdaId": "BDAXXXXX001",
+    "cropQty": "Wheat - 50 Quintals",
+    "farmerName": "Ravi Kumar",
+    "village": "Kuhi",
+    "rejectionReason": "Poor quality",
+    "status": "Rejected"
+  },
+  {
+    "id": "2",
+    "bdaId": "BDAXXXXX001",
+    "cropQty": "Rice - 30 Quintals",
+    "farmerName": "Sita Devi",
+    "village": "Kuhi",
+    "rejectionReason": "Exceeded quota",
+    "status": "Rejected"
+  },
+  {
+    "id": "3",
+    "bdaId": "BDAXXXXX001",
+    "cropQty": "Lentils - 18 Quintals",
+    "farmerName": "Manoj Patel",
+    "village": "Kuhi",
+    "rejectionReason": "Pest infestation",
+    "status": "Rejected"
+  },
+  {
+    "id": "4",
+    "bdaId": "BDAXXXXX001",
+    "cropQty": "Chili Peppers - 12 Quintals",
+    "farmerName": "Suresh Gupta",
+    "village": "Kuhi",
+    "rejectionReason": "Not organic",
+    "status": "Rejected"
+  },
+  {
+    "id": "5",
+    "bdaId": "BDAXXXXX001",
+    "cropQty": "Cabbage - 22 Quintals",
+    "farmerName": "Rahul Sharma",
+    "village": "Kuhi",
+    "rejectionReason": "Damaged during transport",
+    "status": "Rejected"
+  }
+]

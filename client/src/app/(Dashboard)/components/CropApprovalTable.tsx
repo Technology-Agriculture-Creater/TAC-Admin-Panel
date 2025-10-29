@@ -1,0 +1,236 @@
+import { CropApproval, Activity } from "../../../types";
+import ActivityDetailsModal from "./ActivityDetailsModal";
+import { useState } from "react";
+
+interface CropApprovalTableProps {
+  data: CropApproval[];
+  getStatusInfo: (status: string) => {
+    icon: React.ReactElement | null;
+    color: string;
+  };
+}
+
+const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
+  data,
+  getStatusInfo,
+}) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedActivity, setSelectedActivity] = useState<Activity | null>(
+    null
+  );
+
+  const mapCropApprovalToActivity = (cropApproval: CropApproval): Activity => {
+    const cropName = cropApproval.cropQty.split(" - ")[0];
+    return {
+      id: cropApproval.id || Math.random().toString(36).substring(7),
+      farmerName: cropApproval.farmer,
+      village: cropApproval.village,
+      crop: cropName.trim(),
+      grade: "N/A",
+      sowingDate: "N/A",
+      harvestExpected: "N/A",
+      notes: "",
+      minBid: "N/A",
+      maxBid: "N/A",
+      status:
+        cropApproval.status === "Approved"
+          ? "Approved"
+          : cropApproval.status === "Awaiting approval"
+          ? "Pending"
+          : "Rejected",
+      farmerEvidence: [
+        "/Images/veg.png",
+        "/Images/veg.png",
+        "/Images/veg.png",
+        "/Images/veg.png",
+      ],
+      bdaName: cropApproval.bda.name,
+      bdaEvidence: {
+        cropConfirmed: true,
+        cropImage: "/Images/veg.png",
+        qualityConfirmed: true,
+        qualityImage: "/Images/veg.png",
+        locationConfirmed: true,
+        locationImage: "/Images/veg.png",
+        quantityConfirmed: true,
+        quantityImage: "/Images/veg.png",
+      },
+      remarks: "",
+    };
+  };
+
+  const handleViewClick = (item: CropApproval) => {
+    setSelectedActivity(mapCropApprovalToActivity(item));
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedActivity(null);
+  };
+
+  if (data.length === 0) {
+    return (
+      <div className="text-center py-8 text-gray-500">
+        No crop approval data available.
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-w-full align-middle">
+      <table className="min-w-full divide-y divide-gray-200">
+        <thead className="bg-gray-50">
+          <tr className="w-full">
+            <th
+              scope="col"
+              className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              BDA
+            </th>
+            <th
+              scope="col"
+              className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Crop/Qty
+            </th>
+            <th
+              scope="col"
+              className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Farmer
+            </th>
+            <th
+              scope="col"
+              className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Village
+            </th>
+            <th
+              scope="col"
+              className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Status
+            </th>
+            <th
+              scope="col"
+              className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Actions
+            </th>
+          </tr>
+        </thead>
+        <tbody className="bg-white divide-y divide-gray-200">
+          {data.map((item, index) => (
+            <tr key={index} className="w-full">
+              <td className="px-6 py-4 whitespace-nowrap text-center">
+                <div className="flex items-center justify-center">
+                  <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 text-sm">
+                    {item.bda?.name?.charAt(0) || "—"}
+                  </div>
+                  <div className="ml-4 text-left">
+                    <div className="text-sm font-medium text-gray-900">
+                      {item.bda?.name || "—"}
+                    </div>
+                    <div className="text-sm text-gray-500">{item.bda.id}</div>
+                  </div>
+                </div>
+              </td>
+              <td className="px-6 py-4 flex items-center justify-center whitespace-nowrap">
+                <div className="text-sm text-center text-gray-900 px-5 w-52 py-2 rounded-lg bg-yellow-100">
+                  {item.cropQty}
+                </div>
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap text-center">
+                <div className="text-sm text-gray-900">{item.farmer}</div>
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap text-center">
+                <div className="text-sm text-gray-900">{item.village}</div>
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap text-center">
+                <span
+                  className={`px-2 inline-flex text-xs leading-5 items-center justify-center gap-2 font-semibold rounded-full`}
+                  style={{
+                    backgroundColor: `${getStatusInfo(item.status).color}1A`,
+                    color: getStatusInfo(item.status).color,
+                  }}
+                >
+                  {getStatusInfo(item.status).icon} {item.status}
+                </span>
+              </td>
+              <td className="px-6 py-4 flex gap-4 whitespace-nowrap text-sm font-medium">
+                {item.action.includes("view") && (
+                  <button
+                    onClick={() => handleViewClick(item)}
+                    className="text-blue-600 hover:text-blue-900 bg-blue-100 w-40 px-3 py-1 rounded-md"
+                  >
+                    View
+                  </button>
+                )}
+                {item.action.includes("review") && (
+                  <button
+                    onClick={() => handleViewClick(item)}
+                    className="text-gray-600 hover:text-gray-900 bg-white border w-40 border-gray-300 px-3 py-1 rounded-md"
+                  >
+                    Review
+                  </button>
+                )}
+                {item.action.includes("...") && (
+                  <button className="ml-2 text-gray-600 hover:text-gray-900 bg-gray-100 px-3 py-1 rounded-md">
+                    ...
+                  </button>
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      {selectedActivity && (
+        <ActivityDetailsModal
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          activityData={selectedActivity}
+          actionButtons={
+            <>
+              {selectedActivity.status === "Pending" && (
+                <>
+                  <button className="border w-full border-blue-600 text-blue-600 px-6 py-2 rounded-md hover:bg-blue-50">
+                    Escalate to Admin
+                  </button>
+                  <button className="bg-red-500 w-full text-white px-6 py-2 rounded-md hover:bg-red-600">
+                    Reject
+                  </button>
+                  <button className="bg-green-500 w-full text-white px-6 py-2 rounded-md hover:bg-green-600">
+                    Approve
+                  </button>
+                </>
+              )}
+              {selectedActivity.status === "Approved" && (
+                <>
+                  <button className="border w-full border-blue-600 text-blue-600 px-6 py-2 rounded-md hover:bg-blue-50">
+                    Delete
+                  </button>
+                  <button className="bg-red-500 w-full text-white px-6 py-2 rounded-md hover:bg-red-600">
+                    Reject
+                  </button>
+                </>
+              )}
+              {selectedActivity.status === "Rejected" && (
+                <>
+                  <button className="border w-full border-blue-600 text-blue-600 px-6 py-2 rounded-md hover:bg-blue-50">
+                    Delete
+                  </button>
+                  <button className="bg-green-500 w-full text-white px-6 py-2 rounded-md hover:bg-green-600">
+                    Retain
+                  </button>
+                </>
+              )}
+            </>
+          }
+        />
+      )}
+    </div>
+  );
+};
+
+export default CropApprovalTable;
