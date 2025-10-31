@@ -3,16 +3,21 @@ import ActivityDetailsModal from "./ActivityDetailsModal";
 import { useState } from "react";
 
 interface CropApprovalTableProps {
-  data: CropApproval[];
-  getStatusInfo: (status: string) => {
+  initialData?: CropApproval[];
+  getStatusInfo: (
+    status: string
+  ) => {
     icon: React.ReactElement | null;
     color: string;
+    backgroundColor: string;
   };
+  onDataChange: (newData: CropApproval[]) => void;
 }
 
 const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
-  data,
+  initialData = [],
   getStatusInfo,
+  onDataChange,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedActivity, setSelectedActivity] = useState<Activity | null>(
@@ -59,6 +64,27 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
     };
   };
 
+  const handleApprove = (id: string) => {
+    const newData = initialData.map((item) =>
+      item.id === id ? { ...item, status: "Approved", action: ["review"] } : item
+    );
+    onDataChange(newData);
+    handleCloseModal();
+  };
+
+  const handleReject = (id: string) => {
+    const newData = initialData.map((item) =>
+      item.id === id ? { ...item, status: "Rejected", action: ["review"] } : item
+    );
+    onDataChange(newData);
+    handleCloseModal();
+  };
+
+  const handleEscalate = (id: string) => {
+    console.log(`Escalate to Admin for ID: ${id}`);
+    handleCloseModal();
+  };
+
   const handleViewClick = (item: CropApproval) => {
     setSelectedActivity(mapCropApprovalToActivity(item));
     setIsModalOpen(true);
@@ -69,7 +95,7 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
     setSelectedActivity(null);
   };
 
-  if (data.length === 0) {
+  if (initialData.length === 0) {
     return (
       <div className="text-center py-8 text-gray-500">
         No crop approval data available.
@@ -121,7 +147,7 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {data.map((item, index) => (
+          {initialData.map((item, index) => (
             <tr key={index} className="w-full">
               <td className="px-6 py-4 whitespace-nowrap text-center">
                 <div className="flex items-center justify-center">
@@ -190,43 +216,9 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
           isOpen={isModalOpen}
           onClose={handleCloseModal}
           activityData={selectedActivity}
-          actionButtons={
-            <>
-              {selectedActivity.status === "Pending" && (
-                <>
-                  <button className="border w-full border-blue-600 text-blue-600 px-6 py-2 rounded-md hover:bg-blue-50">
-                    Escalate to Admin
-                  </button>
-                  <button className="bg-red-500 w-full text-white px-6 py-2 rounded-md hover:bg-red-600">
-                    Reject
-                  </button>
-                  <button className="bg-green-500 w-full text-white px-6 py-2 rounded-md hover:bg-green-600">
-                    Approve
-                  </button>
-                </>
-              )}
-              {selectedActivity.status === "Approved" && (
-                <>
-                  <button className="border w-full border-blue-600 text-blue-600 px-6 py-2 rounded-md hover:bg-blue-50">
-                    Delete
-                  </button>
-                  <button className="bg-red-500 w-full text-white px-6 py-2 rounded-md hover:bg-red-600">
-                    Reject
-                  </button>
-                </>
-              )}
-              {selectedActivity.status === "Rejected" && (
-                <>
-                  <button className="border w-full border-blue-600 text-blue-600 px-6 py-2 rounded-md hover:bg-blue-50">
-                    Delete
-                  </button>
-                  <button className="bg-green-500 w-full text-white px-6 py-2 rounded-md hover:bg-green-600">
-                    Retain
-                  </button>
-                </>
-              )}
-            </>
-          }
+          onApprove={() => selectedActivity && handleApprove(selectedActivity.id)}
+          onReject={() => selectedActivity && handleReject(selectedActivity.id)}
+          onEscalate={() => selectedActivity && handleEscalate(selectedActivity.id)}
         />
       )}
     </div>

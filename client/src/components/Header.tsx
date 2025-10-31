@@ -1,6 +1,9 @@
-import React, { useState } from "react";
+"use client";
+
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface HeaderProps {
   toggleSidebar: () => void;
@@ -9,9 +12,23 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [username, setUsername] = useState("Guest");
+  const router = useRouter();
+
+  useEffect(() => {
+    const storedUsername = localStorage.getItem("username");
+    if (storedUsername) {
+      setUsername(storedUsername);
+    }
+  }, []);
 
   const handleDropdownToggle = () => {
     setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("username");
+    router.push("/login");
   };
 
   return (
@@ -107,7 +124,7 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen }) => {
               sizes="100vw"
               className="h-8 w-8 rounded-full"
             />
-            <span className="text-gray-700 font-medium">Liam Johnson</span>
+            <span className="text-gray-700 font-medium">{username}</span>
             <svg
               className={`w-4 h-4 transform ${
                 isDropdownOpen ? "rotate-180" : "rotate-0"
@@ -137,7 +154,7 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen }) => {
                   className="h-8 w-8 rounded-full"
                 />
                 <div>
-                  <p className="font-medium text-gray-700">Liam Johnson</p>
+                  <p className="font-medium text-gray-700">{username}</p>
                   <p className="text-xs text-gray-500">BDO-KUHI</p>
                 </div>
               </div>
@@ -202,7 +219,7 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen }) => {
                 </svg>
               </a>
               <button
-                onClick={() => console.log("Log Out clicked")}
+                onClick={handleLogout}
                 className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-t border-gray-200 mt-2"
               >
                 Log Out

@@ -86,9 +86,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
                   width={0}
                   sizes="100vw"
                   alt={item.name}
-                  className="h-6 w-6 mr-2"
+                  className="h-6 w-6 mr-2 flex-shrink-0"
                 />{" "}
-                {item.name}
+                <span className="flex-1 min-w-0">{item.name}</span>
               </Link>
             </li>
           ))}
