@@ -2,6 +2,9 @@ import type { Request, Response } from 'express';
 import { Types } from 'mongoose';
 import Farmer from '../models/farmer.model.ts';
 import crypto from 'crypto';
+import cropModel from '../models/crop.model.ts';
+import path from 'path';
+import { uploadImage } from '../services/imagekit.service.ts';
 
 interface FarmerRequestBody {
   userId?: string;
@@ -424,36 +427,205 @@ export const deleteFarmer = async (req: Request, res: Response) => {
 
 export const sellCrop = async (req: Request, res: Response) => {
   try {
-    const { farmerId, cropDetails } = req.body;
-
-    if (!farmerId || !Types.ObjectId.isValid(farmerId)) {
-      return res.status(400).json({ message: 'Invalid farmer ID' });
+    const {
+      cropName,
+      variety,
+      type,
+      fertilizersUsed,
+      cropQualityGrade,
+      quantity,
+      pricePerQuintal,
+      landSize,
+      soilType,
+      irrigationType,
+      packagingType,
+      feedback,
+      userId, // this is farmer's userId
+    } = req.body;
+    if (!userId || !cropName) {
+      return res.status(400).json({
+        success: false,
+        message: 'User ID and crop name are required.',
+      });
     }
 
-    if (!cropDetails || !Array.isArray(cropDetails) || cropDetails.length === 0) {
-      return res.status(400).json({ message: 'Crop details are required' });
+    const farmer = await Farmer.findOne({_id:userId });
+    console.log("🚀 ~ sellCrop ~ userId:", userId)
+    console.log("🚀 ~ sellCrop ~ farmer:", farmer)
+    if (!farmer) {
+      return res.status(404).json({
+        success: false,
+        message: 'Farmer not found. Please register as a farmer first.',
+      });
     }
 
-    const farmer = await Farmer.findById(farmerId).exec();
-    if (!farmer) return res.status(404).json({ message: 'Farmer not found' });
+    const files = req.files as Express.Multer.File[] | undefined;
+    let imageUrls: string[] = [];
 
-    farmer.cropsGrown = [...(farmer.cropsGrown || []), ...cropDetails];
-    await farmer.save();
+    if (files && files.length > 0) {
+      imageUrls = await Promise.all(
+        files.map(async (file) => {
+          const imageUrl = await uploadImage(file);
+          return imageUrl;
+        })
+      );
+    }
 
-    res.status(200).json({ message: 'Crops added for sale successfully', farmer });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server Error' });
+    const crop = new cropModel({
+      userId: farmer.userId,      
+      farmerId: farmer._id, 
+      cropName,
+      variety,
+      type,
+      fertilizersUsed,
+      cropQualityGrade,
+      quantity,
+      pricePerQuintal,
+      landSize,
+      soilType,
+      irrigationType,
+      packagingType,
+      feedback,
+      cropImages: imageUrls,
+      status: 'active',
+    });
+
+    await crop.save();
+
+    return res.status(200).json({
+      success: true,
+      message: 'Crop listed successfully.',
+      data: crop,
+    });
+
+  } catch (error: any) {
+    console.error('Sell Crop API Error:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Something went wrong while listing your crop.',
+      error: error.message || 'Internal Server Error',
+    });
   }
-}
+};
 
-export const activeCropListings = async (req: Request, res: Response) => {
+
+export const updateCropDetails = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const farmers = await Farmer.find({ 'cropsGrown.0': { $exists: true } }).exec();
-    res.status(200).json({ farmers });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server Error' });
+    const { cropId } = req.params;
+
+    if (!cropId) {
+      return res.status(400).json({
+        success: false,
+        message: 'Crop ID is required.',
+      });
+    }
+
+    // Extract allowed fields from request body
+    const {
+      cropName,
+      variety,
+      type,
+      quantity,
+      pricePerQuintal,
+      description,
+      location,
+      harvestDate,
+      status,
+      cropImages,
+    } = req.body;
+
+    // Build update object dynamically
+    const updateData: Record<string, any> = {};
+    if (cropName) updateData.cropName = cropName;
+    if (variety) updateData.variety = variety;
+    if (type) updateData.type = type;
+    if (quantity) updateData.quantity = quantity;
+    if (pricePerQuintal) updateData.pricePerQuintal = pricePerQuintal;
+    if (description) updateData.description = description;
+    if (location) updateData.location = location;
+    if (harvestDate) updateData.harvestDate = harvestDate;
+    if (status) updateData.status = status;
+    if (cropImages && Array.isArray(cropImages)) updateData.cropImages = cropImages;
+
+    // Update crop details
+    const updatedCrop = await cropModel.findByIdAndUpdate(cropId, updateData, {
+      new: true, // return updated document
+      runValidators: true, // ensure validation rules are applied
+    }).lean();
+
+    if (!updatedCrop) {
+      return res.status(404).json({
+        success: false,
+        message: 'Crop not found. Unable to update.',
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'Crop details updated successfully.',
+      data: updatedCrop,
+    });
+
+  } catch (error: any) {
+    console.error('Update Crop Details Error:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Something went wrong while updating crop details.',
+      error: error.message || 'Internal Server Error',
+    });
   }
-}
+};
+
+export const getActiveCropListings = async (req: Request, res: Response): Promise<Response> => {
+  try {
+    const { farmerId } = req.params;
+
+    if (!farmerId) {
+      return res.status(400).json({
+        success: false,
+        message: 'Farmer ID is required.',
+      });
+    }
+
+    // Pagination setup
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const skip = (page - 1) * limit;
+
+    // Fetch only active crops for this farmer
+    const activeCrops = await cropModel.find({
+      farmerId,
+      status: 'active',
+    })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .lean();
+
+    const totalActiveCrops = await cropModel.countDocuments({
+      farmerId,
+      status: 'active',
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: 'Active crops fetched successfully.',
+      pagination: {
+        total: totalActiveCrops,
+        page,
+        limit,
+        totalPages: Math.ceil(totalActiveCrops / limit),
+      },
+      data: activeCrops,
+    });
+
+  } catch (error: any) {
+    console.error('Get Active Crop Listings Error:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Something went wrong while fetching active crops.',
+      error: error.message || 'Internal Server Error',
+    });
+  }
+};
 

@@ -1,7 +1,11 @@
 import express from 'express';
-import { registerFarmer, sendOtp, verifyOtp ,registerDraft,registerWithOtp,sendRegisterOtp} from '../controllers/farmerController.ts';
+import { registerFarmer, sendOtp, verifyOtp ,registerDraft,registerWithOtp,sendRegisterOtp, sellCrop,
+  updateCropDetails,
+  getActiveCropListings,} from '../controllers/farmerController.ts';
 import { authenticate } from '../middlewares/auth.middleware.ts';
 import upload from '../services/multer.service.ts';
+
+
 
 const authRoute = express.Router();
 authRoute.post('/', (req,res)=>{res.send("Farmer Route")});
@@ -41,5 +45,21 @@ authRoute.post(
 );
 authRoute.post('/sendOtp', sendOtp);
 authRoute.post('/verifyOtp', verifyOtp);
+
+// -----------------------------
+// 🌾 Crop Management Routes
+// -----------------------------
+
+authRoute.post(
+  '/sellCrop',
+  upload.array('cropImages', 5), // reuse your multer config
+  sellCrop
+);
+
+// 2️⃣ Update existing crop details by cropId
+authRoute.put('/updateCrop/:cropId', updateCropDetails);
+
+// 3️⃣ Get all active crops by farmerId (with pagination)
+authRoute.get('/activeCrops/:farmerId', getActiveCropListings);
 
 export default authRoute;
