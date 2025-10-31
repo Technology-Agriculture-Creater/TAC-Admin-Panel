@@ -1,101 +1,91 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 
-export default function page() {
+export default function LoginPage() {
+  const [userId, setUserId] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const router = useRouter();
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (userId === "sahil@123" && password === "sahil@123") {
+      localStorage.setItem("username", "Sahil");
+      router.push("/");
+    } else {
+      setError("Invalid User ID or Password");
+    }
+  };
+
+  const handleGuestLogin = () => {
+    localStorage.setItem("username", "Guest");
+    router.push("/");
+  };
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-white py-12 px-4 sm:px-6 lg:px-8">
-      <div className="flex flex-col items-center mb-8">
-        {/* Logo */}
-        <Image
-          src="/Images/logo.png"
-          alt="TAC Agrilink Logo"
-          height={0}
-          width={0}
-          sizes="100vw"
-          className="h-24 w-80 object-contain mb-4"
-        />
-        <h1 className="text-4xl font-bold text-gray-800 mb-2">
-          Village-Level Access for Ground Support
-        </h1>
-        <p className="text-gray-600 text-lg">
-          Connecting Farmers, Trades & Communities through You
-        </p>
-      </div>
-
-      {/* Login Form */}
-      <div className="p-8 rounded-lg shadow-md max-w-md w-full">
-        <h2 className="text-2xl font-semibold text-center text-gray-800 mb-2">
-          TAC BDA Login
-        </h2>
-        <p className="text-gray-500 text-center text-sm mb-6">
-          Your data is safe & encrypted.
-        </p>
-
-        <form>
+    <div className="flex min-h-screen items-center justify-center bg-gray-100">
+      <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-md">
+        <div className="mb-6 flex justify-center">
+          <Image
+            src="/Images/logo1.png"
+            alt="TAC Logo"
+            width={150}
+            height={150}
+            className="h-24 w-auto"
+          />
+        </div>
+        <h2 className="mb-6 text-center text-2xl font-bold">Login</h2>
+        <form onSubmit={handleLogin}>
           <div className="mb-4">
             <label
               htmlFor="userId"
-              className="block text-gray-700 text-sm font-bold mb-2"
+              className="mb-2 block text-sm font-medium text-gray-700"
             >
-              USER ID
+              User ID
             </label>
             <input
               type="text"
               id="userId"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              placeholder="Enter your User ID"
+              className="w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:outline-none"
+              value={userId}
+              onChange={(e) => setUserId(e.target.value)}
+              required
             />
           </div>
-
           <div className="mb-6">
             <label
               htmlFor="password"
-              className="block text-gray-700 text-sm font-bold mb-2"
+              className="mb-2 block text-sm font-medium text-gray-700"
             >
-              PASSWORD
+              Password
             </label>
             <input
               type="password"
               id="password"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-              placeholder="Enter your password"
+              className="w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:outline-none"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
             />
           </div>
-
+          {error && <p className="mb-4 text-center text-red-500">{error}</p>}
           <button
             type="submit"
-            className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
+            className="w-full rounded-md bg-blue-600 p-2 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
             Login
           </button>
-        </form>
-
-        <div className="text-center mt-4">
-          <a
-            href="#"
-            className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
+          <button
+            type="button"
+            onClick={handleGuestLogin}
+            className="w-full bg-gray-500 text-white py-2 rounded-md hover:bg-gray-600 transition-colors mt-2"
           >
-            Forgot Password? (Link to reset via OTP)
-          </a>
-        </div>
-      </div>
-
-      {/* Language Selection */}
-      <div className="text-center mt-6">
-        <p className="text-gray-600 mb-2">Need Help? Contact TAC Support</p>
-        <div className="flex justify-center space-x-2 text-sm">
-          <a href="#" className="text-blue-500 hover:text-blue-800">
-            English
-          </a>
-          <span>|</span>
-          <a href="#" className="text-blue-500 hover:text-blue-800">
-            Marathi
-          </a>
-          <span>|</span>
-          <a href="#" className="text-blue-500 hover:text-blue-800">
-            Hindi
-          </a>
-        </div>
+            Login as Guest
+          </button>
+        </form>
       </div>
     </div>
   );
