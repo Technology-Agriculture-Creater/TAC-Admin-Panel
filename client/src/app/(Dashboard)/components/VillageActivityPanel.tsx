@@ -20,6 +20,7 @@ import TradeActivitiesTable from "./TradeActivitiesTable";
 import ComplaintsTable from "./ComplaintsTable";
 import SystemTable from "./SystemTable";
 import DisputesTable from "./DisputesTable";
+import { apiService, Crop } from "../../../lib/api";
 
 const VillageActivityPanel = () => {
   const [selectedStatus, setSelectedStatus] = useState("All");
@@ -27,16 +28,97 @@ const VillageActivityPanel = () => {
   const [activeTab, setActiveTab] = useState("Crop Approval");
   const itemsPerPage = 10;
 
+  // API state for crop approval
+  const [cropApprovalData, setCropApprovalData] = useState<CropApproval[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [, setTotalPages] = useState(0);
+  const [totalCrops, setTotalCrops] = useState(0);
+
+  // Fetch crop approval data from API
+  const fetchCropApprovalData = async () => {
+    if (activeTab !== "Crop Approval") return;
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const status =
+        selectedStatus === "All"
+          ? undefined
+          : selectedStatus === "Awaiting approval"
+          ? "pending"
+          : selectedStatus === "Approved"
+          ? "active"
+          : selectedStatus === "Rejected"
+          ? "cancelled"
+          : undefined;
+
+      const response = await apiService.getAllCrops({
+        page: currentPage,
+        limit: 10, // You can adjust this as needed
+        status: status
+      });
+
+      if (response.success && response.data) {
+        // Transform API data to match frontend CropApproval type
+        const transformedData: CropApproval[] = response.data.map(
+          (crop: Crop) => ({
+            id: crop._id,
+            bda: {
+              name: crop.farmerId?.name || "BDO Office",
+              id: crop.farmerId?._id || "N/A",
+            },
+            cropQty: `${crop.cropName} - ${crop.quantity} kg`,
+            farmer: crop.farmerId?.name || "Unknown Farmer",
+            village: "Unknown Village", // This data is not available in the API response
+            status:
+              crop.status === "pending"
+                ? "Awaiting approval"
+                : crop.status === "active"
+                ? "Approved"
+                : crop.status === "cancelled"
+                ? "Rejected"
+                : crop.status === "sold"
+                ? "Sold"
+                : "Unknown",
+            action: crop.status === "pending" ? ["view"] : ["review"],
+          })
+        );
+
+        setCropApprovalData(transformedData);
+        setTotalPages(response.totalPages || 0);
+        setTotalCrops(response.totalCrops || 0);
+      } else {
+        throw new Error(response.message || "Failed to fetch crops");
+      }
+    } catch (err) {
+      console.error("Error fetching crop approval data:", err);
+      setError(
+        err instanceof Error ? err.message : "Failed to fetch crop data"
+      );
+      // Fallback to mock data if API fails
+      setCropApprovalData([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     setSelectedStatus("All");
     setCurrentPage(1);
   }, [activeTab]);
 
+  // Fetch crop approval data when component loads or filters change
+  useEffect(() => {
+    fetchCropApprovalData();
+  }, [activeTab, currentPage, selectedStatus]);
+
   const tabs = [
     {
       label: "Crop Approval",
       icon: "/Images/cropA.png",
-      count: cropApprovalData.length,
+      count: totalCrops,
     },
     {
       label: "Trade Activities",
@@ -71,7 +153,7 @@ const VillageActivityPanel = () => {
       default:
         return [];
     }
-  }, [activeTab]);
+  }, [activeTab, cropApprovalData]);
 
   const uniqueStatuses = useMemo(() => {
     const statuses = new Set<string>();
@@ -187,7 +269,7 @@ const VillageActivityPanel = () => {
       : data.filter((item) => item.status === selectedStatus);
   }, [selectedStatus, data]);
 
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const calculatedTotalPages = Math.ceil(filteredData.length / itemsPerPage);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
@@ -196,7 +278,7 @@ const VillageActivityPanel = () => {
 
   const renderPageNumbers = () => {
     const pageNumbers = [];
-    for (let i = 1; i <= totalPages; i++) {
+    for (let i = 1; i <= calculatedTotalPages; i++) {
       pageNumbers.push(
         <a
           key={i}
@@ -329,11 +411,48 @@ const VillageActivityPanel = () => {
       </div>
       {/* Data Table */}
       <div className="mt-6 overflow-x-auto">
-        {activeTab === "Crop Approval" && (
+        {loading && (
+          <div className="flex justify-center items-center py-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+            <span className="ml-2 text-gray-600">
+              Loading crop approvals...
+            </span>
+          </div>
+        )}
+
+        {error && (
+          <div className="bg-red-50 border border-red-200 rounded-md p-4 mb-4">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <svg
+                  className="h-5 w-5 text-red-400"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+              <div className="ml-3">
+                <h3 className="text-sm font-medium text-red-800">
+                  Error loading data
+                </h3>
+                <div className="mt-2 text-sm text-red-700">
+                  <p>{error}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {!loading && !error && activeTab === "Crop Approval" && (
           <CropApprovalTable
             initialData={currentItems as CropApproval[]}
             getStatusInfo={getStatusInfo}
-            onDataChange={() => {}}
+            onDataChange={fetchCropApprovalData}
           />
         )}
         {activeTab === "Trade Activities" && (
@@ -380,9 +499,11 @@ const VillageActivityPanel = () => {
           {renderPageNumbers()}
           <button
             onClick={() => paginate(currentPage + 1)}
-            disabled={currentPage === totalPages}
+            disabled={currentPage === calculatedTotalPages}
             className={`relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 ${
-              currentPage === totalPages ? "cursor-not-allowed opacity-50" : ""
+              currentPage === calculatedTotalPages
+                ? "cursor-not-allowed opacity-50"
+                : ""
             }`}
           >
             <span className="sr-only">Next</span>

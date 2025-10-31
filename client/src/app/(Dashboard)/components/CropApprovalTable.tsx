@@ -1,12 +1,11 @@
 import { CropApproval, Activity } from "../../../types";
 import ActivityDetailsModal from "./ActivityDetailsModal";
 import { useState } from "react";
+import { apiService } from "../../../lib/api";
 
 interface CropApprovalTableProps {
   initialData?: CropApproval[];
-  getStatusInfo: (
-    status: string
-  ) => {
+  getStatusInfo: (status: string) => {
     icon: React.ReactElement | null;
     color: string;
     backgroundColor: string;
@@ -64,19 +63,45 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
     };
   };
 
-  const handleApprove = (id: string) => {
-    const newData = initialData.map((item) =>
-      item.id === id ? { ...item, status: "Approved", action: ["review"] } : item
-    );
-    onDataChange(newData);
+  const handleApprove = async (id: string) => {
+    try {
+      const response = await apiService.updateCropStatus(id, "active");
+      if (response.success) {
+        const newData = initialData.map((item) =>
+          item.id === id
+            ? { ...item, status: "Approved", action: ["review"] }
+            : item
+        );
+        onDataChange(newData);
+      } else {
+        console.error("Failed to approve crop:", response.message);
+        alert("Failed to approve crop. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error approving crop:", error);
+      alert("Error approving crop. Please try again.");
+    }
     handleCloseModal();
   };
 
-  const handleReject = (id: string) => {
-    const newData = initialData.map((item) =>
-      item.id === id ? { ...item, status: "Rejected", action: ["review"] } : item
-    );
-    onDataChange(newData);
+  const handleReject = async (id: string) => {
+    try {
+      const response = await apiService.updateCropStatus(id, "cancelled");
+      if (response.success) {
+        const newData = initialData.map((item) =>
+          item.id === id
+            ? { ...item, status: "Rejected", action: ["review"] }
+            : item
+        );
+        onDataChange(newData);
+      } else {
+        console.error("Failed to reject crop:", response.message);
+        alert("Failed to reject crop. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error rejecting crop:", error);
+      alert("Error rejecting crop. Please try again.");
+    }
     handleCloseModal();
   };
 
@@ -216,9 +241,13 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
           isOpen={isModalOpen}
           onClose={handleCloseModal}
           activityData={selectedActivity}
-          onApprove={() => selectedActivity && handleApprove(selectedActivity.id)}
+          onApprove={() =>
+            selectedActivity && handleApprove(selectedActivity.id)
+          }
           onReject={() => selectedActivity && handleReject(selectedActivity.id)}
-          onEscalate={() => selectedActivity && handleEscalate(selectedActivity.id)}
+          onEscalate={() =>
+            selectedActivity && handleEscalate(selectedActivity.id)
+          }
         />
       )}
     </div>

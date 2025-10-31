@@ -6,15 +6,15 @@ import { getAllCrops,updateCropStatus,getCropDetailsById } from '../controllers/
 
 const authRoute = express.Router();
 
-authRoute.post(
+authRoute.get(
   '/getAllCrops',
   getAllCrops,
 );
-authRoute.post(
+authRoute.put(
   '/updateCropStatus',
   updateCropStatus,
 );
 
-authRoute.post('/getCropDetailsById/:cropId', getCropDetailsById);
+authRoute.get('/getCropDetailsById/:cropId', getCropDetailsById);
 
 export default authRoute;
