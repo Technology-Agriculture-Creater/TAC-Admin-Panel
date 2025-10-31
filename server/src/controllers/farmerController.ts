@@ -47,7 +47,187 @@ interface FarmerRequestBody {
   };
   applicationStatus?: 'draft' | 'submitted' | 'under_review' | 'approved' | 'rejected';
   isPaid?: boolean;
+  otp?: string;
 }
+
+// OTP store for registration (separate from your login otpStore)
+const registerOtpStore: Record<string, { otpOrToken: string; expiresAt: number; type: 'otp' | 'token' }> = {};
+
+export const registerDraft = async (req: Request<any, any, FarmerRequestBody>, res: Response) => {
+  try {
+    let { userId, ...rest } = req.body;
+
+    // If userId supplied keep it, else generate new one (same logic as your registerFarmer)
+    if (!userId) {
+      const lastFarmer = await Farmer.findOne({}, { userId: 1 }).sort({ createdAt: -1 }).lean();
+      let newIdNumber = 1;
+      if (lastFarmer?.userId) {
+        const match = lastFarmer.userId.match(/\d+$/);
+        if (match) newIdNumber = parseInt(match[0]) + 1;
+      }
+      userId = `TAC${newIdNumber.toString().padStart(5, '0')}`;
+    }
+
+    const files = req.files as { [fieldname: string]: Express.Multer.File[] } | undefined;
+    const profilePicUrl = files?.profilePic?.[0]?.path ?? rest.farmerProfilePic ?? null;
+    const aadharImageUrl = files?.aadharPic?.[0]?.path ?? rest.farmerAadharPic ?? null;
+
+    const updateData = {
+      ...rest,
+      userId,
+      applicationStatus: 'draft',
+      isPaid: rest.isPaid ?? false,
+      profilePicUrl,
+      aadharImageUrl,
+      isMobileVerified: false,
+    };
+
+    // Minimal validation: mobile or name optional for draft — but at least one identifier useful
+    const farmer = await Farmer.findOneAndUpdate(
+      { userId },
+      { $set: updateData },
+      { new: true, upsert: true, setDefaultsOnInsert: true },
+    ).exec();
+
+    res.status(200).json({
+      success: true,
+      message: 'Draft saved successfully',
+      farmer,
+    });
+  } catch (error: any) {
+    console.error('❌ Error in registerDraft:', error);
+    res.status(500).json({ success: false, message: 'Server Error' });
+  }
+};
+
+export const sendRegisterOtp = async (req: Request, res: Response) => {
+  try {
+    const { mobileNumber } = req.body;
+     if (!mobileNumber) return res.status(400).json({ success: false, message: 'Mobile number is required' });
+
+    // If a farmer exists and is already verified, block new OTP
+    const existing = await Farmer.findOne({ mobileNumber }).exec();
+    if (existing) {
+      return res.status(400).json({ success: false, message: 'Mobile number already verified/registered' });
+    }
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    registerOtpStore[mobileNumber] = {
+      otpOrToken: otp,
+      expiresAt: Date.now() + 5 * 60 * 1000,
+      type: 'otp',
+    };
+
+    // TODO: replace console.log with real SMS provider
+    console.log(`Registration OTP for ${mobileNumber}: ${otp}`);
+
+    res.status(200).json({ success: true, message: 'OTP sent successfully for registration' });
+  } catch (error) {
+    console.error('❌ Error in sendRegisterOtp:', error);
+    res.status(500).json({ success: false, message: 'Server Error' });
+  }
+};
+
+export const registerWithOtp = async (req: Request<any, any, FarmerRequestBody>, res: Response) => {
+  try {
+    const { mobileNumber, otp, userId: providedUserId, ...rest } = req.body;
+    console.log("🚀 ~ registerWithOtp ~ mobileNumber:", mobileNumber)
+
+    if (!mobileNumber || !otp) {
+      return res.status(400).json({
+        success: false,
+        message: 'Mobile number and OTP are required.',
+      });
+    }
+
+    const existing = await Farmer.findOne({ mobileNumber }).exec();
+    if (existing) {
+      return res.status(400).json({ success: false, message: 'The Farmer already registered with same number' });
+    }
+
+    const record = registerOtpStore[mobileNumber];
+    if (!record || record.type !== 'otp') {
+      return res.status(400).json({
+        success: false,
+        message: 'No OTP sent to this number.',
+      });
+    }
+
+    if (Date.now() > record.expiresAt) {
+      delete registerOtpStore[mobileNumber];
+      return res.status(400).json({
+        success: false,
+        message: 'OTP has expired. Please request a new one.',
+      });
+    }
+
+    if (record.otpOrToken !== otp) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid OTP.',
+      });
+    }
+
+    // ✅ OTP verified → remove it immediately
+    delete registerOtpStore[mobileNumber];
+
+    // 🧩 Generate or reuse userId
+    let userId = providedUserId;
+    if (!userId) {
+      const lastFarmer = await Farmer.findOne({}, { userId: 1 }).sort({ createdAt: -1 }).lean();
+      let newIdNumber = 1;
+      if (lastFarmer?.userId) {
+        const match = lastFarmer.userId.match(/\d+$/);
+        if (match) newIdNumber = parseInt(match[0]) + 1;
+      }
+      userId = `TAC${newIdNumber.toString().padStart(5, '0')}`;
+    }
+
+    // 🖼️ File uploads
+    const files = req.files as { [fieldname: string]: Express.Multer.File[] } | undefined;
+    const profilePicUrl = files?.farmerProfilePic?.[0]?.path ?? rest.farmerProfilePic ?? null;
+    const aadharImageUrl = files?.farmerAadharPic?.[0]?.path ?? rest.farmerAadharPic ?? null;
+
+    // 🧠 Prepare data
+    const farmerData = {
+      ...rest,
+      userId,
+      mobileNumber,
+      isMobileVerified: true,
+      applicationStatus: rest.applicationStatus ?? 'submitted',
+      profilePicUrl,
+      aadharImageUrl,
+    };
+
+    if (!farmerData.name || !farmerData.mobileNumber) {
+      return res.status(400).json({
+        success: false,
+        message: 'Missing required fields: name or mobile number.',
+      });
+    }
+
+    // 💾 Save farmer
+    const farmer = await Farmer.findOneAndUpdate(
+      { userId },
+      { $set: farmerData },
+      { new: true, upsert: true, setDefaultsOnInsert: true },
+    ).exec();
+
+    res.status(200).json({
+      success: true,
+      message: 'Farmer registered successfully with OTP verification',
+      farmer,
+    });
+  } catch (error: any) {
+    console.error('❌ Error in registerWithOtp:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal Server Error',
+    });
+  }
+};
+
 
 export const registerFarmer = async (req: Request<any, any, FarmerRequestBody>, res: Response) => {
   try {
@@ -137,6 +317,8 @@ export const registerFarmer = async (req: Request<any, any, FarmerRequestBody>, 
     });
   }
 };
+
+
 const otpStore: Record<string, { otp: string; expiresAt: number }> = {};
 
 export const sendOtp = async (req: Request, res: Response) => {
