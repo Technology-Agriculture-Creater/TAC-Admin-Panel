@@ -114,7 +114,7 @@ export const sendRegisterOtp = async (req: Request, res: Response) => {
       return res.status(400).json({ success: false, message: 'Mobile number already verified/registered' });
     }
 
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const otp = Math.floor(10000 + Math.random() * 90000).toString();
 
     registerOtpStore[mobileNumber] = {
       otpOrToken: otp,
