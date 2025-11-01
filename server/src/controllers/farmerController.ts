@@ -351,6 +351,94 @@ export const sendOtp = async (req: Request, res: Response) => {
   }
 };
 
+export const sellCropApi = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const {
+      cropName,
+      variety,
+      type,
+      fertilizersUsed,
+      cropQualityGrade,
+      quantity,
+      pricePerQuintal,
+      landSize,
+      soilType,
+      irrigationType,
+      packagingType,
+      feedback,
+      userId,
+    } = req.body;
+
+    // Check for missing fields
+    if (
+      !cropName ||
+      !variety ||
+      !type ||
+      !fertilizersUsed ||
+      !cropQualityGrade ||
+      !quantity ||
+      !pricePerQuintal ||
+      !landSize ||
+      !soilType ||
+      !irrigationType ||
+      !packagingType ||
+      !userId
+    ) {
+      res
+        .status(400)
+        .json({ success: false, message: "All fields are required." });
+      return;
+    }
+
+    // Convert and validate numeric fields
+    const parsedQuantity = Number(quantity);
+    const parsedPrice = Number(pricePerQuintal);
+    const parsedLandSize = parseFloat(landSize);
+
+    if (isNaN(parsedQuantity) || isNaN(parsedPrice) || isNaN(parsedLandSize)) {
+      res.status(400).json({
+        success: false,
+        message: "Quantity, pricePerQuintal, and landSize must be numbers.",
+      });
+      return;
+    }
+
+    // Create new crop listing
+    const crop = new cropModel({
+      cropName,
+      variety,
+      type,
+      fertilizersUsed,
+      cropQualityGrade,
+      quantity: parsedQuantity,
+      pricePerQuintal: parsedPrice,
+      landSize: parsedLandSize,
+      soilType,
+      irrigationType,
+      packagingType,
+      feedback,
+      userId,
+      farmerId:userId,
+    });
+
+    await crop.save();
+
+    res.status(201).json({
+      success: true,
+      message: "Crop listed successfully.",
+      data: crop,
+    });
+  } catch (error: any) {
+    console.error("Error in sellCrop:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
+
+
 export const verifyOtp = async (req: Request, res: Response) => {
   try {
     const { mobileNumber, otp } = req.body;
@@ -426,6 +514,7 @@ export const deleteFarmer = async (req: Request, res: Response) => {
 };
 
 export const sellCrop = async (req: Request, res: Response) => {
+  
   try {
     const {
       cropName,
@@ -441,6 +530,7 @@ export const sellCrop = async (req: Request, res: Response) => {
       packagingType,
       feedback,
       userId, // this is farmer's userId
+      
     } = req.body;
     if (!userId || !cropName) {
       return res.status(400).json({
@@ -448,16 +538,15 @@ export const sellCrop = async (req: Request, res: Response) => {
         message: 'User ID and crop name are required.',
       });
     }
-
+    
     const farmer = await Farmer.findOne({_id:userId });
-    console.log("🚀 ~ sellCrop ~ userId:", userId)
-    console.log("🚀 ~ sellCrop ~ farmer:", farmer)
     if (!farmer) {
       return res.status(404).json({
         success: false,
         message: 'Farmer not found. Please register as a farmer first.',
       });
     }
+    // console.log("🚀 ~ sellCrop ~ req:")
 
     const files = req.files as Express.Multer.File[] | undefined;
     let imageUrls: string[] = [];
@@ -473,7 +562,7 @@ export const sellCrop = async (req: Request, res: Response) => {
 
     const crop = new cropModel({
       userId: farmer.userId,      
-      farmerId: farmer._id, 
+      farmerId: userId, 
       cropName,
       variety,
       type,
@@ -488,6 +577,7 @@ export const sellCrop = async (req: Request, res: Response) => {
       feedback,
       cropImages: imageUrls,
       status: 'active',
+      
     });
 
     await crop.save();
@@ -507,7 +597,6 @@ export const sellCrop = async (req: Request, res: Response) => {
     });
   }
 };
-
 
 export const updateCropDetails = async (req: Request, res: Response): Promise<Response> => {
   try {
@@ -578,7 +667,7 @@ export const updateCropDetails = async (req: Request, res: Response): Promise<Re
 
 export const getActiveCropListings = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const { farmerId } = req.params;
+    const { farmerId } = req.body;
 
     if (!farmerId) {
       return res.status(400).json({
@@ -594,8 +683,63 @@ export const getActiveCropListings = async (req: Request, res: Response): Promis
 
     // Fetch only active crops for this farmer
     const activeCrops = await cropModel.find({
-      farmerId,
+      farmerId: farmerId,
       status: 'active',
+    })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .lean();
+    console.log("🚀 ~ getActiveCropListings ~ activeCrops:", activeCrops)
+
+    const totalActiveCrops = await cropModel.countDocuments({
+      farmerId: farmerId,
+      status: 'active',
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: 'Active crops fetched successfully.',
+      pagination: {
+        total: totalActiveCrops,
+        page,
+        limit,
+        totalPages: Math.ceil(totalActiveCrops / limit),
+      },
+      data: activeCrops,
+    });
+
+  } catch (error: any) {
+    console.error('Get Active Crop Listings Error:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Something went wrong while fetching active crops.',
+      error: error.message || 'Internal Server Error',
+    });
+  }
+};
+
+export const getAllCrops = async (req: Request, res: Response): Promise<Response> => {
+  try {
+    const { farmerId } = req.body;
+
+    if (!farmerId) {
+      return res.status(400).json({
+        success: false,
+        message: 'Farmer ID is required.',
+      });
+    }
+
+    // Pagination setup
+    const page = parseInt(req.query.page as string) || 1;
+    console.log("🚀 ~ getAllCrops ~ req.query.page:", req.query.page)
+    const limit = parseInt(req.query.limit as string) || 10;
+    console.log("🚀 ~ getAllCrops ~ req.query.limit:", req.query.limit)
+    const skip = (page - 1) * limit;
+
+    // Fetch only active crops for this farmer
+    const activeCrops = await cropModel.find({
+      farmerId:farmerId,
     })
       .sort({ createdAt: -1 })
       .skip(skip)
@@ -603,8 +747,7 @@ export const getActiveCropListings = async (req: Request, res: Response): Promis
       .lean();
 
     const totalActiveCrops = await cropModel.countDocuments({
-      farmerId,
-      status: 'active',
+      farmerId: farmerId,
     });
 
     return res.status(200).json({
