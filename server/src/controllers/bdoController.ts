@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import CropModel from '../models/crop.model.ts';
+import CropModel from '../models/cropListing.model.ts';
 
 /**
  * @desc    Get all crop listings (with pagination)
@@ -53,7 +53,7 @@ export const updateCropStatus = async (req: Request, res: Response): Promise<Res
   try {
     const { cropId, status } = req.body;
 
-    const validStatuses = ['pending', 'active', 'sold', 'cancelled'];
+    const validStatuses = ['Awaiting Approval','OnProgress', 'Approved', 'Sold', 'Rejected'];
     if (!status || !validStatuses.includes(status)) {
       return res.status(400).json({
         success: false,

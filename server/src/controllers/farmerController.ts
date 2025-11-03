@@ -2,7 +2,7 @@ import type { Request, Response } from 'express';
 import { Types } from 'mongoose';
 import Farmer from '../models/farmer.model.ts';
 import crypto from 'crypto';
-import cropModel from '../models/crop.model.ts';
+import cropModel from '../models/cropListing.model.ts';
 import path from 'path';
 import { uploadImage } from '../services/imagekit.service.ts';
 
@@ -344,7 +344,7 @@ export const sendOtp = async (req: Request, res: Response) => {
 
     console.log(`OTP for ${mobileNumber}: ${otp}`); // Replace with actual SMS service
 
-    res.status(200).json({ message: 'OTP sent successfully' });
+    res.status(200).json({otp:otp, message: 'OTP sent successfully' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server Error' });
@@ -771,4 +771,5 @@ export const getAllCrops = async (req: Request, res: Response): Promise<Response
     });
   }
 };
+
 
