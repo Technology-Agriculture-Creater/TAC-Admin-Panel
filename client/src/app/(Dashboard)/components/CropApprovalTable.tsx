@@ -11,6 +11,7 @@ interface CropApprovalTableProps {
     color: string;
     backgroundColor: string;
   };
+
   onDataChange: (newData: CropApproval[]) => void;
   onCropClick: (cropId: string) => void; // New prop for handling crop clicks
 }
@@ -28,9 +29,8 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
   );
 
   const mapCropApprovalToActivity = (cropApproval: CropApproval): Activity => {
-    const cropName = cropApproval.cropQty.split(" - ")[0];
     const rawCrop = rawCropData?.find((crop) => crop._id === cropApproval.id);
-
+    const cropName = rawCrop?.cropName || cropApproval.cropQty.split(" - ")[0];
     const getFullName = (
       nameObj:
         | { first: string; middle?: string; last: string }
@@ -46,28 +46,47 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
       }
       return "N/A";
     };
-
-    console.log(cropApproval);
+    console.log(rawCrop);
 
     return {
-      id: cropApproval.id || Math.random().toString(36).substring(7),
+      id:
+        rawCrop?._id ||
+        cropApproval.id ||
+        Math.random().toString(36).substring(7),
       farmerName: getFullName(rawCrop?.farmerId?.name || cropApproval.farmer),
+      farmerMobileNumber: rawCrop?.farmerId?.mobileNumber || "N/A",
       village:
-        rawCrop?.farmerId?.address?.villageOrCity || cropApproval.village,
+        rawCrop?.farmerId?.address?.villageOrCity &&
+        rawCrop.farmerId.address.villageOrCity !== ""
+          ? rawCrop.farmerId.address.villageOrCity
+          : cropApproval.village,
       crop: cropName.trim(),
-      grade: cropApproval.cropQualityGrade,
-      sowingDate: cropApproval.sowingDate, // Using the actual sowingDate
+      grade:
+        rawCrop?.cropQualityGrade || cropApproval.cropQualityGrade || "N/A",
+      sowingDate: rawCrop?.updatedAt
+        ? new Date(rawCrop.updatedAt).toISOString().split("T")[0]
+        : cropApproval.sowingDate
+        ? new Date(cropApproval.sowingDate).toISOString().split("T")[0]
+        : "N/A",
       harvestExpected: "N/A",
-      notes: "N/A",
+      notes: rawCrop?.feedback || "N/A",
       minBid: "N/A",
       maxBid: "N/A",
       status:
-        cropApproval.status === "Approved"
+        rawCrop?.status === "active"
+          ? "Approved"
+          : rawCrop?.status === "pending"
+          ? "Pending"
+          : rawCrop?.status === "cancelled"
+          ? "Rejected"
+          : rawCrop?.status === "sold"
+          ? "Completed"
+          : cropApproval.status === "Approved"
           ? "Approved"
           : cropApproval.status === "Awaiting approval"
           ? "Pending"
           : "Rejected",
-      farmerEvidence: [
+      farmerEvidence: rawCrop?.cropImages || [
         "/Images/veg.png",
         "/Images/veg.png",
         "/Images/veg.png",
@@ -76,13 +95,13 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
       bdaName: getFullName(rawCrop?.farmerId?.name || cropApproval.bda.name),
       bdaEvidence: {
         cropConfirmed: true,
-        cropImage: "/Images/veg.png",
+        cropImage: rawCrop?.cropImages?.[0] || "/Images/veg.png",
         qualityConfirmed: true,
-        qualityImage: "/Images/veg.png",
+        qualityImage: rawCrop?.cropImages?.[1] || "/Images/veg.png",
         locationConfirmed: true,
-        locationImage: "/Images/veg.png",
+        locationImage: rawCrop?.cropImages?.[2] || "/Images/veg.png",
         quantityConfirmed: true,
-        quantityImage: "/Images/veg.png",
+        quantityImage: rawCrop?.cropImages?.[3] || "/Images/veg.png",
       },
       remarks: "",
     };
@@ -111,7 +130,7 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
 
   const handleReject = async (id: string) => {
     try {
-      const response = await apiService.updateCropStatus(id);
+      const response = await apiService.updateCropStatus(id, "rejected");
       if (response.success) {
         const newData = initialData.map((item) =>
           item.id === id
@@ -177,6 +196,12 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
               className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
             >
               Farmer
+            </th>
+            <th
+              scope="col"
+              className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Mobile Number
             </th>
             <th
               scope="col"

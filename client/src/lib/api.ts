@@ -13,6 +13,9 @@ interface Crop {
   cropName: string;
   quantity: number;
   status: "pending" | "active" | "sold" | "cancelled";
+  cropQualityGrade?: string; // Added field
+  feedback?: string; // Added field
+  cropImages?: string[]; // Added field
   farmerId: {
     _id: string;
     name: {

@@ -314,10 +314,7 @@ const VillageActivityPanel = () => {
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   const handleCropClick = (cropId: string) => {
-    const clickedRawCrop = rawCropData.find((crop) => crop._id === cropId);
-    if (clickedRawCrop) {
-      console.log("Clicked raw crop data:", clickedRawCrop);
-    }
+    rawCropData.find((crop) => crop._id === cropId);
   };
 
   return (

@@ -35,11 +35,13 @@ export interface CropApproval {
   action: string[];
   cropQualityGrade?: string; // Added field
   sowingDate?: string; // Added field
+  feedback?: string; // Added field
 }
 
 export interface Activity {
   id: string;
   farmerName: string | { first: string; middle?: string; last: string };
+  farmerMobileNumber?: string; // Added field for farmer's mobile number
   village: string;
   crop: string;
   grade: string;
