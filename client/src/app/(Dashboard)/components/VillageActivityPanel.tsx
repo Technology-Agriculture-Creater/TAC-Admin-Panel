@@ -61,7 +61,7 @@ const VillageActivityPanel = () => {
       });
 
       if (response.success && response.data) {
-        console.log("All crops data:", response.data);
+        // console.log("All crops data:", response.data);
         setRawCropData(response.data);
         // Transform API data to match frontend CropApproval type
         const transformedData: CropApproval[] = response.data.map(
@@ -474,6 +474,7 @@ const VillageActivityPanel = () => {
         {!loading && !error && activeTab === "Crop Approval" && (
           <CropApprovalTable
             initialData={currentItems as CropApproval[]}
+            rawCropData={rawCropData} // Pass raw crop data
             getStatusInfo={getStatusInfo}
             onDataChange={fetchCropApprovalData}
             onCropClick={handleCropClick} // Pass the new handler

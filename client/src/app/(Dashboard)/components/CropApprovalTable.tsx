@@ -1,10 +1,11 @@
 import { CropApproval, Activity } from "../../../types";
 import ActivityDetailsModal from "./ActivityDetailsModal";
 import { useState } from "react";
-import { apiService } from "../../../lib/api";
+import { apiService, Crop } from "../../../lib/api";
 
 interface CropApprovalTableProps {
   initialData?: CropApproval[];
+  rawCropData?: Crop[]; // New prop to pass raw crop data
   getStatusInfo: (status: string) => {
     icon: React.ReactElement | null;
     color: string;
@@ -16,6 +17,7 @@ interface CropApprovalTableProps {
 
 const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
   initialData = [],
+  rawCropData = [], // Destructure rawCropData with a default empty array
   getStatusInfo,
   onDataChange,
   onCropClick,
@@ -27,15 +29,36 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
 
   const mapCropApprovalToActivity = (cropApproval: CropApproval): Activity => {
     const cropName = cropApproval.cropQty.split(" - ")[0];
+    const rawCrop = rawCropData?.find((crop) => crop._id === cropApproval.id);
+
+    const getFullName = (
+      nameObj:
+        | { first: string; middle?: string; last: string }
+        | string
+        | undefined
+    ) => {
+      if (typeof nameObj === "object" && nameObj !== null) {
+        return [nameObj.first, nameObj.middle, nameObj.last]
+          .filter(Boolean)
+          .join(" ");
+      } else if (typeof nameObj === "string") {
+        return nameObj;
+      }
+      return "N/A";
+    };
+
+    console.log(cropApproval);
+
     return {
       id: cropApproval.id || Math.random().toString(36).substring(7),
-      farmerName: cropApproval.farmer,
-      village: cropApproval.village,
+      farmerName: getFullName(rawCrop?.farmerId?.name || cropApproval.farmer),
+      village:
+        rawCrop?.farmerId?.address?.villageOrCity || cropApproval.village,
       crop: cropName.trim(),
       grade: cropApproval.cropQualityGrade,
-      sowingDate: "N/A",
+      sowingDate: cropApproval.sowingDate, // Using the actual sowingDate
       harvestExpected: "N/A",
-      notes: "",
+      notes: "N/A",
       minBid: "N/A",
       maxBid: "N/A",
       status:
@@ -50,7 +73,7 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
         "/Images/veg.png",
         "/Images/veg.png",
       ],
-      bdaName: cropApproval.bda.name,
+      bdaName: getFullName(rawCrop?.farmerId?.name || cropApproval.bda.name),
       bdaEvidence: {
         cropConfirmed: true,
         cropImage: "/Images/veg.png",

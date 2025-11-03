@@ -33,6 +33,43 @@ export interface CropApproval {
   village: string;
   status: string;
   action: string[];
+  cropQualityGrade?: string; // Added field
+  sowingDate?: string; // Added field
+}
+
+export interface Activity {
+  id: string;
+  farmerName: string | { first: string; middle?: string; last: string };
+  village: string;
+  crop: string;
+  grade: string;
+  sowingDate: string;
+  harvestExpected: string;
+  notes: string;
+  minBid: string;
+  maxBid: string;
+  status:
+    | "Approved"
+    | "Pending"
+    | "Rejected"
+    | "Pending review"
+    | "In process"
+    | "Completed"
+    | "Resolved"
+    | "Disputed";
+  farmerEvidence: string[];
+  bdaName: string | { first: string; middle?: string; last: string };
+  bdaEvidence: {
+    cropConfirmed: boolean;
+    cropImage?: string;
+    qualityConfirmed: boolean;
+    qualityImage?: string;
+    locationConfirmed: boolean;
+    locationImage?: string;
+    quantityConfirmed: boolean;
+    quantityImage?: string;
+  };
+  remarks: string;
 }
 
 export interface TradeActivity {
@@ -97,39 +134,4 @@ export interface System {
   description: string;
   status: "Completed" | "In Progress" | "Warning";
   timestamp: string;
-}
-
-export interface Activity {
-  id: string;
-  farmerName: string;
-  village: string;
-  crop: string;
-  grade: string;
-  sowingDate: string;
-  harvestExpected: string;
-  notes: string;
-  minBid: string;
-  maxBid: string;
-  status:
-    | "Approved"
-    | "Pending"
-    | "Rejected"
-    | "Pending review"
-    | "In process"
-    | "Completed"
-    | "Resolved"
-    | "Disputed";
-  farmerEvidence: string[];
-  bdaName: string;
-  bdaEvidence: {
-    cropConfirmed: boolean;
-    cropImage?: string;
-    qualityConfirmed: boolean;
-    qualityImage?: string;
-    locationConfirmed: boolean;
-    locationImage?: string;
-    quantityConfirmed: boolean;
-    quantityImage?: string;
-  };
-  remarks: string;
 }
