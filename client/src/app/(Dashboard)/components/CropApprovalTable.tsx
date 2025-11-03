@@ -150,6 +150,38 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
     handleCloseModal();
   };
 
+  const handleDelete = async (id: string) => {
+    console.log("handleDelete function called for ID:", id);
+    // Implement actual delete logic here if needed
+    handleCloseModal();
+  };
+
+  const handleRetain = async (id: string) => {
+    console.log("handleRetain function called for ID:", id);
+    try {
+      const response = await apiService.updateCropStatus(
+        id,
+        "Awaiting Approval"
+      );
+      console.log("API Response for Retain:", response);
+      if (response.success) {
+        const newData = initialData.map((item) =>
+          item.id === id
+            ? { ...item, status: "Awaiting approval", action: ["view"] }
+            : item
+        );
+        onDataChange(newData);
+      } else {
+        console.error("Failed to retain crop:", response.message);
+        alert("Failed to retain crop. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error retaining crop:", error);
+      alert("Error retaining crop. Please try again.");
+    }
+    handleCloseModal();
+  };
+
   const handleViewClick = (crop: CropApproval) => {
     // console.log("Clicked crop data:", crop);
     onCropClick(crop.id);
@@ -301,6 +333,8 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
           onEscalate={() =>
             selectedActivity && handleEscalate(selectedActivity.id)
           }
+          onRetain={() => selectedActivity && handleRetain(selectedActivity.id)}
+          onDelete={() => selectedActivity && handleDelete(selectedActivity.id)}
         />
       )}
     </div>

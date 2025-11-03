@@ -10,6 +10,8 @@ interface ActivityDetailsModalProps {
   onApprove: (id: string) => void;
   onReject: (id: string) => void;
   onEscalate: (id: string) => void;
+  onRetain: (id: string) => void;
+  onDelete: (id: string) => void;
 }
 
 const ActivityDetailsModal: React.FC<ActivityDetailsModalProps> = ({
@@ -19,6 +21,8 @@ const ActivityDetailsModal: React.FC<ActivityDetailsModalProps> = ({
   onApprove,
   onReject,
   onEscalate,
+  onRetain,
+  onDelete,
 }) => {
   if (!isOpen || !activityData) return null;
 
@@ -356,7 +360,10 @@ const ActivityDetailsModal: React.FC<ActivityDetailsModalProps> = ({
           )}
           {activityData.status === "Approved" && (
             <>
-              <button className="border w-full active:scale-95 border-blue-600 text-blue-600 px-6 py-2 rounded-md hover:bg-blue-50">
+              <button
+                onClick={() => onDelete(activityData.id)}
+                className="border w-full active:scale-95 border-blue-600 text-blue-600 px-6 py-2 rounded-md hover:bg-blue-50"
+              >
                 Delete
               </button>
               <button
@@ -369,10 +376,16 @@ const ActivityDetailsModal: React.FC<ActivityDetailsModalProps> = ({
           )}
           {activityData.status === "Rejected" && (
             <>
-              <button className="border w-full active:scale-95 border-blue-600 text-blue-600 px-6 py-2 rounded-md hover:bg-blue-50">
+              <button
+                onClick={() => onDelete(activityData.id)}
+                className="border w-full active:scale-95 border-blue-600 text-blue-600 px-6 py-2 rounded-md hover:bg-blue-50"
+              >
                 Delete
               </button>
-              <button className="bg-green-500 w-full active:scale-95 text-white px-6 py-2 rounded-md hover:bg-green-600">
+              <button
+                onClick={() => onRetain(activityData.id)}
+                className="bg-green-500 w-full active:scale-95 text-white px-6 py-2 rounded-md hover:bg-green-600"
+              >
                 Retain
               </button>
             </>
