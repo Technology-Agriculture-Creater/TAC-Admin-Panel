@@ -359,7 +359,10 @@ const ActivityDetailsModal: React.FC<ActivityDetailsModalProps> = ({
               <button className="border w-full active:scale-95 border-blue-600 text-blue-600 px-6 py-2 rounded-md hover:bg-blue-50">
                 Delete
               </button>
-              <button className="bg-red-500 w-full active:scale-95 text-white px-6 py-2 rounded-md hover:bg-red-600">
+              <button
+                onClick={() => onReject(activityData.id)}
+                className="bg-red-500 w-full active:scale-95 text-white px-6 py-2 rounded-md hover:bg-red-600"
+              >
                 Reject
               </button>
             </>
