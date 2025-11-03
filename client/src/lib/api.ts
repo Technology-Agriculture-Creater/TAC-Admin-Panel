@@ -21,7 +21,15 @@ interface Crop {
       last: string;
     };
     mobileNumber: string;
-    address?: string;
+    address?: {
+      houseNo?: string;
+      street?: string;
+      villageOrCity?: string;
+      district?: string;
+      state?: string;
+      country?: string;
+      postalCode?: string;
+    };
     farmerType?: string;
   };
   createdAt: string;

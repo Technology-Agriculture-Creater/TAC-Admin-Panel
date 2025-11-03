@@ -11,12 +11,14 @@ interface CropApprovalTableProps {
     backgroundColor: string;
   };
   onDataChange: (newData: CropApproval[]) => void;
+  onCropClick: (cropId: string) => void; // New prop for handling crop clicks
 }
 
 const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
   initialData = [],
   getStatusInfo,
   onDataChange,
+  onCropClick,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedActivity, setSelectedActivity] = useState<Activity | null>(
@@ -30,7 +32,7 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
       farmerName: cropApproval.farmer,
       village: cropApproval.village,
       crop: cropName.trim(),
-      grade: "N/A",
+      grade: cropApproval.cropQualityGrade,
       sowingDate: "N/A",
       harvestExpected: "N/A",
       notes: "",
@@ -86,7 +88,7 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
 
   const handleReject = async (id: string) => {
     try {
-      const response = await apiService.updateCropStatus(id, "cancelled");
+      const response = await apiService.updateCropStatus(id);
       if (response.success) {
         const newData = initialData.map((item) =>
           item.id === id
@@ -110,8 +112,10 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
     handleCloseModal();
   };
 
-  const handleViewClick = (item: CropApproval) => {
-    setSelectedActivity(mapCropApprovalToActivity(item));
+  const handleViewClick = (crop: CropApproval) => {
+    // console.log("Clicked crop data:", crop);
+    onCropClick(crop.id);
+    setSelectedActivity(mapCropApprovalToActivity(crop));
     setIsModalOpen(true);
   };
 
@@ -177,11 +181,15 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
               <td className="px-6 py-4 whitespace-nowrap text-center">
                 <div className="flex items-center justify-center">
                   <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 text-sm">
-                    {/* {item.bda?.name?.charAt(0) || "—"} */}
+                    {typeof item.bda?.name === "string"
+                      ? item.bda?.name.charAt(0) || "—"
+                      : "—"}
                   </div>
                   <div className="ml-4 text-left">
                     <div className="text-sm font-medium text-gray-900">
-                      {item.bda?.name || "—"}
+                      {typeof item.bda?.name === "string"
+                        ? item.bda?.name || "—"
+                        : "—"}
                     </div>
                     <div className="text-sm text-gray-500">{item.bda.id}</div>
                   </div>
@@ -193,7 +201,13 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
                 </div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-center">
-                <div className="text-sm text-gray-900">{item.farmer}</div>
+                <div className="text-sm text-gray-900">
+                  {typeof item.farmer === "string"
+                    ? item.farmer
+                    : `${item.farmer?.first ?? ""} ${
+                        item.farmer?.middle ?? ""
+                      } ${item.farmer?.last ?? ""}`.trim()}
+                </div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-center">
                 <div className="text-sm text-gray-900">{item.village}</div>
