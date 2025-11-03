@@ -82,7 +82,7 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
           ? "Completed"
           : cropApproval.status === "Approved"
           ? "Approved"
-          : cropApproval.status === "Awaiting approval"
+          : cropApproval.status === "Awaiting Approval"
           ? "Pending"
           : "Rejected",
       farmerEvidence: rawCrop?.cropImages || ["/Images/veg.png"],
@@ -110,7 +110,7 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
             ? { ...item, status: "Approved", action: ["review"] }
             : item
         );
-        onDataChange(newData);
+        onDataChange(newData as CropApproval[]);
       } else {
         console.error("Failed to approve crop:", response.message);
         alert("Failed to approve crop. Please try again.");
@@ -123,17 +123,15 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
   };
 
   const handleReject = async (id: string) => {
-    console.log("handleReject function called for ID:", id);
     try {
       const response = await apiService.updateCropStatus(id, "Rejected");
-      console.log("API Response for Reject:", response);
       if (response.success) {
         const newData = initialData.map((item) =>
           item.id === id
             ? { ...item, status: "Rejected", action: ["review"] }
             : item
         );
-        onDataChange(newData);
+        onDataChange(newData as CropApproval[]);
       } else {
         console.error("Failed to reject crop:", response.message);
         alert("Failed to reject crop. Please try again.");
@@ -157,7 +155,6 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
   };
 
   const handleRetain = async (id: string) => {
-    console.log("handleRetain function called for ID:", id);
     try {
       const response = await apiService.updateCropStatus(
         id,
@@ -170,7 +167,7 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
             ? { ...item, status: "Awaiting approval", action: ["view"] }
             : item
         );
-        onDataChange(newData);
+        onDataChange(newData as CropApproval[]);
       } else {
         console.error("Failed to retain crop:", response.message);
         alert("Failed to retain crop. Please try again.");

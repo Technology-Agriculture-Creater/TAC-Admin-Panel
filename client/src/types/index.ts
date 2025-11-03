@@ -32,7 +32,14 @@ export interface CropApproval {
   cropQty: string;
   farmer: string | { first: string; middle?: string; last: string };
   village: string;
-  status: string;
+  status:
+    | "pending"
+    | "active"
+    | "sold"
+    | "cancelled"
+    | "Approved"
+    | "Rejected"
+    | "Awaiting Approval";
   action: string[];
   cropQualityGrade?: string; // Added field
   sowingDate?: string; // Added field

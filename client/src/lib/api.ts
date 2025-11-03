@@ -12,7 +12,14 @@ interface Crop {
   _id: string;
   cropName: string;
   quantity: number;
-  status: "pending" | "active" | "sold" | "cancelled" | "Approved" | "Rejected";
+  status:
+    | "pending"
+    | "active"
+    | "sold"
+    | "cancelled"
+    | "Approved"
+    | "Rejected"
+    | "Awaiting Approval";
   cropQualityGrade?: string; // Added field
   feedback?: string; // Added field
   cropImages?: string[]; // Added field
