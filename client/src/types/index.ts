@@ -1,14 +1,14 @@
 export interface FarmerData {
   id: string;
   bdaId?: string;
-  name: string;
+  name: string | { first: string; middle?: string; last: string };
   cropQty?: string;
   village: string;
   status: string;
   number?: string;
   farmer?: string | { name: string; id: string };
   bda?: {
-    name: string;
+    name: string | { first: string; middle?: string; last: string };
     id: string;
   };
   taluka?: string;
@@ -25,11 +25,11 @@ export interface FarmerData {
 export interface CropApproval {
   id: string;
   bda: {
-    name: string;
+    name: string | { first: string; middle?: string; last: string };
     id: string;
   };
   cropQty: string;
-  farmer: string;
+  farmer: string | { first: string; middle?: string; last: string };
   village: string;
   status: string;
   action: string[];

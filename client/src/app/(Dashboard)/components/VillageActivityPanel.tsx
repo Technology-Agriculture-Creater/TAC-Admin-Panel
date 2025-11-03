@@ -10,7 +10,6 @@ import {
 } from "../../../types";
 import { Search, ChevronsLeft, ChevronsRight } from "lucide-react";
 import TabComponent from "../../../components/TabComponent";
-import cropApprovalData from "../../../data/CropApproval.json";
 import tradeData from "../../../data/TradeActivities.json";
 import complaintsData from "../../../data/Complaints.json";
 import disputesData from "../../../data/Disputes.json";
@@ -32,7 +31,7 @@ const VillageActivityPanel = () => {
   const [cropApprovalData, setCropApprovalData] = useState<CropApproval[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [, setTotalPages] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
   const [totalCrops, setTotalCrops] = useState(0);
 
   // Fetch crop approval data from API
@@ -57,7 +56,7 @@ const VillageActivityPanel = () => {
       const response = await apiService.getAllCrops({
         page: currentPage,
         limit: 10, // You can adjust this as needed
-        status: status
+        status: status,
       });
 
       if (response.success && response.data) {
@@ -66,11 +65,19 @@ const VillageActivityPanel = () => {
           (crop: Crop) => ({
             id: crop._id,
             bda: {
-              name: crop.farmerId?.name || "BDO Office",
+              name: [
+                crop.farmerId?.name?.first,
+                crop.farmerId?.name?.middle,
+                crop.farmerId?.name?.last,
+              ].filter(Boolean).join(" ") || "BDO Office",
               id: crop.farmerId?._id || "N/A",
             },
             cropQty: `${crop.cropName} - ${crop.quantity} kg`,
-            farmer: crop.farmerId?.name || "Unknown Farmer",
+            farmer: [
+              crop.farmerId?.name?.first,
+              crop.farmerId?.name?.middle,
+              crop.farmerId?.name?.last,
+            ].filter(Boolean).join(" ") || "Unknown Farmer",
             village: "Unknown Village", // This data is not available in the API response
             status:
               crop.status === "pending"
@@ -274,28 +281,28 @@ const VillageActivityPanel = () => {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
 
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
-
   const renderPageNumbers = () => {
     const pageNumbers = [];
-    for (let i = 1; i <= calculatedTotalPages; i++) {
+    for (let i = 1; i <= totalPages; i++) {
       pageNumbers.push(
-        <a
+        <button
           key={i}
-          href="#"
           onClick={() => paginate(i)}
-          className={`relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium ${
+          aria-current={currentPage === i ? "page" : undefined}
+          className={`relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 ${
             currentPage === i
-              ? "bg-blue-50 text-blue-600 hover:bg-blue-100"
-              : "bg-white text-gray-700 hover:bg-gray-50"
+              ? "z-10 bg-indigo-50 border-indigo-500 text-indigo-600"
+              : ""
           }`}
         >
           {i}
-        </a>
+        </button>
       );
     }
     return pageNumbers;
   };
+
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   return (
     <div className="bg-white p-4 rounded-lg shadow-md">
@@ -499,11 +506,9 @@ const VillageActivityPanel = () => {
           {renderPageNumbers()}
           <button
             onClick={() => paginate(currentPage + 1)}
-            disabled={currentPage === calculatedTotalPages}
+            disabled={currentPage === totalPages}
             className={`relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 ${
-              currentPage === calculatedTotalPages
-                ? "cursor-not-allowed opacity-50"
-                : ""
+              currentPage === totalPages ? "cursor-not-allowed opacity-50" : ""
             }`}
           >
             <span className="sr-only">Next</span>

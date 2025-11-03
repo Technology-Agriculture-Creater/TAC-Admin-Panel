@@ -177,7 +177,7 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
               <td className="px-6 py-4 whitespace-nowrap text-center">
                 <div className="flex items-center justify-center">
                   <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 text-sm">
-                    {item.bda?.name?.charAt(0) || "—"}
+                    {/* {item.bda?.name?.charAt(0) || "—"} */}
                   </div>
                   <div className="ml-4 text-left">
                     <div className="text-sm font-medium text-gray-900">

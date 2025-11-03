@@ -15,7 +15,11 @@ interface Crop {
   status: "pending" | "active" | "sold" | "cancelled";
   farmerId: {
     _id: string;
-    name: string;
+    name: {
+      first: string;
+      middle?: string;
+      last: string;
+    };
     mobileNumber: string;
     address?: string;
     farmerType?: string;
@@ -30,7 +34,7 @@ interface UpdateCropStatusRequest {
 }
 
 class ApiService {
-  private baseURL = "http://localhost:8000/api";
+  private baseURL = "https://apiadmin.technologyagriculturecreater.com/api";
 
   async getAllCrops(
     params: {
@@ -46,15 +50,12 @@ class ApiService {
     if (params.status) queryParams.append("status", params.status);
     if (params.cropName) queryParams.append("cropName", params.cropName);
 
-    const response = await fetch(
-      `${this.baseURL}/bdo/getAllCrops?${queryParams}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const response = await fetch(`${this.baseURL}/api/bdo/getAllCrops`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -65,7 +66,7 @@ class ApiService {
 
   async getCropById(cropId: string): Promise<ApiResponse<Crop>> {
     const response = await fetch(
-      `${this.baseURL}/bdo/getCropDetailsById/${cropId}`,
+      `${this.baseURL}/api/bdo/getCropDetailsById/${cropId}`,
       {
         method: "GET",
         headers: {
