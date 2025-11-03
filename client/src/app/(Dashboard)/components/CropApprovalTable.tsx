@@ -46,7 +46,7 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
       }
       return "N/A";
     };
-    console.log(rawCrop);
+    console.log("Full rawCrop object in CropApprovalTable:", rawCrop);
 
     return {
       id:
@@ -60,6 +60,19 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
         rawCrop.farmerId.address.villageOrCity !== ""
           ? rawCrop.farmerId.address.villageOrCity
           : cropApproval.village,
+      fullAddress: rawCrop?.farmerId?.address
+        ? [
+            rawCrop.farmerId.address.houseNo,
+            rawCrop.farmerId.address.street,
+            rawCrop.farmerId.address.villageOrCity,
+            rawCrop.farmerId.address.district,
+            rawCrop.farmerId.address.state,
+            rawCrop.farmerId.address.country,
+            rawCrop.farmerId.address.postalCode,
+          ]
+            .filter(Boolean)
+            .join(", ")
+        : undefined,
       crop: cropName.trim(),
       grade:
         rawCrop?.cropQualityGrade || cropApproval.cropQualityGrade || "N/A",

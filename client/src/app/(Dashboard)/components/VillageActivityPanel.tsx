@@ -61,10 +61,15 @@ const VillageActivityPanel = () => {
       });
 
       if (response.success && response.data) {
-        // console.log("All crops data:", response.data);
-        setRawCropData(response.data);
+        const processedData = response.data.map((crop: Crop) => ({
+          ...crop,
+          farmerId: {
+            ...crop.farmerId,
+          },
+        }));
+        setRawCropData(processedData);
         // Transform API data to match frontend CropApproval type
-        const transformedData: CropApproval[] = response.data.map(
+        const transformedData: CropApproval[] = processedData.map(
           (crop: Crop) => ({
             id: crop._id,
             bda: {

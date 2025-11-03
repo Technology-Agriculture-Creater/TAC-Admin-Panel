@@ -16,6 +16,7 @@ interface Crop {
   cropQualityGrade?: string; // Added field
   feedback?: string; // Added field
   cropImages?: string[]; // Added field
+  fullAddress?: string;
   farmerId: {
     _id: string;
     name: {

@@ -84,7 +84,7 @@ const ActivityDetailsModal: React.FC<ActivityDetailsModalProps> = ({
                   className="w-8 h-8 rounded-full mr-2 object-cover"
                 />
                 <div>
-                  <p className="font-medium">{activityData.farmerName}</p>
+                  <p className="font-medium">{activityData?.farmerName}</p>
                   <p className="text-sm text-gray-500">{activityData.id}</p>
                 </div>
               </div>

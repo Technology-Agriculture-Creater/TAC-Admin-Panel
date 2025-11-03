@@ -4,6 +4,7 @@ export interface FarmerData {
   name: string | { first: string; middle?: string; last: string };
   cropQty?: string;
   village: string;
+  fullAddress?: string;
   status: string;
   number?: string;
   farmer?: string | { name: string; id: string };
