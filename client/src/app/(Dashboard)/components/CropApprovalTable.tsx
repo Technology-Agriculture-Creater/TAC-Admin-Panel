@@ -46,7 +46,6 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
       }
       return "N/A";
     };
-    console.log("Full rawCrop object in CropApprovalTable:", rawCrop);
 
     return {
       id:
@@ -60,19 +59,6 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
         rawCrop.farmerId.address.villageOrCity !== ""
           ? rawCrop.farmerId.address.villageOrCity
           : cropApproval.village,
-      fullAddress: rawCrop?.farmerId?.address
-        ? [
-            rawCrop.farmerId.address.houseNo,
-            rawCrop.farmerId.address.street,
-            rawCrop.farmerId.address.villageOrCity,
-            rawCrop.farmerId.address.district,
-            rawCrop.farmerId.address.state,
-            rawCrop.farmerId.address.country,
-            rawCrop.farmerId.address.postalCode,
-          ]
-            .filter(Boolean)
-            .join(", ")
-        : undefined,
       crop: cropName.trim(),
       grade:
         rawCrop?.cropQualityGrade || cropApproval.cropQualityGrade || "N/A",
@@ -99,12 +85,7 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
           : cropApproval.status === "Awaiting approval"
           ? "Pending"
           : "Rejected",
-      farmerEvidence: rawCrop?.cropImages || [
-        "/Images/veg.png",
-        "/Images/veg.png",
-        "/Images/veg.png",
-        "/Images/veg.png",
-      ],
+      farmerEvidence: rawCrop?.cropImages || ["/Images/veg.png"],
       bdaName: getFullName(rawCrop?.farmerId?.name || cropApproval.bda.name),
       bdaEvidence: {
         cropConfirmed: true,
@@ -143,7 +124,7 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
 
   const handleReject = async (id: string) => {
     try {
-      const response = await apiService.updateCropStatus(id, "rejected");
+      const response = await apiService.updateCropStatus(id, "cancelled");
       if (response.success) {
         const newData = initialData.map((item) =>
           item.id === id
@@ -210,12 +191,7 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
             >
               Farmer
             </th>
-            <th
-              scope="col"
-              className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-            >
-              Mobile Number
-            </th>
+
             <th
               scope="col"
               className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
