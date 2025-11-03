@@ -104,6 +104,7 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
   const handleApprove = async (id: string) => {
     try {
       const response = await apiService.updateCropStatus(id, "active");
+      console.log("API Response for Approve:", response);
       if (response.success) {
         const newData = initialData.map((item) =>
           item.id === id
@@ -123,8 +124,10 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
   };
 
   const handleReject = async (id: string) => {
+    console.log("handleReject function called for ID:", id);
     try {
       const response = await apiService.updateCropStatus(id, "cancelled");
+      console.log("API Response for Reject:", response);
       if (response.success) {
         const newData = initialData.map((item) =>
           item.id === id

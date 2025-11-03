@@ -7,9 +7,9 @@ interface ActivityDetailsModalProps {
   isOpen: boolean;
   onClose: () => void;
   activityData: Activity | null;
-  onApprove: () => void;
-  onReject: () => void;
-  onEscalate: () => void;
+  onApprove: (id: string) => void;
+  onReject: (id: string) => void;
+  onEscalate: (id: string) => void;
 }
 
 const ActivityDetailsModal: React.FC<ActivityDetailsModalProps> = ({
@@ -100,7 +100,9 @@ const ActivityDetailsModal: React.FC<ActivityDetailsModalProps> = ({
                   className="w-8 h-8 rounded-full mr-2 object-cover"
                 />
                 <div>
-                  <p className="font-medium">{getFullName(activityData?.farmerName)}</p>
+                  <p className="font-medium">
+                    {getFullName(activityData?.farmerName)}
+                  </p>
                   <p className="text-sm text-gray-500">{activityData.id}</p>
                 </div>
               </div>
@@ -177,7 +179,9 @@ const ActivityDetailsModal: React.FC<ActivityDetailsModalProps> = ({
                 className="w-8 h-8 rounded-full mr-2 object-cover"
               />
               <div>
-                <p className="font-medium">{getFullName(activityData?.bdaName)}</p>
+                <p className="font-medium">
+                  {getFullName(activityData?.bdaName)}
+                </p>
                 <p className="text-sm text-gray-500">{activityData.id}</p>
               </div>
             </div>
@@ -331,20 +335,20 @@ const ActivityDetailsModal: React.FC<ActivityDetailsModalProps> = ({
           {activityData.status === "Pending" && (
             <>
               <button
-                onClick={onEscalate}
-                className="border w-full border-blue-600 text-blue-600 px-6 py-2 rounded-md hover:bg-blue-50"
+                onClick={() => onEscalate(activityData.id)}
+                className="border w-full active:scale-95 border-blue-600 text-blue-600 px-6 py-2 rounded-md hover:bg-blue-50"
               >
                 Escalate to Admin
               </button>
               <button
-                onClick={onReject}
-                className="bg-red-500 w-full text-white px-6 py-2 rounded-md hover:bg-red-600"
+                onClick={() => onReject(activityData.id)}
+                className="bg-red-500 w-full active:scale-95 text-white px-6 py-2 rounded-md hover:bg-red-600"
               >
                 Reject
               </button>
               <button
-                onClick={onApprove}
-                className="bg-green-500 w-full text-white px-6 py-2 rounded-md hover:bg-green-600"
+                onClick={() => onApprove(activityData.id)}
+                className="bg-green-500 w-full active:scale-95 text-white px-6 py-2 rounded-md hover:bg-green-600"
               >
                 Approve
               </button>
@@ -352,20 +356,23 @@ const ActivityDetailsModal: React.FC<ActivityDetailsModalProps> = ({
           )}
           {activityData.status === "Approved" && (
             <>
-              <button className="border w-full border-blue-600 text-blue-600 px-6 py-2 rounded-md hover:bg-blue-50">
+              <button className="border w-full active:scale-95 border-blue-600 text-blue-600 px-6 py-2 rounded-md hover:bg-blue-50">
                 Delete
               </button>
-              <button className="bg-red-500 w-full text-white px-6 py-2 rounded-md hover:bg-red-600">
+              <button
+                onClick={() => onReject(activityData.id)}
+                className="bg-red-500 w-full active:scale-95 text-white px-6 py-2 rounded-md hover:bg-red-600"
+              >
                 Reject
               </button>
             </>
           )}
           {activityData.status === "Rejected" && (
             <>
-              <button className="border w-full border-blue-600 text-blue-600 px-6 py-2 rounded-md hover:bg-blue-50">
+              <button className="border w-full active:scale-95 border-blue-600 text-blue-600 px-6 py-2 rounded-md hover:bg-blue-50">
                 Delete
               </button>
-              <button className="bg-green-500 w-full text-white px-6 py-2 rounded-md hover:bg-green-600">
+              <button className="bg-green-500 w-full active:scale-95 text-white px-6 py-2 rounded-md hover:bg-green-600">
                 Retain
               </button>
             </>
