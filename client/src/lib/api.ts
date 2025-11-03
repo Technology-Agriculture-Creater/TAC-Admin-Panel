@@ -12,7 +12,7 @@ interface Crop {
   _id: string;
   cropName: string;
   quantity: number;
-  status: "pending" | "active" | "sold" | "cancelled";
+  status: "pending" | "active" | "sold" | "cancelled" | "Approved" | "Rejected";
   cropQualityGrade?: string; // Added field
   feedback?: string; // Added field
   cropImages?: string[]; // Added field
@@ -39,7 +39,6 @@ interface Crop {
   createdAt: string;
   updatedAt: string;
 }
-
 
 class ApiService {
   private baseURL = "https://apiadmin.technologyagriculturecreater.com/api";
@@ -92,9 +91,14 @@ class ApiService {
 
   async updateCropStatus(
     cropId: string,
-    status: "pending" | "active" | "sold" | "cancelled"
+    status:
+      | "Awaiting Approval"
+      | "OnProgress"
+      | "Approved"
+      | "Sold"
+      | "Rejected"
   ): Promise<ApiResponse<Crop>> {
-    const response = await fetch(`${this.baseURL}/bdo/updateCropStatus`, {
+    const response = await fetch(`${this.baseURL}/api/bdo/updateCropStatus`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -106,7 +110,8 @@ class ApiService {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    return await response.json();
+    const data = await response.json();
+    return { success: true, message: "Crop status updated successfully", data };
   }
 }
 

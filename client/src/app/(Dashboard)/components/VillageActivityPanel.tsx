@@ -60,6 +60,8 @@ const VillageActivityPanel = () => {
         status: status,
       });
 
+      console.log(response);
+
       if (response.success && response.data) {
         const processedData = response.data.map((crop: Crop) => ({
           ...crop,
@@ -96,12 +98,10 @@ const VillageActivityPanel = () => {
             status:
               crop.status === "pending"
                 ? "Awaiting approval"
-                : crop.status === "active"
+                : crop.status === "Approved"
                 ? "Approved"
-                : crop.status === "cancelled"
+                : crop.status === "Rejected"
                 ? "Rejected"
-                : crop.status === "sold"
-                ? "Sold"
                 : "Unknown",
             action: crop.status === "pending" ? ["view"] : ["review"],
           })
