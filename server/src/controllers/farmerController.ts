@@ -82,7 +82,7 @@ export const registerDraft = async (req: Request<any, any, FarmerRequestBody>, r
       isPaid: rest.isPaid ?? false,
       profilePicUrl,
       aadharImageUrl,
-      isMobileVerified: false,
+      isMobileVerified: false,  
     };
 
     // Minimal validation: mobile or name optional for draft — but at least one identifier useful
