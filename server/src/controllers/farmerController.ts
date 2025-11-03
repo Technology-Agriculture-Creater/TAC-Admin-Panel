@@ -334,7 +334,7 @@ export const sendOtp = async (req: Request, res: Response) => {
     console.log('🚀 ~ sendOtp ~ farmer:', farmer);
     if (!farmer) return res.status(404).json({ message: 'Farmer not found' });
 
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const otp = Math.floor(10000 + Math.random() * 90000).toString();
     console.log('🚀 ~ sendOtp ~ otp:', otp);
 
     otpStore[mobileNumber] = {
