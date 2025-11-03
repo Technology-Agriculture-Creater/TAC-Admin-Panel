@@ -22,6 +22,22 @@ const ActivityDetailsModal: React.FC<ActivityDetailsModalProps> = ({
 }) => {
   if (!isOpen || !activityData) return null;
 
+  const getFullName = (
+    nameObj:
+      | { first: string; middle?: string; last: string }
+      | string
+      | undefined
+  ) => {
+    if (typeof nameObj === "object" && nameObj !== null) {
+      return [nameObj.first, nameObj.middle, nameObj.last]
+        .filter(Boolean)
+        .join(" ");
+    } else if (typeof nameObj === "string") {
+      return nameObj;
+    }
+    return "N/A";
+  };
+
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50">
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-5xl max-h-[90vh] overflow-y-auto relative">
@@ -84,7 +100,7 @@ const ActivityDetailsModal: React.FC<ActivityDetailsModalProps> = ({
                   className="w-8 h-8 rounded-full mr-2 object-cover"
                 />
                 <div>
-                  <p className="font-medium">{activityData.farmerName}</p>
+                  <p className="font-medium">{getFullName(activityData?.farmerName)}</p>
                   <p className="text-sm text-gray-500">{activityData.id}</p>
                 </div>
               </div>
@@ -161,7 +177,7 @@ const ActivityDetailsModal: React.FC<ActivityDetailsModalProps> = ({
                 className="w-8 h-8 rounded-full mr-2 object-cover"
               />
               <div>
-                <p className="font-medium">{activityData.bdaName}</p>
+                <p className="font-medium">{getFullName(activityData?.bdaName)}</p>
                 <p className="text-sm text-gray-500">{activityData.id}</p>
               </div>
             </div>

@@ -10,7 +10,6 @@ import {
 } from "../../../types";
 import { Search, ChevronsLeft, ChevronsRight } from "lucide-react";
 import TabComponent from "../../../components/TabComponent";
-import cropApprovalData from "../../../data/CropApproval.json";
 import tradeData from "../../../data/TradeActivities.json";
 import complaintsData from "../../../data/Complaints.json";
 import disputesData from "../../../data/Disputes.json";
@@ -32,8 +31,9 @@ const VillageActivityPanel = () => {
   const [cropApprovalData, setCropApprovalData] = useState<CropApproval[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [, setTotalPages] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
   const [totalCrops, setTotalCrops] = useState(0);
+  const [rawCropData, setRawCropData] = useState<Crop[]>([]);
 
   // Fetch crop approval data from API
   const fetchCropApprovalData = async () => {
@@ -57,21 +57,42 @@ const VillageActivityPanel = () => {
       const response = await apiService.getAllCrops({
         page: currentPage,
         limit: 10, // You can adjust this as needed
-        status: status
+        status: status,
       });
 
       if (response.success && response.data) {
+        const processedData = response.data.map((crop: Crop) => ({
+          ...crop,
+          farmerId: {
+            ...crop.farmerId,
+          },
+        }));
+        setRawCropData(processedData);
         // Transform API data to match frontend CropApproval type
-        const transformedData: CropApproval[] = response.data.map(
+        const transformedData: CropApproval[] = processedData.map(
           (crop: Crop) => ({
             id: crop._id,
             bda: {
-              name: crop.farmerId?.name || "BDO Office",
+              name:
+                [
+                  crop.farmerId?.name?.first,
+                  crop.farmerId?.name?.middle,
+                  crop.farmerId?.name?.last,
+                ]
+                  .filter(Boolean)
+                  .join(" ") || "BDO Office",
               id: crop.farmerId?._id || "N/A",
             },
             cropQty: `${crop.cropName} - ${crop.quantity} kg`,
-            farmer: crop.farmerId?.name || "Unknown Farmer",
-            village: "Unknown Village", // This data is not available in the API response
+            farmer:
+              [
+                crop.farmerId?.name?.first,
+                crop.farmerId?.name?.middle,
+                crop.farmerId?.name?.last,
+              ]
+                .filter(Boolean)
+                .join(" ") || "Unknown Farmer",
+            village: crop.farmerId?.address?.villageOrCity || "Unknown Village",
             status:
               crop.status === "pending"
                 ? "Awaiting approval"
@@ -225,7 +246,7 @@ const VillageActivityPanel = () => {
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
-                d="M2.66667 10.6667L1.13333 12.2C0.922223 12.4111 0.680446 12.4584 0.408001 12.342C0.135557 12.2256 -0.000443359 12.0171 1.08578e-06 11.7167V1.33333C1.08578e-06 0.966667 0.130668 0.652889 0.392001 0.392C0.653334 0.131111 0.967112 0.000444444 1.33333 0H12C12.3667 0 12.6807 0.130667 12.942 0.392C13.2033 0.653333 13.3338 0.967111 13.3333 1.33333V9.33333C13.3333 9.7 13.2029 10.014 12.942 10.2753C12.6811 10.5367 12.3671 10.6671 12 10.6667H2.66667ZM6.66667 8.66667C6.85556 8.66667 7.014 8.60267 7.142 8.47467C7.27 8.34667 7.33378 8.18845 7.33333 8C7.33289 7.81156 7.26889 7.65333 7.14133 7.52533C7.01378 7.39733 6.85556 7.33333 6.66667 7.33333C6.47778 7.33333 6.31956 7.39733 6.192 7.52533C6.06445 7.65333 6.00045 7.81156 6 8C5.99956 8.18845 6.06356 8.34689 6.192 8.47533C6.32045 8.60378 6.47867 8.66756 6.66667 8.66667ZM6.66667 6C6.85556 6 7.014 5.936 7.142 5.808C7.27 5.68 7.33378 5.52178 7.33333 5.33333V2.66667C7.33333 2.47778 7.26933 2.31956 7.14133 2.192C7.01333 2.06444 6.85511 2.00044 6.66667 2C6.47822 1.99956 6.32 2.06356 6.192 2.192C6.064 2.32044 6 2.47867 6 2.66667V5.33333C6 5.52222 6.064 5.68067 6.192 5.80867C6.32 5.93667 6.47822 6.00044 6.66667 6Z"
+                d="M2.66667 10.6667L1.13333 12.2C0.922223 12.4111 0.680446 12.4584 0.408001 12.342C0.135557 12.2256 -0.000443359 12.0171 1.08578e-06 11.7167V1.33333C1.08578e-06 0.966667 0.130668 0.652889 0.392001 0.392C0.653334 0.131111 0.967112 0.000444444 1.33333 0H12C12.3667 0 12.6807 0.130667 12.942 0.392C13.2033 0.653333 13.3338 0.967111 13.3333 1.33333V9.33333C13.3333 9.7 13.2029 10.014 12.942 10.2753C12.6811 10.5367 12.3671 10.6671 12 10.6667H2.66667ZM6.66667 8.66667C6.85556 8.66667 7.014 8.60267 7.142 8.47467C7.27 8.34667 7.33378 8.18845 7.33333 8C7.33289 7.81156 7.26889 7.65333 7.14133 7.52533C7.01378 7.39733 6.85556 7.33333 6.66667 7.33333C6.47778 7.33333 6.31956 7.39733 6.192 7.52533C6.06445 7.65333 6.00045 7.81156 6 8C5.99956 8.18845 6.06356 7.39733 6.192 8.47533C6.32045 8.60378 6.47867 8.66756 6.66667 8.66667ZM6.66667 6C6.85556 6 7.014 5.936 7.142 5.808C7.27 5.68 7.33378 5.52178 7.33333 5.33333V2.66667C7.33333 2.47778 7.26933 2.31956 7.14133 2.192C7.01333 2.06444 6.85511 2.00044 6.66667 2C6.47822 1.99956 6.32 2.06356 6.192 2.192C6.064 2.32044 6 2.47867 6 2.66667V5.33333C6 5.52222 6.064 5.68067 6.192 5.80867C6.32 5.93667 6.47822 6.00044 6.66667 6Z"
                 fill="#E53950"
               />
             </svg>
@@ -269,32 +290,36 @@ const VillageActivityPanel = () => {
       : data.filter((item) => item.status === selectedStatus);
   }, [selectedStatus, data]);
 
-  const calculatedTotalPages = Math.ceil(filteredData.length / itemsPerPage);
+  // const calculatedTotalPages = Math.ceil(filteredData.length / itemsPerPage);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
 
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
-
   const renderPageNumbers = () => {
     const pageNumbers = [];
-    for (let i = 1; i <= calculatedTotalPages; i++) {
+    for (let i = 1; i <= totalPages; i++) {
       pageNumbers.push(
-        <a
+        <button
           key={i}
-          href="#"
           onClick={() => paginate(i)}
-          className={`relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium ${
+          aria-current={currentPage === i ? "page" : undefined}
+          className={`relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 ${
             currentPage === i
-              ? "bg-blue-50 text-blue-600 hover:bg-blue-100"
-              : "bg-white text-gray-700 hover:bg-gray-50"
+              ? "z-10 bg-indigo-50 border-indigo-500 text-indigo-600"
+              : ""
           }`}
         >
           {i}
-        </a>
+        </button>
       );
     }
     return pageNumbers;
+  };
+
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
+  const handleCropClick = (cropId: string) => {
+    rawCropData.find((crop) => crop._id === cropId);
   };
 
   return (
@@ -451,8 +476,10 @@ const VillageActivityPanel = () => {
         {!loading && !error && activeTab === "Crop Approval" && (
           <CropApprovalTable
             initialData={currentItems as CropApproval[]}
+            rawCropData={rawCropData} // Pass raw crop data
             getStatusInfo={getStatusInfo}
             onDataChange={fetchCropApprovalData}
+            onCropClick={handleCropClick} // Pass the new handler
           />
         )}
         {activeTab === "Trade Activities" && (
@@ -499,11 +526,9 @@ const VillageActivityPanel = () => {
           {renderPageNumbers()}
           <button
             onClick={() => paginate(currentPage + 1)}
-            disabled={currentPage === calculatedTotalPages}
+            disabled={currentPage === totalPages}
             className={`relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 ${
-              currentPage === calculatedTotalPages
-                ? "cursor-not-allowed opacity-50"
-                : ""
+              currentPage === totalPages ? "cursor-not-allowed opacity-50" : ""
             }`}
           >
             <span className="sr-only">Next</span>
