@@ -21,7 +21,7 @@ app.use(cookieParser());
 
 app.use('/api', indexRoute);
 
-app.get('/', (req, res) => {
+app.get('/hello', (req, res) => {
   res.send('Hello World!');
 });
 

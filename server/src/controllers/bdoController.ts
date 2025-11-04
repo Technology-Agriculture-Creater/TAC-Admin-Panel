@@ -15,14 +15,14 @@ export const getAllCrops = async (req: Request, res: Response): Promise<Response
 
     const { status, cropName } = req.query;
 
-    const filters: Record<string, any> = {};
+    const filters: Record<string, any> = { status: { $ne: 'sold' } };
     if (status) filters.status = status;
     if (cropName)
       filters.cropName = { $regex: cropName, $options: 'i' }; // case-insensitive search
 
     const [crops, total] = await Promise.all([
       CropModel.find(filters)
-        .populate('farmerId', 'name mobileNumber')
+        .populate('farmerId', 'name mobileNumber address')
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit)
@@ -52,7 +52,7 @@ export const getAllCrops = async (req: Request, res: Response): Promise<Response
 export const updateCropStatus = async (req: Request, res: Response): Promise<Response> => {
   try {
     const { cropId, status } = req.body;
-
+    console.log('cropId, status',cropId, status)
     const validStatuses = ['Awaiting Approval','OnProgress', 'Approved', 'Sold', 'Rejected'];
     if (!status || !validStatuses.includes(status)) {
       return res.status(400).json({
