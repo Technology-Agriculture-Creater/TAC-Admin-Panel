@@ -34,7 +34,7 @@ export default function ClientLayoutWrapper({
   return (
     <div className="flex h-screen overflow-auto">
       <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col md:w-[calc(100%-16rem)]">
         <Header toggleSidebar={toggleSidebar} isOpen={isSidebarOpen} />
         <main className="flex-1 p-4 bg-gray-100 overflow-y-auto">
           {children}
