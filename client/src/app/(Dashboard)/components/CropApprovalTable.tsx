@@ -30,6 +30,7 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
 
   const mapCropApprovalToActivity = (cropApproval: CropApproval): Activity => {
     const rawCrop = rawCropData?.find((crop) => crop._id === cropApproval.id);
+    console.log(rawCrop);
     const cropName = rawCrop?.cropName || cropApproval.cropQty.split(" - ")[0];
     const getFullName = (
       nameObj:
@@ -72,7 +73,13 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
       minBid: "N/A",
       maxBid: "N/A",
       status:
-        rawCrop?.status === "active"
+        rawCrop?.status === "Approved"
+          ? "Approved"
+          : rawCrop?.status === "Rejected"
+          ? "Rejected"
+          : rawCrop?.status === "Awaiting Approval" // Check for Awaiting Approval first
+          ? "Pending review"
+          : rawCrop?.status === "active"
           ? "Approved"
           : rawCrop?.status === "pending"
           ? "Pending"
@@ -80,10 +87,6 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
           ? "Rejected"
           : rawCrop?.status === "sold"
           ? "Completed"
-          : cropApproval.status === "Approved"
-          ? "Approved"
-          : cropApproval.status === "Awaiting Approval"
-          ? "Pending"
           : "Rejected",
       farmerEvidence: rawCrop?.cropImages || ["/Images/veg.png"],
       bdaName: getFullName(rawCrop?.farmerId?.name || cropApproval.bda.name),

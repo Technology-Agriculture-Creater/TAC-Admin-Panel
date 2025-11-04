@@ -336,7 +336,8 @@ const ActivityDetailsModal: React.FC<ActivityDetailsModalProps> = ({
         {/* Action Buttons */}
 
         <div className="flex w-full space-x-4 mt-6">
-          {activityData.status === "Pending" && (
+          {(activityData.status === "Pending" ||
+            activityData.status === "Pending review") && (
             <>
               <button
                 onClick={() => onEscalate(activityData.id)}
