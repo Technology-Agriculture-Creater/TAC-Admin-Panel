@@ -48,9 +48,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
     <aside
       role="navigation"
       aria-label="Main sidebar"
-      className={`fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-md flex-col transition-transform duration-300 ease-in-out ${
+      className={`fixed inset-y-0 left-0 z-50 bg-white shadow-md flex-col transition-transform duration-300 ease-in-out ${
         isOpen ? "translate-x-0 flex" : "-translate-x-full hidden"
-      } md:static md:translate-x-0 md:flex md:h-screen`}
+      } md:static md:translate-x-0 md:flex md:h-screen w-64`}
     >
       <div className="p-4 flex items-center justify-between">
         <Image

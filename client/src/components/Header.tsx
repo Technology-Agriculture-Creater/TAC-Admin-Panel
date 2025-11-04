@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 interface HeaderProps {
   toggleSidebar: () => void;
@@ -14,6 +14,8 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [username, setUsername] = useState("Guest");
   const router = useRouter();
+  const pathname = usePathname();
+  const [pageTitle, setPageTitle] = useState("Dashboard");
 
   useEffect(() => {
     const storedUsername = localStorage.getItem("username");
@@ -21,6 +23,38 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen }) => {
       setUsername(storedUsername);
     }
   }, []);
+
+  useEffect(() => {
+    if (!pathname) {
+      setPageTitle("Dashboard");
+      return;
+    }
+
+    const path = pathname;
+
+    if (!path) {
+      setPageTitle("Dashboard");
+      return;
+    }
+
+    if (path === "/") {
+      setPageTitle("Dashboard");
+      return;
+    }
+
+    const pathSegments = path.split("/").filter(Boolean);
+    const lastSegment = pathSegments[pathSegments.length - 1];
+
+    if (lastSegment) {
+      const formattedTitle = lastSegment
+        .split("-")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
+      setPageTitle(formattedTitle);
+    } else {
+      setPageTitle("Dashboard");
+    }
+  }, [pathname]);
 
   const handleDropdownToggle = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -70,7 +104,7 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen }) => {
             </svg>
           )}
         </button>
-        <h2 className="text-xl font-semibold text-gray-800">Dashboard</h2>
+        <h2 className="text-xl font-semibold text-gray-800">{pageTitle}</h2>
       </div>
       <div className="flex items-center space-x-4">
         <div className="relative">

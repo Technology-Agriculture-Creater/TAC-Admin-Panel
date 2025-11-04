@@ -267,7 +267,7 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
                 </div>
               </td>
               <td className="px-6 py-4 flex items-center justify-center whitespace-nowrap">
-                <div className="text-sm text-center text-gray-900 px-5 w-52 py-2 rounded-lg bg-yellow-100">
+                <div className="text-sm text-center text-gray-900 px-5 py-2 rounded-lg bg-yellow-100">
                   {item.cropQty}
                 </div>
               </td>
