@@ -15,7 +15,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
     {
       name: "Dashboard",
       icon: "/images/dashboard.png",
-      href: "/",
+      href: "/dashboard",
     },
     {
       name: "BDA Monitoring",
@@ -75,7 +75,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
               <Link
                 href={item.href}
                 className={`flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer ${
-                  pathname === item.href
+                  pathname.startsWith(item.href)
                     ? "bg-blue-50 border-r-4 border-blue-600 text-blue-400 font-semibold"
                     : "text-gray-700"
                 }`}
