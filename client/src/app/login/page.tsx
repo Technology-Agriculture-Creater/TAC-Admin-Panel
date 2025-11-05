@@ -14,7 +14,7 @@ export default function LoginPage() {
     e.preventDefault();
     if (userId === "sahil@123" && password === "sahil@123") {
       localStorage.setItem("username", "Sahil");
-      router.push("/");
+      router.push("/dashboard");
     } else {
       setError("Invalid User ID or Password");
     }
@@ -22,7 +22,7 @@ export default function LoginPage() {
 
   const handleGuestLogin = () => {
     localStorage.setItem("username", "Guest");
-    router.push("/");
+    router.push("/dashboard");
   };
 
   return (
