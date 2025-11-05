@@ -23,6 +23,15 @@ export interface FarmerData {
   issueType?: string;
 }
 
+export interface FarmerManagementData {
+  "Farmer Name": string;
+  "Farmer ID": string;
+  Taluka: string;
+  Village: string;
+  Contact: string;
+  "Account Status": string;
+}
+
 export interface CropApproval {
   id: string;
   bda: {
