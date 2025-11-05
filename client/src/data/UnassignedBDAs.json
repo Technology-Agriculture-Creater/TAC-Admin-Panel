@@ -1,0 +1,44 @@
+[
+  {
+    "id": "BDAXXXX0001",
+    "name": "Aarav Deshmukh",
+    "district": "Nagpur",
+    "taluka": "Kamthi",
+    "contact": "9876543210"
+  },
+  {
+    "id": "BDAXXXX0002",
+    "name": "Saanvi Iyer",
+    "district": "Nagpur",
+    "taluka": "Higna",
+    "contact": "1234567890"
+  },
+  {
+    "id": "BDAXXXX0003",
+    "name": "Rohan Patel",
+    "district": "Nagpur",
+    "taluka": "Mankapur",
+    "contact": "2345678901"
+  },
+  {
+    "id": "BDAXXXX0004",
+    "name": "Priya Mehta",
+    "district": "Nagpur",
+    "taluka": "Kamptee",
+    "contact": "3456789012"
+  },
+  {
+    "id": "BDAXXXX0005",
+    "name": "Vikram Singh",
+    "district": "Nagpur",
+    "taluka": "Nandanvan",
+    "contact": "4567890123"
+  },
+  {
+    "id": "BDAXXXX0006",
+    "name": "Ananya Sharma",
+    "district": "Nagpur",
+    "taluka": "Wadi",
+    "contact": "5678901234"
+  }
+]
