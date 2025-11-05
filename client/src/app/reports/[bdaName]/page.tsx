@@ -4,6 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import reportsData from "../../../data/Reports.json";
 import Image from "next/image";
 import { Phone, Calendar, Mail, Home, MapPin, Reply } from "lucide-react";
+import BdaFarmerManagementTable from "./components/BdaFarmerManagementTable";
 
 const BdaProfilePage = () => {
   const params = useParams();
@@ -119,6 +120,7 @@ const BdaProfilePage = () => {
           </div>
         </div>
       </div>
+      <BdaFarmerManagementTable />
     </div>
   );
 };
