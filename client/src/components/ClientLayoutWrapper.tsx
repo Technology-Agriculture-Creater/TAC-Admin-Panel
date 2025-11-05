@@ -32,7 +32,7 @@ export default function ClientLayoutWrapper({
   }, []);
 
   return (
-    <div className="flex h-screen overflow-auto">
+    <div className="flex h-screen overflow-hidden">
       <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
       <div className="flex-1 flex flex-col md:w-[calc(100%-16rem)]">
         <Header toggleSidebar={toggleSidebar} isOpen={isSidebarOpen} />
