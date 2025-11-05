@@ -62,7 +62,7 @@ const Header = () => {
       </div>
       <div className="p-4 border-[1px] rounded-lg flex-1">
         <p className="text-gray-500 text-sm">Trade Volume</p>
-        <p className="text-xl font-semibold">12000000</p>
+        <p className="text-xl font-semibold">1200</p>
       </div>
     </div>
   );
