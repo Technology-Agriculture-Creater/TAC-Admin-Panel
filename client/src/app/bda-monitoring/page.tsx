@@ -1,12 +1,14 @@
 import React from "react";
-import Header from "./components/Header";
+import TopPerformers from "./components/TopPerformers";
+import VillageAllocationPanel from "./components/VillageAllocationPanel";
+import UnassignedBDAs from "./components/UnassignedBDAs";
 
 const BDAMonitoringPage = () => {
   return (
-    <div>
-      <Header />
-      <h1>BDA Monitoring Page</h1>
-      <p>Content for BDA Monitoring will go here.</p>
+    <div className="flex-1 overflow-auto p-4 bg-gray-100">
+      <TopPerformers />
+      <VillageAllocationPanel />
+      <UnassignedBDAs />
     </div>
   );
 };
