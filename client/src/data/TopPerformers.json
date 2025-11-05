@@ -1,0 +1,67 @@
+[
+  {
+    "rank": 1,
+    "bda": {
+      "name": "Rajesh Patil",
+      "id": "BDAXXXX0001",
+      "image": "/Images/profile.jpg"
+    },
+    "farmerRegistered": 620,
+    "cropsVerified": 180,
+    "tradesFacilitated": 75,
+    "complaintsResolved": 6,
+    "score": "95%"
+  },
+  {
+    "rank": 2,
+    "bda": {
+      "name": "Rupesh Gedam",
+      "id": "BDAXXXX0001",
+      "image": "/Images/profile.jpg"
+    },
+    "farmerRegistered": 620,
+    "cropsVerified": 180,
+    "tradesFacilitated": 75,
+    "complaintsResolved": 6,
+    "score": "95%"
+  },
+  {
+    "rank": 3,
+    "bda": {
+      "name": "Ali Khan",
+      "id": "BDAXXXX0001",
+      "image": "/Images/profile.jpg"
+    },
+    "farmerRegistered": 730,
+    "cropsVerified": 160,
+    "tradesFacilitated": 80,
+    "complaintsResolved": 8,
+    "score": "92%"
+  },
+  {
+    "rank": 4,
+    "bda": {
+      "name": "Sofia Johnson",
+      "id": "BDAXXXX0001",
+      "image": "/Images/profile.jpg"
+    },
+    "farmerRegistered": 610,
+    "cropsVerified": 190,
+    "tradesFacilitated": 70,
+    "complaintsResolved": 10,
+    "score": "89%"
+  },
+  {
+    "rank": 5,
+    "bda": {
+      "name": "Liam O'Connor",
+      "id": "BDAXXXX0001",
+      "image": "/Images/profile.jpg"
+    },
+    "farmerRegistered": 580,
+    "cropsVerified": 210,
+    "tradesFacilitated": 74,
+    "complaintsResolved": 9,
+    "score": "88%"
+  }
+]
