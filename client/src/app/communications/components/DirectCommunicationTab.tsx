@@ -1,8 +1,60 @@
 "use client";
-import React from "react";
+import { useState } from "react";
 import Image from "next/image";
 
 const DirectCommunicationTab = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const chatList = [
+    {
+      id: 1,
+      name: "Ramesh Patil",
+      status: "Online",
+      type: "individual",
+    },
+    {
+      id: 2,
+      name: "Sneha Joshi",
+      status: "Away",
+      type: "individual",
+    },
+    {
+      id: 3,
+      name: "Amit Kumar",
+      status: "Online",
+      type: "individual",
+    },
+    {
+      id: 4,
+      name: "Priya Sharma",
+      status: "Online",
+      type: "individual",
+    },
+    {
+      id: 5,
+      name: "Vikram Singh",
+      status: "Online",
+      type: "individual",
+    },
+  ];
+
+  const groupChatList = [
+    {
+      id: 1,
+      name: "KUHI TALUKA -BDA's CLUSTER",
+      members: "Ramesh Patil, Sneha Joshi, Amit Kumar, Priyansh Sharma +3",
+      type: "group",
+    },
+  ];
+
+  const filteredChatList = chatList.filter((chat) =>
+    chat.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const filteredGroupChatList = groupChatList.filter((chat) =>
+    chat.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div>
       <div className="p-4">
@@ -11,6 +63,7 @@ const DirectCommunicationTab = () => {
             <input
               type="text"
               placeholder="Search by Farmer / BDA / Trade ID"
+              onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <svg
@@ -37,201 +90,87 @@ const DirectCommunicationTab = () => {
 
         <div className="mb-4 text-lg font-semibold">Chats</div>
 
-        {/* Chat List Item 1 */}
-        <div className="flex items-center justify-between p-3 mb-2 bg-white rounded-lg shadow-sm">
-          <div className="flex items-center">
-            <Image
-              src="/Images/profile.jpg"
-              alt="Ramesh Patil"
-              className="w-10 h-10 rounded-full mr-3 object-cover"
-              height={0}
-              width={0}
-              sizes="100vw"
-            />
-            <div>
-              <div className="font-medium">Ramesh Patil</div>
-              <div className="text-sm text-green-500">Online</div>
-            </div>
-          </div>
-          <svg
-            className="w-5 h-5 text-gray-500"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
+        {filteredChatList.map((chat) => (
+          <div
+            key={chat.id}
+            className="flex items-center justify-between p-3 mb-2 bg-white rounded-lg shadow-sm"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M9 5l7 7-7 7"
-            ></path>
-          </svg>
-        </div>
-
-        {/* Chat List Item 2 */}
-        <div className="flex items-center justify-between p-3 mb-2 bg-white rounded-lg shadow-sm">
-          <div className="flex items-center">
-            <Image
-              src="/Images/profile.jpg"
-              alt="Sneha Joshi"
-              className="w-10 h-10 rounded-full mr-3 object-cover"
-              height={0}
-              width={0}
-              sizes="100vw"
-            />
-            <div>
-              <div className="font-medium">Sneha Joshi</div>
-              <div className="text-sm text-gray-500">Away</div>
+            <div className="flex items-center">
+              <Image
+                src="/Images/profile.jpg"
+                alt={chat.name}
+                className="w-10 h-10 rounded-full mr-3 object-cover"
+                height={0}
+                width={0}
+                sizes="100vw"
+              />
+              <div>
+                <div className="font-medium">{chat.name}</div>
+                <div
+                  className={`text-sm ${
+                    chat.status === "Online"
+                      ? "text-green-500"
+                      : "text-gray-500"
+                  }`}
+                >
+                  {chat.status}
+                </div>
+              </div>
             </div>
+            <svg
+              className="w-5 h-5 text-gray-500"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M9 5l7 7-7 7"
+              ></path>
+            </svg>
           </div>
-          <svg
-            className="w-5 h-5 text-gray-500"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M9 5l7 7-7 7"
-            ></path>
-          </svg>
-        </div>
-
-        {/* Chat List Item 3 */}
-        <div className="flex items-center justify-between p-3 mb-2 bg-white rounded-lg shadow-sm">
-          <div className="flex items-center">
-            <Image
-              src="/Images/profile.jpg"
-              alt="Amit Kumar"
-              className="w-10 h-10 rounded-full mr-3 object-cover"
-              height={0}
-              width={0}
-              sizes="100vw"
-            />
-            <div>
-              <div className="font-medium">Amit Kumar</div>
-              <div className="text-sm text-green-500">Online</div>
-            </div>
-          </div>
-          <svg
-            className="w-5 h-5 text-gray-500"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M9 5l7 7-7 7"
-            ></path>
-          </svg>
-        </div>
-
-        {/* Chat List Item 4 */}
-        <div className="flex items-center justify-between p-3 mb-2 bg-white rounded-lg shadow-sm">
-          <div className="flex items-center">
-            <Image
-              src="/Images/profile.jpg"
-              alt="Priya Sharma"
-              className="w-10 h-10 rounded-full mr-3 object-cover"
-              height={0}
-              width={0}
-              sizes="100vw"
-            />
-            <div>
-              <div className="font-medium">Priya Sharma</div>
-              <div className="text-sm text-green-500">Online</div>
-            </div>
-          </div>
-          <svg
-            className="w-5 h-5 text-gray-500"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M9 5l7 7-7 7"
-            ></path>
-          </svg>
-        </div>
-
-        {/* Chat List Item 5 */}
-        <div className="flex items-center justify-between p-3 mb-2 bg-white rounded-lg shadow-sm">
-          <div className="flex items-center">
-            <Image
-              src="/Images/profile.jpg"
-              alt="Vikram Singh"
-              className="w-10 h-10 rounded-full mr-3 object-cover"
-              height={0}
-              width={0}
-              sizes="100vw"
-            />
-            <div>
-              <div className="font-medium">Vikram Singh</div>
-              <div className="text-sm text-green-500">Online</div>
-            </div>
-          </div>
-          <svg
-            className="w-5 h-5 text-gray-500"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M9 5l7 7-7 7"
-            ></path>
-          </svg>
-        </div>
+        ))}
 
         <div className="mb-4 text-lg font-semibold">Group Chat</div>
 
-        {/* Group Chat Item */}
-        <div className="flex items-center justify-between p-3 mb-2 bg-white rounded-lg shadow-sm">
-          <div className="flex items-center">
-            <Image
-              src="/Images/profile.jpg"
-              alt="KUHI TALUKA -BDA's CLUSTER"
-              className="w-10 h-10 rounded-full mr-3 object-cover"
-              height={0}
-              width={0}
-              sizes="100vw"
-            />
-            <div>
-              <div className="font-medium">KUHI TALUKA -BDA&apos;s CLUSTER</div>
-              <div className="text-sm text-gray-500">
-                Ramesh Patil, Sneha Joshi, Amit Kumar, Priyansh Sharma +3
+        {filteredGroupChatList.map((chat) => (
+          <div
+            key={chat.id}
+            className="flex items-center justify-between p-3 mb-2 bg-white rounded-lg shadow-sm"
+          >
+            <div className="flex items-center">
+              <Image
+                src="/Images/profile.jpg"
+                alt={chat.name}
+                className="w-10 h-10 rounded-full mr-3 object-cover"
+                height={0}
+                width={0}
+                sizes="100vw"
+              />
+              <div>
+                <div className="font-medium">{chat.name}</div>
+                <div className="text-sm text-gray-500">{chat.members}</div>
               </div>
             </div>
+            <svg
+              className="w-5 h-5 text-gray-500"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M9 5l7 7-7 7"
+              ></path>
+            </svg>
           </div>
-          <svg
-            className="w-5 h-5 text-gray-500"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M9 5l7 7-7 7"
-            ></path>
-          </svg>
-        </div>
+        ))}
       </div>
     </div>
   );
