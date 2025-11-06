@@ -1,8 +1,17 @@
 "use client";
-import React from "react";
+import { useState } from "react";
 import IssueEscalationData from "../../../data/IssueEscalationData.json";
 
 const IssueEscalationTab = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filterData = IssueEscalationData.filter(
+    (item) =>
+      item.raisedBy.includes(searchTerm) ||
+      item.bdaId.includes(searchTerm) ||
+      item.id.includes(searchTerm)
+  );
+
   return (
     <div className="p-4">
       <div className="flex items-center justify-between mb-4">
@@ -10,6 +19,7 @@ const IssueEscalationTab = () => {
           <input
             type="text"
             placeholder="Search by Farmer / BDA / Trade ID"
+            onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <svg
@@ -47,7 +57,7 @@ const IssueEscalationTab = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {IssueEscalationData.map((issue, index) => (
+        {filterData.map((issue, index) => (
           <div key={index} className="bg-white rounded-lg shadow-sm p-4">
             <div className="flex justify-between items-center mb-2">
               <div className="flex item-center justify-center gap-2">
@@ -55,7 +65,8 @@ const IssueEscalationTab = () => {
                   {issue.id}
                 </span>
                 <div className="text-sm text-gray-600 mb-1 flex flex-col">
-                  Raised by: <span className="font-medium">{issue.raisedBy}</span>
+                  Raised by:{" "}
+                  <span className="font-medium">{issue.raisedBy}</span>
                   <div className="text-sm text-gray-600 mb-2">
                     {issue.bdaId}
                   </div>
