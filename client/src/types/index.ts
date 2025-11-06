@@ -48,7 +48,8 @@ export interface CropApproval {
     | "cancelled"
     | "Approved"
     | "Rejected"
-    | "Awaiting Approval";
+    | "Awaiting Approval"
+    | string;
   action: string[];
   cropQualityGrade?: string; // Added field
   sowingDate?: string; // Added field
