@@ -1,0 +1,46 @@
+[
+  {
+    "id": "ESC-4521",
+    "raisedBy": "BDA: Sunil Prakash",
+    "bdaId": "BDAXXXXX00001",
+    "assignedTo": "Assigned to BDO",
+    "issue": "Payment Delay ₹45,000",
+    "village": "Pipalgaon",
+    "crop": "Onion | 20 Quintals",
+    "status": "In Progress",
+    "statusColor": "bg-yellow-500"
+  },
+  {
+    "id": "ESC-4522",
+    "raisedBy": "BDA: Ravi Kumar",
+    "bdaId": "BDAXXXXX00002",
+    "assignedTo": "Assigned to Field Officer",
+    "issue": "Quality Check Pending ₹20,000",
+    "village": "Kalyanpur",
+    "crop": "Wheat | 15 Quintals",
+    "status": "Completed",
+    "statusColor": "bg-green-500"
+  },
+  {
+    "id": "ESC-4521",
+    "raisedBy": "BDA: Sunil Prakash",
+    "bdaId": "BDAXXXXX00001",
+    "assignedTo": "Assigned to BDO",
+    "issue": "Payment Delay ₹45,000",
+    "village": "Pipalgaon",
+    "crop": "Onion | 20 Quintals",
+    "status": "In Progress",
+    "statusColor": "bg-yellow-500"
+  },
+  {
+    "id": "ESC-4522",
+    "raisedBy": "BDA: Ravi Kumar",
+    "bdaId": "BDAXXXXX00002",
+    "assignedTo": "Assigned to Field Officer",
+    "issue": "Quality Check Pending ₹20,000",
+    "village": "Kalyanpur",
+    "crop": "Wheat | 15 Quintals",
+    "status": "Completed",
+    "statusColor": "bg-green-500"
+  }
+]
