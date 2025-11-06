@@ -456,7 +456,7 @@ export const verifyOtp = async (req: Request, res: Response) => {
     }
 
     if (record.otp !== otp) return res.status(400).json({ message: 'Invalid OTP' });
-    const farmers = await Farmer.find({ mobileNumber }).exec();
+    const farmers = await Farmer.findOne({ mobileNumber }).exec();
     delete otpStore[mobileNumber];
 
     const token = crypto.randomBytes(16).toString('hex');
@@ -684,7 +684,7 @@ export const getActiveCropListings = async (req: Request, res: Response): Promis
     // Fetch only active crops for this farmer
     const activeCrops = await cropModel.find({
       farmerId: farmerId,
-      status: 'active',
+      status: 'Approved',
     })
       .sort({ createdAt: -1 })
       .skip(skip)
@@ -694,7 +694,7 @@ export const getActiveCropListings = async (req: Request, res: Response): Promis
 
     const totalActiveCrops = await cropModel.countDocuments({
       farmerId: farmerId,
-      status: 'active',
+      status: 'Approved',
     });
 
     return res.status(200).json({
