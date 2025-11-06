@@ -69,9 +69,9 @@ authRoute.post(
 authRoute.put('/updateCrop/:cropId', updateCropDetails);
 
 // 3️⃣ Get all active crops by farmerId (with pagination)
-authRoute.get('/activeCrops', getActiveCropListings);
+authRoute.post('/activeCrops', getActiveCropListings);
 
-authRoute.get('/getAllCropsByFramerId', getAllCrops);
+authRoute.post('/getAllCropsByFramerId', getAllCrops);
 
 
 export default authRoute;
