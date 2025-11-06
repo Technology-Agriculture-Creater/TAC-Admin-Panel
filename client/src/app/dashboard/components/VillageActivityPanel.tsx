@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useCallback } from "react";
 import Image from "next/image";
 import {
   CropApproval,
@@ -25,6 +25,7 @@ const VillageActivityPanel = () => {
   const [selectedStatus, setSelectedStatus] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
   const [activeTab, setActiveTab] = useState("Crop Approval");
+  const [searchQuery, setSearchQuery] = useState("");
   const itemsPerPage = 10;
 
   // API state for crop approval
@@ -36,7 +37,7 @@ const VillageActivityPanel = () => {
   const [rawCropData, setRawCropData] = useState<Crop[]>([]);
 
   // Fetch crop approval data from API
-  const fetchCropApprovalData = async () => {
+  const fetchCropApprovalData = useCallback(async () => {
     if (activeTab !== "Crop Approval") return;
 
     setLoading(true);
@@ -123,7 +124,17 @@ const VillageActivityPanel = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [
+    activeTab,
+    selectedStatus,
+    currentPage,
+    setCropApprovalData,
+    setError,
+    setLoading,
+    setRawCropData,
+    setTotalPages,
+    setTotalCrops,
+  ]);
 
   useEffect(() => {
     setSelectedStatus("All");
@@ -133,7 +144,7 @@ const VillageActivityPanel = () => {
   // Fetch crop approval data when component loads or filters change
   useEffect(() => {
     fetchCropApprovalData();
-  }, [activeTab, currentPage, selectedStatus]);
+  }, [activeTab, currentPage, selectedStatus, fetchCropApprovalData]);
 
   const tabs = [
     {
@@ -285,10 +296,47 @@ const VillageActivityPanel = () => {
   };
 
   const filteredData = useMemo(() => {
-    return selectedStatus === "All"
-      ? data
-      : data.filter((item) => item.status === selectedStatus);
-  }, [selectedStatus, data]);
+    const lowerCaseQuery = searchQuery.toLowerCase();
+    const dataToFilter =
+      selectedStatus === "All"
+        ? data
+        : data.filter((item) => item.status === selectedStatus);
+
+    if (!lowerCaseQuery) {
+      return dataToFilter;
+    }
+
+    switch (activeTab) {
+      case "Crop Approval":
+        return (dataToFilter as CropApproval[]).filter(
+          (item) =>
+            item.farmer &&
+            (typeof item.farmer === "string"
+              ? item.farmer
+              : `${item.farmer.first} ${item.farmer.middle ?? ""} ${
+                  item.farmer.last
+                }`
+                  .replace(/\s+/g, " ")
+                  .trim()
+            )
+              .toLowerCase()
+              .includes(lowerCaseQuery)
+        );
+      case "Trade Activities":
+        return (dataToFilter as TradeActivity[]).filter(
+          (item) =>
+            item.farmer && item.farmer.toLowerCase().includes(lowerCaseQuery)
+        );
+      case "Complaints":
+        return (dataToFilter as Complaint[]).filter(
+          (item) =>
+            item.complaintId &&
+            item.farmer.name.toLowerCase().includes(lowerCaseQuery)
+        );
+      default:
+        return dataToFilter;
+    }
+  }, [selectedStatus, data, searchQuery, activeTab]);
 
   // const calculatedTotalPages = Math.ceil(filteredData.length / itemsPerPage);
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -428,6 +476,8 @@ const VillageActivityPanel = () => {
             type="text"
             placeholder="Search here"
             className="border border-gray-300 rounded-l-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
           <button className="bg-blue-600 flex items-center justify-between gap-2 text-white p-2 rounded-r-md text-sm hover:bg-blue-700">
             <Search /> Search
