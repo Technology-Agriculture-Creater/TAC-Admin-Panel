@@ -18,6 +18,8 @@ const LayoutContent: React.FC<LayoutContentProps> = ({ children }) => {
     const username = localStorage.getItem("username");
     if (!username && !isLoginPage) {
       router.push("/login");
+    } else if (username && pathname === "/") {
+      router.push("/dashboard");
     }
   }, [pathname, isLoginPage, router]);
 
