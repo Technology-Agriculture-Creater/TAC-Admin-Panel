@@ -20,10 +20,10 @@ interface BdaFarmerManagementTableProps {
 
 const BdaFarmerManagementTable: React.FC<
   BdaFarmerManagementTableProps
-> = ({}) => {
+> = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
-  const [activeTab, setActiveTab] = useState("farmerRegistry");
+  const [activeTab, setActiveTab] = useState("farmerregistered");
   const [selectedDuration, setSelectedDuration] = useState("Last 1 Month");
 
   const handlePageChange = (page: number) => {
