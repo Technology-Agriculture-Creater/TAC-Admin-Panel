@@ -2,7 +2,7 @@ import express from 'express';
 import { register, login, logout, getProfile } from '../controllers/user.controller.ts';
 import { authenticate } from '../middlewares/auth.middleware.ts';
 import upload from '../services/multer.service.ts';
-import { getAllCrops,updateCropStatus,getCropDetailsById } from '../controllers/bdoController.ts';
+import { getAllCrops,updateCropStatus,getCropDetailsById, importCrops, bulkImportLocations } from '../controllers/bdoController.ts';
 
 const authRoute = express.Router();
 
@@ -16,5 +16,10 @@ authRoute.put(
 );
 
 authRoute.get('/getCropDetailsById/:cropId', getCropDetailsById);
+
+authRoute.post('/importCrops', upload.single('file'), importCrops);
+
+
+authRoute.post('/bulkImportLocations', bulkImportLocations);
 
 export default authRoute;

@@ -23,36 +23,42 @@ export interface ISupplyDemand {
 }
 
 export interface ICropInsights {
-  season: string; // e.g. "Kharif", "Rabi", "Zaid"
-  sowingTime: string; // e.g. "June - July"
-  harvestTime: string; // e.g. "October - November"
-  averageYield: string; // e.g. "20 quintals/acre"
-  requiredTemperature: string; // e.g. "20°C - 35°C"
-  waterRequirement: string; // e.g. "Moderate"
+  season: string;
+  sowingTime: string;
+  harvestTime: string;
+  averageYield: string;
+  requiredTemperature: string;
+  waterRequirement: string;
 }
 
 export interface IFarmerInformation {
-  recommendedSellingTime: string; // e.g. "Immediately after harvest"
-  storageTips: string; // e.g. "Store in dry, ventilated area"
-  qualityGrading: string; // e.g. "Grade A, B, C"
+  recommendedSellingTime: string;
+  storageTips: string;
+  qualityGrading: string;
 }
 
 export interface IAdditionalDetails {
-  govtMSP?: number; // Government Minimum Support Price
-  exportImportStatus?: string; // e.g. "Exported to Middle East"
-  subsidiesSchemes?: string[]; // e.g. ["PM-KISAN", "Fertilizer Subsidy"]
+  govtMSP?: number;
+  exportImportStatus?: string;
+  subsidiesSchemes?: string[];
+}
+
+export interface ICategory {
+  name: string;
+  image?: string;
 }
 
 export interface ICrop extends Document {
   name: string;
   variants: ICropVariant[];
-  category: string;
+  category: ICategory; // ✅ changed type
   location: ILocation;
   supplyDemand: ISupplyDemand;
   marketLocation: string;
   cropInsights: ICropInsights;
   farmerInformation: IFarmerInformation;
   additionalDetails: IAdditionalDetails;
+  otherDetails?: Record<string, any>;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -70,7 +76,12 @@ const CropSchema = new Schema<ICrop>(
         pricePercentage: { type: Number },
       },
     ],
-    category: { type: String, required: true },
+
+    // ✅ Updated category section
+    category: {
+      name: { type: String, required: true },
+      image: { type: String },
+    },
 
     location: {
       latitude: { type: Number, required: true },
@@ -78,15 +89,12 @@ const CropSchema = new Schema<ICrop>(
       city: { type: String, required: true },
       state: { type: String, required: true },
     },
-
     supplyDemand: {
       arrivalQtyToday: { type: Number, default: 0 },
       stockAvailability: { type: Number, default: 0 },
       majorArrivalDistricts: [{ type: String }],
     },
-
     marketLocation: { type: String, required: true },
-
     cropInsights: {
       season: { type: String },
       sowingTime: { type: String },
@@ -95,17 +103,19 @@ const CropSchema = new Schema<ICrop>(
       requiredTemperature: { type: String },
       waterRequirement: { type: String },
     },
-
     farmerInformation: {
       recommendedSellingTime: { type: String },
       storageTips: { type: String },
       qualityGrading: { type: String },
     },
-
     additionalDetails: {
       govtMSP: { type: Number },
       exportImportStatus: { type: String },
       subsidiesSchemes: [{ type: String }],
+    },
+    otherDetails: {
+      type: Schema.Types.Mixed,
+      default: {},
     },
   },
   { timestamps: true }

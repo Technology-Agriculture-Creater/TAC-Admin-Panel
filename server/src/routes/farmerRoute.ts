@@ -1,7 +1,16 @@
 import express from 'express';
 import { registerFarmer, sendOtp, verifyOtp ,registerDraft,registerWithOtp,sendRegisterOtp, sellCrop,getAllCrops,
   updateCropDetails,sellCropApi,
-  getActiveCropListings,} from '../controllers/farmerController.ts';
+ getActiveCropListings,
+  getCropCategories,
+  getTopCropsOfDay,
+  getMajorCropsInMarket,
+  getOilSeedCrops,
+  getPulseCrops,
+  getMoreCrops,
+  getTopGainers,
+  getTopLosers,
+  getCropDetailsAndTrend,} from '../controllers/farmerController.ts';
 import { authenticate } from '../middlewares/auth.middleware.ts';
 import upload from '../services/multer.service.ts';
 
@@ -72,6 +81,15 @@ authRoute.put('/updateCrop/:cropId', updateCropDetails);
 authRoute.post('/activeCrops', getActiveCropListings);
 
 authRoute.post('/getAllCropsByFramerId', getAllCrops);
+authRoute.get('/getCropCategories',getCropCategories)
+authRoute.get("/topCrops", getTopCropsOfDay);
+authRoute.get("/majorCrops", getMajorCropsInMarket);
 
+authRoute.get("/oil-seeds", getOilSeedCrops);
+authRoute.get("/pulses", getPulseCrops);
+authRoute.get("/more-crops", getMoreCrops);
+authRoute.get("/top-gainers", getTopGainers);
+authRoute.get("/top-losers", getTopLosers);
+authRoute.get("/:id/details-and-trend", getCropDetailsAndTrend);
 
 export default authRoute;
