@@ -1,37 +1,39 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const DirectCommunicationTab = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const router = useRouter();
 
   const chatList = [
     {
-      id: 1,
+      id: "1",
       name: "Ramesh Patil",
       status: "Online",
       type: "individual",
     },
     {
-      id: 2,
+      id: "2",
       name: "Sneha Joshi",
-      status: "Away",
+      status: "Offline",
       type: "individual",
     },
     {
-      id: 3,
+      id: "3",
       name: "Amit Kumar",
       status: "Online",
       type: "individual",
     },
     {
-      id: 4,
+      id: "4",
       name: "Priya Sharma",
       status: "Online",
       type: "individual",
     },
     {
-      id: 5,
+      id: "5",
       name: "Vikram Singh",
       status: "Online",
       type: "individual",
@@ -40,7 +42,7 @@ const DirectCommunicationTab = () => {
 
   const groupChatList = [
     {
-      id: 1,
+      id: "1",
       name: "KUHI TALUKA -BDA's CLUSTER",
       members: "Ramesh Patil, Sneha Joshi, Amit Kumar, Priyansh Sharma +3",
       type: "group",
@@ -93,7 +95,8 @@ const DirectCommunicationTab = () => {
         {filteredChatList.map((chat) => (
           <div
             key={chat.id}
-            className="flex items-center justify-between p-3 mb-2 bg-white rounded-lg shadow-sm"
+            onClick={() => router.push(`/communications/chat/${chat.id}`)}
+            className="flex items-center justify-between p-3 mb-2 bg-white rounded-lg shadow-sm cursor-pointer"
           >
             <div className="flex items-center">
               <Image
@@ -139,7 +142,8 @@ const DirectCommunicationTab = () => {
         {filteredGroupChatList.map((chat) => (
           <div
             key={chat.id}
-            className="flex items-center justify-between p-3 mb-2 bg-white rounded-lg shadow-sm"
+            onClick={() => router.push(`/communications/chat/${chat.id}`)}
+            className="flex items-center justify-between p-3 mb-2 bg-white rounded-lg shadow-sm cursor-pointer"
           >
             <div className="flex items-center">
               <Image
