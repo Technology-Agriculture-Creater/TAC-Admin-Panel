@@ -122,13 +122,13 @@ const VillageAllocationPanel = () => {
                       fill="#0077b6"
                       transform="rotate(0)matrix(1, 0, 0, 1, 0, 0)"
                     >
-                      <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                      <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
                       <g
                         id="SVGRepo_tracerCarrier"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                         stroke="#CCCCCC"
-                        stroke-width="0.08"
+                        strokeWidth="0.08"
                       ></g>
                       <g id="SVGRepo_iconCarrier">
                         {" "}

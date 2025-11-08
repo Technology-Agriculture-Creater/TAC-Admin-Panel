@@ -120,7 +120,7 @@ const BdaProfilePage = () => {
           </div>
         </div>
       </div>
-      <BdaFarmerManagementTable />
+      <BdaFarmerManagementTable bdaName={bda.bdaName} />
     </div>
   );
 };
