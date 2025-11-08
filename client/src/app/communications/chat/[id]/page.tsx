@@ -3,6 +3,7 @@ import React from "react";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
+import ReactMarkdown from "react-markdown";
 import {
   EllipsisVertical,
   X,
@@ -212,7 +213,7 @@ const ChatPage = () => {
                   : "bg-gray-200"
               } p-3 rounded-lg max-w-xs`}
             >
-              {message.text}
+              <ReactMarkdown>{message.text}</ReactMarkdown>
             </div>
           </div>
         ))}
