@@ -152,38 +152,35 @@ export const importCrops = async (req: Request, res: Response): Promise<Response
 
     console.time("CropImportTotal");
 
-    // 🧾 Step 1: Parse Excel first
+    // Step 1: Parse Excel first
     const rows = await parseUploadedFile(req.file);
-    if (!rows || rows.length === 0) {
+    if (!rows?.length) {
       return res.status(400).json({ success: false, message: "No data found in file" });
     }
 
-    // 📂 Step 2: Read uploads folder asynchronously and cache file names
+    // Step 2: Cache uploads folder (Array version to keep compatibility)
     const uploadsDir = path.join(__dirname, "../../uploads");
-    const allFiles = await fs.promises.readdir(uploadsDir);
-    const allFilesSet = new Set(allFiles.map((f) => f.toLowerCase()));
+    const allFiles: string[] = (await fs.promises.readdir(uploadsDir)).map((f) =>
+      f.toLowerCase()
+    );
 
-    // 🧠 Fast image lookup
+    // Step 3: Fast lookup helper (compatible with your old mapper)
     const findImageFast = (name: string): string => {
       const normalized = name.toLowerCase().replace(/\s+/g, " ");
-      for (const file of allFilesSet) {
-        if (file.includes(normalized)) {
-          return `/uploads/${file}`;
-        }
-      }
-      return `/uploads/defaults/placeholder.png`;
+      const match = allFiles.find((file) => file.includes(normalized));
+      return match ? `/uploads/${match}` : `/uploads/defaults/placeholder.png`;
     };
 
-    // ⚙️ Step 3: Map all rows into crop objects
+    // Step 4: Map all rows
     const crops = rows.map((r) => mapRowToCrop(r, findImageFast));
 
-    // 🧹 Step 4: Delete old crops + insert new crops concurrently
+    // Step 5: Delete old + Insert new in parallel batches
     const rawCollection = mongoose.connection.collection("crops");
 
     const deletePromise = rawCollection.deleteMany({});
     const insertPromise = (async () => {
       const BATCH_SIZE = 20000;
-      const concurrency = 3; // number of batches processed in parallel
+      const concurrency = 3;
 
       const chunks: typeof crops[] = [];
       for (let i = 0; i < crops.length; i += BATCH_SIZE) {
@@ -194,7 +191,6 @@ export const importCrops = async (req: Request, res: Response): Promise<Response
       for (const chunk of chunks) {
         const task = rawCollection.insertMany(chunk, { ordered: false });
         queue.push(task);
-
         if (queue.length >= concurrency) {
           await Promise.all(queue);
           queue.length = 0;
