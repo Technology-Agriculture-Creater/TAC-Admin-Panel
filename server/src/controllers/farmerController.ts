@@ -1087,142 +1087,40 @@ export const getMajorCropsInMarket = async (req: Request, res: Response) => {
   }
 };
 
+
 export const getOilSeedCrops = async (req: Request, res: Response) => {
   try {
     const city = (req.query.city as string)?.trim() || "Nagpur";
     const limit = parseInt(req.query.limit as string) || 10;
 
-    // 🌐 Adjust to India time (UTC+5:30)
-    const now = new Date();
-    const indiaOffsetMs = 5.5 * 60 * 60 * 1000;
-    const todayIndia = new Date(now.getTime() + indiaOffsetMs);
-    todayIndia.setHours(0, 0, 0, 0);
-    let dateToUse = new Date(todayIndia.getTime() - indiaOffsetMs);
-
-    // 1️⃣ Get today's oilseed data
-    let todayData = await CropModel.aggregate([
+    const crops = await CropModel.aggregate([
       {
         $match: {
           "location.city": { $regex: new RegExp(city, "i") },
-          "category.name": { $regex: /oil/i },
-          "otherDetails.reportedDate": { $gte: dateToUse },
+          "category.name": { $regex: /oil/i }, // Match "oil" in category name
         },
       },
       {
         $group: {
-          _id: { name: "$name", variant: "$variants.name", city: "$location.city" },
-          avgPrice: { $avg: { $arrayElemAt: ["$variants.price", 0] } },
-          minPrice: { $avg: { $arrayElemAt: ["$variants.minPrice", 0] } },
-          maxPrice: { $avg: { $arrayElemAt: ["$variants.maxPrice", 0] } },
-          trades: { $sum: "$supplyDemand.arrivalQtyToday" },
+          _id: "$name",
+          totalArrival: { $sum: "$supplyDemand.arrivalQtyToday" },
         },
       },
+      { $sort: { totalArrival: -1 } },
+      { $limit: limit },
     ]);
 
-    // 2️⃣ Fallback if no data for today
-    if (todayData.length === 0) {
-      const lastRecord = await CropModel.findOne(
-        { "category.name": { $regex: /oil/i } },
-        { "otherDetails.reportedDate": 1 }
-      )
-        .sort({ "otherDetails.reportedDate": -1 })
-        .lean();
+    const result = crops.map((c) => ({ name: c._id }));
 
-      // ✅ Type-safe check before accessing nested fields
-      if (!lastRecord?.otherDetails?.reportedDate) {
-        return res.status(404).json({
-          success: false,
-          message: "No oil seed data found.",
-        });
-      }
-
-      const lastDate = new Date(lastRecord.otherDetails.reportedDate);
-      lastDate.setHours(0, 0, 0, 0);
-      dateToUse = lastDate;
-
-      const nextDay = new Date(lastDate);
-      nextDay.setDate(nextDay.getDate() + 1);
-
-      todayData = await CropModel.aggregate([
-        {
-          $match: {
-            "location.city": { $regex: new RegExp(city, "i") },
-            "category.name": { $regex: /oil/i },
-            "otherDetails.reportedDate": { $gte: lastDate, $lt: nextDay },
-          },
-        },
-        {
-          $group: {
-            _id: { name: "$name", variant: "$variants.name", city: "$location.city" },
-            avgPrice: { $avg: { $arrayElemAt: ["$variants.price", 0] } },
-            minPrice: { $avg: { $arrayElemAt: ["$variants.minPrice", 0] } },
-            maxPrice: { $avg: { $arrayElemAt: ["$variants.maxPrice", 0] } },
-            trades: { $sum: "$supplyDemand.arrivalQtyToday" },
-          },
-        },
-      ]);
-    }
-
-    // 3️⃣ Get previous day's data
-    const prevDay = new Date(dateToUse);
-    prevDay.setDate(prevDay.getDate() - 1);
-    const nextPrev = new Date(prevDay);
-    nextPrev.setDate(nextPrev.getDate() + 1);
-
-    const yesterdayData = await CropModel.aggregate([
-      {
-        $match: {
-          "location.city": { $regex: new RegExp(city, "i") },
-          "category.name": { $regex: /oil/i },
-          "otherDetails.reportedDate": { $gte: prevDay, $lt: nextPrev },
-        },
-      },
-      {
-        $group: {
-          _id: { name: "$name", variant: "$variants.name", city: "$location.city" },
-          avgPrice: { $avg: { $arrayElemAt: ["$variants.price", 0] } },
-        },
-      },
-    ]);
-
-    const yesterdayMap = new Map<string, number>();
-    yesterdayData.forEach((y) => {
-      yesterdayMap.set(JSON.stringify(y._id), y.avgPrice);
-    });
-
-    // 4️⃣ Calculate price changes and map output
-    const result = todayData.map((t) => {
-      const yesterdayAvg = yesterdayMap.get(JSON.stringify(t._id));
-      const priceChange = yesterdayAvg ? t.avgPrice - yesterdayAvg : 0;
-      const priceChangePercent = yesterdayAvg
-        ? ((t.avgPrice - yesterdayAvg) / yesterdayAvg) * 100
-        : 0;
-
-      return {
-        cropName: t._id.name,
-        variantName: Array.isArray(t._id.variant) ? t._id.variant[0] : t._id.variant,
-        location: t._id.city,
-        avgPrice: Math.round(t.avgPrice),
-        minPrice: Math.round(t.minPrice),
-        maxPrice: Math.round(t.maxPrice),
-        priceChange: Math.round(priceChange),
-        priceChangePercent: +priceChangePercent.toFixed(2),
-        trades: +t.trades.toFixed(2),
-        dateUsed: dateToUse,
-      };
-    });
-
-    result.sort((a, b) => b.trades - a.trades);
-
-    return res.status(200).json({
+    res.status(200).json({
       success: true,
-      message: `Top Oil Seed crops for ${dateToUse.toDateString()}`,
+      message: `Top Oil Seed crops in ${city} (all-time data)`,
       count: result.length,
-      topCrops: result.slice(0, limit),
+      crops: result,
     });
   } catch (error: any) {
     console.error("❌ getOilSeedCrops Error:", error);
-    return res.status(500).json({
+    res.status(500).json({
       success: false,
       message: "Failed to fetch oil seed crops.",
       error: error.message,
@@ -1230,47 +1128,36 @@ export const getOilSeedCrops = async (req: Request, res: Response) => {
   }
 };
 
+
 export const getPulseCrops = async (req: Request, res: Response) => {
   try {
     const city = (req.query.city as string)?.trim() || "Nagpur";
     const limit = parseInt(req.query.limit as string) || 10;
 
-    // (same code as oilseed one, just replace category filter)
-    const categoryRegex = /pulse/i;
-
-    // 🌐 Adjust India time (UTC+5:30)
-    const now = new Date();
-    const indiaOffsetMs = 5.5 * 60 * 60 * 1000;
-    const todayIndia = new Date(now.getTime() + indiaOffsetMs);
-    todayIndia.setHours(0, 0, 0, 0);
-    let dateToUse = new Date(todayIndia.getTime() - indiaOffsetMs);
-
-    let todayData = await CropModel.aggregate([
+    const crops = await CropModel.aggregate([
       {
         $match: {
           "location.city": { $regex: new RegExp(city, "i") },
-          "category.name": { $regex: categoryRegex },
-          "otherDetails.reportedDate": { $gte: dateToUse },
+          "category.name": { $regex: /pulse/i },
         },
       },
       {
         $group: {
-          _id: { name: "$name", variant: "$variants.name", city: "$location.city" },
-          avgPrice: { $avg: { $arrayElemAt: ["$variants.price", 0] } },
-          minPrice: { $avg: { $arrayElemAt: ["$variants.minPrice", 0] } },
-          maxPrice: { $avg: { $arrayElemAt: ["$variants.maxPrice", 0] } },
-          trades: { $sum: "$supplyDemand.arrivalQtyToday" },
+          _id: "$name",
+          totalArrival: { $sum: "$supplyDemand.arrivalQtyToday" },
         },
       },
+      { $sort: { totalArrival: -1 } },
+      { $limit: limit },
     ]);
 
-    // ... (same fallback, previous day, map, calculation, sorting as oilseed)
+    const result = crops.map((c) => ({ name: c._id }));
 
     res.status(200).json({
       success: true,
-      message: `Top Pulse crops for ${dateToUse.toDateString()}`,
+      message: `Top Pulse crops in ${city} (all-time data)`,
       count: result.length,
-      topCrops: result.slice(0, limit),
+      crops: result,
     });
   } catch (error: any) {
     console.error("❌ getPulseCrops Error:", error);
@@ -1282,46 +1169,35 @@ export const getPulseCrops = async (req: Request, res: Response) => {
   }
 };
 
-
 export const getMoreCrops = async (req: Request, res: Response) => {
   try {
     const city = (req.query.city as string)?.trim() || "Nagpur";
     const limit = parseInt(req.query.limit as string) || 10;
 
-    // same India time logic
-    const now = new Date();
-    const indiaOffsetMs = 5.5 * 60 * 60 * 1000;
-    const todayIndia = new Date(now.getTime() + indiaOffsetMs);
-    todayIndia.setHours(0, 0, 0, 0);
-    let dateToUse = new Date(todayIndia.getTime() - indiaOffsetMs);
-
-    // exclude oil and pulse
-    let result = await CropModel.aggregate([
+    const crops = await CropModel.aggregate([
       {
         $match: {
           "location.city": { $regex: new RegExp(city, "i") },
-          "category.name": { $not: { $regex: /(oil|pulse)/i } },
-          "otherDetails.reportedDate": { $gte: dateToUse },
+          "category.name": { $not: { $regex: /(oil|pulse)/i } }, // exclude oil & pulse
         },
       },
       {
         $group: {
-          _id: { name: "$name", variant: "$variants.name", city: "$location.city" },
-          avgPrice: { $avg: { $arrayElemAt: ["$variants.price", 0] } },
-          minPrice: { $avg: { $arrayElemAt: ["$variants.minPrice", 0] } },
-          maxPrice: { $avg: { $arrayElemAt: ["$variants.maxPrice", 0] } },
-          trades: { $sum: "$supplyDemand.arrivalQtyToday" },
+          _id: "$name",
+          totalArrival: { $sum: "$supplyDemand.arrivalQtyToday" },
         },
       },
+      { $sort: { totalArrival: -1 } },
+      { $limit: limit },
     ]);
 
-    // (same fallback, previous day, map, and return structure as others)
+    const result = crops.map((c) => ({ name: c._id }));
 
     res.status(200).json({
       success: true,
-      message: `Top Other Major crops for ${dateToUse.toDateString()}`,
+      message: `Top other major crops in ${city} (all-time data)`,
       count: result.length,
-      topCrops: result.slice(0, limit),
+      crops: result,
     });
   } catch (error: any) {
     console.error("❌ getMoreCrops Error:", error);
