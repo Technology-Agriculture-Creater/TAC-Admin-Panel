@@ -141,50 +141,69 @@ export const getCropDetailsById = async (req: Request, res: Response): Promise<R
   }
 };
 
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export const importCrops = async (req: Request, res: Response) => {
+export const importCrops = async (req: Request, res: Response): Promise<Response> => {
   try {
-    if (!req.file)
+    if (!req.file) {
       return res.status(400).json({ success: false, message: "No file uploaded" });
+    }
 
     console.time("CropImportTotal");
 
-    // 🧹 Step 1: Delete old data (parallel execution)
-    const deletePromise = cropModel.deleteMany({});
-
-    // 🧾 Step 2: Parse Excel (async)
-    const rows = parseUploadedFile(req.file);
-    if (!rows.length)
+    // 🧾 Step 1: Parse Excel first
+    const rows = await parseUploadedFile(req.file);
+    if (!rows || rows.length === 0) {
       return res.status(400).json({ success: false, message: "No data found in file" });
+    }
 
-    await deletePromise;
-
-    // 📂 Step 3: Cache uploads folder once
+    // 📂 Step 2: Read uploads folder asynchronously and cache file names
     const uploadsDir = path.join(__dirname, "../../uploads");
-    const allFiles = fs.readdirSync(uploadsDir).map((f) => f.toLowerCase());
+    const allFiles = await fs.promises.readdir(uploadsDir);
+    const allFilesSet = new Set(allFiles.map((f) => f.toLowerCase()));
 
-    // ⚡ Optimized local finder
-    const findImageFast = (name: string) => {
+    // 🧠 Fast image lookup
+    const findImageFast = (name: string): string => {
       const normalized = name.toLowerCase().replace(/\s+/g, " ");
-      const match = allFiles.find((file) => file.includes(normalized));
-      return match ? `/uploads/${match}` : `/uploads/defaults/placeholder.png`;
+      for (const file of allFilesSet) {
+        if (file.includes(normalized)) {
+          return `/uploads/${file}`;
+        }
+      }
+      return `/uploads/defaults/placeholder.png`;
     };
 
-    // 🧠 Step 4: Map rows
-    
+    // ⚙️ Step 3: Map all rows into crop objects
     const crops = rows.map((r) => mapRowToCrop(r, findImageFast));
 
-    // 💾 Step 5: Insert in batches (10k per batch)
-    const BATCH_SIZE = 10000;
-    for (let i = 0; i < crops.length; i += BATCH_SIZE) {
-      const chunk = crops.slice(i, i + BATCH_SIZE);
-      // await cropModel.insertMany(chunk, { ordered: false });
-      const rawCollection = mongoose.connection.collection("crops");
-      await rawCollection.insertMany(chunk, { ordered: false });
-    }
+    // 🧹 Step 4: Delete old crops + insert new crops concurrently
+    const rawCollection = mongoose.connection.collection("crops");
+
+    const deletePromise = rawCollection.deleteMany({});
+    const insertPromise = (async () => {
+      const BATCH_SIZE = 20000;
+      const concurrency = 3; // number of batches processed in parallel
+
+      const chunks: typeof crops[] = [];
+      for (let i = 0; i < crops.length; i += BATCH_SIZE) {
+        chunks.push(crops.slice(i, i + BATCH_SIZE));
+      }
+
+      const queue: Promise<any>[] = [];
+      for (const chunk of chunks) {
+        const task = rawCollection.insertMany(chunk, { ordered: false });
+        queue.push(task);
+
+        if (queue.length >= concurrency) {
+          await Promise.all(queue);
+          queue.length = 0;
+        }
+      }
+      if (queue.length > 0) await Promise.all(queue);
+    })();
+
+    await Promise.all([deletePromise, insertPromise]);
 
     console.timeEnd("CropImportTotal");
 
