@@ -10,6 +10,8 @@ import { DistrictModel } from '../models/district.model.ts';
 import { StateModel } from '../models/state.model.ts';
 import { CountryModel } from '../models/country.model.ts';
 import path from 'path';
+import { fileURLToPath } from 'url';
+import mongoose from 'mongoose';
 
 /**
  * @desc    Get all crop listings (with pagination)
@@ -140,35 +142,56 @@ export const getCropDetailsById = async (req: Request, res: Response): Promise<R
 };
 
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 export const importCrops = async (req: Request, res: Response) => {
   try {
     if (!req.file)
-      return res
-        .status(400)
-        .json({ success: false, message: "No file uploaded" });
+      return res.status(400).json({ success: false, message: "No file uploaded" });
 
-    // 🧾 Parse Excel or ZIP file
+    console.time("CropImportTotal");
+
+    // 🧹 Step 1: Delete old data (parallel execution)
+    const deletePromise = cropModel.deleteMany({});
+
+    // 🧾 Step 2: Parse Excel (async)
     const rows = parseUploadedFile(req.file);
     if (!rows.length)
-      return res
-        .status(400)
-        .json({ success: false, message: "No data found in file" });
+      return res.status(400).json({ success: false, message: "No data found in file" });
 
-    // 🧹 Step 1: Clear previous crops
-    await cropModel.deleteMany({});
-    console.log("🧹 Existing crops deleted successfully.");
+    await deletePromise;
 
-    // 🧠 Step 2: Map Excel rows to crop model
-    const crops = rows.map(mapRowToCrop);
+    // 📂 Step 3: Cache uploads folder once
+    const uploadsDir = path.join(__dirname, "../../uploads");
+    const allFiles = fs.readdirSync(uploadsDir).map((f) => f.toLowerCase());
 
-    // 💾 Step 3: Save to DB
-    const result = await cropModel.insertMany(crops, { ordered: false });
+    // ⚡ Optimized local finder
+    const findImageFast = (name: string) => {
+      const normalized = name.toLowerCase().replace(/\s+/g, " ");
+      const match = allFiles.find((file) => file.includes(normalized));
+      return match ? `/uploads/${match}` : `/uploads/defaults/placeholder.png`;
+    };
 
-    // ✅ Step 4: Respond
+    // 🧠 Step 4: Map rows
+    
+    const crops = rows.map((r) => mapRowToCrop(r, findImageFast));
+
+    // 💾 Step 5: Insert in batches (10k per batch)
+    const BATCH_SIZE = 10000;
+    for (let i = 0; i < crops.length; i += BATCH_SIZE) {
+      const chunk = crops.slice(i, i + BATCH_SIZE);
+      // await cropModel.insertMany(chunk, { ordered: false });
+      const rawCollection = mongoose.connection.collection("crops");
+      await rawCollection.insertMany(chunk, { ordered: false });
+    }
+
+    console.timeEnd("CropImportTotal");
+
     return res.status(201).json({
       success: true,
-      message: `🧹 Old crops cleared and ${result.length} new crops imported successfully.`,
-      count: result.length,
+      message: `🧹 Old crops cleared and ${crops.length} new crops imported successfully.`,
+      count: crops.length,
     });
   } catch (error: any) {
     console.error("❌ Crop Import Error:", error);
