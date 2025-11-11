@@ -10,7 +10,7 @@ const PerformanceOverview = () => {
       <div className="mb-4">
         <div className="flex items-center gap-2">
           <Image
-            src="/images/Panel.svg"
+            src="/Images/Panel.svg"
             alt="Performance"
             width={24}
             height={24}

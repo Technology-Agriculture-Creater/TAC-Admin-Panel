@@ -39,7 +39,7 @@ const SummaryCards = () => {
           <div className="flex items-center justify-between">
             <h3 className="text-3xl font-bold text-gray-800">6200</h3>
             <Image
-              src="/images/framer1.png"
+              src="/Images/framer1.png"
               alt="User Avatar"
               height={0}
               width={0}
@@ -58,7 +58,7 @@ const SummaryCards = () => {
           <div className="flex items-center justify-between">
             <h3 className="text-3xl font-bold text-gray-800">11</h3>
             <Image
-              src="/images/BDA.png"
+              src="/Images/BDA.png"
               alt="User Avatar"
               height={0}
               width={0}
@@ -79,7 +79,7 @@ const SummaryCards = () => {
           <div className="flex items-center justify-between">
             <h3 className="text-3xl font-bold text-gray-800">4,350</h3>
             <Image
-              src="/images/crop.png"
+              src="/Images/crop.png"
               alt="User Avatar"
               height={0}
               width={0}
@@ -100,7 +100,7 @@ const SummaryCards = () => {
               Trades Activity
             </h3>
             <Image
-              src="/images/trade.png"
+              src="/Images/trade.png"
               alt="User Avatar"
               height={0}
               width={0}

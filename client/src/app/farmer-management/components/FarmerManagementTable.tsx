@@ -128,7 +128,7 @@ const FarmerManagementTable: React.FC<FarmerManagementTableProps> = ({
             <div className="flex-shrink-0 h-10 w-10">
               <Image
                 className="h-10 w-10 rounded-full object-cover"
-                src="/images/profile.jpg"
+                src="/Images/profile.jpg"
                 alt=""
                 width={40}
                 height={40}

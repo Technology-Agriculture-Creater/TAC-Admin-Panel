@@ -14,32 +14,32 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
   const navItems = [
     {
       name: "Dashboard",
-      icon: "/images/dashboard.png",
+      icon: "/Images/dashboard.png",
       href: "/dashboard",
     },
     {
       name: "BDA Monitoring",
-      icon: "/images/monitor.png",
+      icon: "/Images/monitor.png",
       href: "/bda-monitoring",
     },
     {
       name: "Farmer Management",
-      icon: "/images/framer.png",
+      icon: "/Images/framer.png",
       href: "/farmer-management",
     },
     {
       name: "Communications",
-      icon: "/images/communication.png",
+      icon: "/Images/communication.png",
       href: "/communications",
     },
     {
       name: "Reports",
-      icon: "/images/report.png",
+      icon: "/Images/report.png",
       href: "/reports",
     },
     {
       name: "Profile & Settings",
-      icon: "/images/profile.png",
+      icon: "/Images/profile.png",
       href: "/profile-settings",
     },
   ];
@@ -54,7 +54,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
     >
       <div className="p-4 flex items-center justify-between">
         <Image
-          src="/images/logo1.png"
+          src="/Images/logo1.png"
           height={0}
           width={0}
           sizes="100vw"

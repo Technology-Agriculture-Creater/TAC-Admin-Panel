@@ -6,7 +6,7 @@ const NewOnboardings = () => {
     {
       id: "TACXXX0008",
       name: "Isabella Rodriguez",
-      avatar: "/images/profile.jpg",
+      avatar: "/Images/profile.jpg",
       category: "Small",
       type: "Small (5 Acre - 15 Acre)",
       taluka: "Nagpur",
@@ -15,7 +15,7 @@ const NewOnboardings = () => {
     {
       id: "TACXXX0009",
       name: "Liam Johnson",
-      avatar: "/images/profile.jpg",
+      avatar: "/Images/profile.jpg",
       category: "Medium",
       type: "Medium (15 Acre - 30 Acre)",
       taluka: "Pune",
@@ -24,7 +24,7 @@ const NewOnboardings = () => {
     {
       id: "TACXXX0010",
       name: "Ava Smith",
-      avatar: "/images/profile.jpg",
+      avatar: "/Images/profile.jpg",
       category: "Large",
       type: "Large (30 Acre - 50 Acre)",
       taluka: "Mumbai",
@@ -33,7 +33,7 @@ const NewOnboardings = () => {
     {
       id: "TACXXX0011",
       name: "Noah Brown",
-      avatar: "/images/profile.jpg",
+      avatar: "/Images/profile.jpg",
       category: "Extra Large",
       type: "Extra Large (50 Acre and above)",
       taluka: "Bangalore",
@@ -42,7 +42,7 @@ const NewOnboardings = () => {
     {
       id: "TACXXX0012",
       name: "Emma Williams",
-      avatar: "/images/profile.jpg",
+      avatar: "/Images/profile.jpg",
       category: "Small",
       type: "Small (5 Acre - 15 Acre)",
       taluka: "Hyderabad",
@@ -51,7 +51,7 @@ const NewOnboardings = () => {
     {
       id: "TACXXX0013",
       name: "Oliver Jones",
-      avatar: "/images/profile.jpg",
+      avatar: "/Images/profile.jpg",
       category: "Medium",
       type: "Medium (15 Acre - 30 Acre)",
       taluka: "Chennai",
@@ -60,7 +60,7 @@ const NewOnboardings = () => {
     {
       id: "TACXXX0014",
       name: "Sophia Garcia",
-      avatar: "/images/profile.jpg",
+      avatar: "/Images/profile.jpg",
       category: "Large",
       type: "Large (30 Acre - 50 Acre)",
       taluka: "Ahmedabad",
@@ -73,7 +73,7 @@ const NewOnboardings = () => {
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center gap-2">
           <Image
-            src="/images/vector.png"
+            src="/Images/Vector.png"
             alt="Onboarding"
             width={24}
             height={24}

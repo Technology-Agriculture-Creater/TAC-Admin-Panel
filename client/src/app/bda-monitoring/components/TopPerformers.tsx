@@ -62,7 +62,7 @@ const TopPerformers = () => {
                 <td className="px-6 py-4 whitespace-nowrap">
                   {performer.rank === 1 && (
                     <Image
-                      src="/images/first.png"
+                      src="/Images/first.png"
                       alt="Gold Medal"
                       width={36}
                       height={24}
@@ -70,7 +70,7 @@ const TopPerformers = () => {
                   )}
                   {performer.rank === 2 && (
                     <Image
-                      src="/images/second.png"
+                      src="/Images/second.png"
                       alt="Silver Medal"
                       width={36}
                       height={24}
@@ -78,7 +78,7 @@ const TopPerformers = () => {
                   )}
                   {performer.rank === 3 && (
                     <Image
-                      src="/images/third.png"
+                      src="/Images/third.png"
                       alt="Bronze Medal"
                       width={36}
                       height={24}

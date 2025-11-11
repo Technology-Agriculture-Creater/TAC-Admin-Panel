@@ -149,25 +149,25 @@ const VillageActivityPanel = () => {
   const tabs = [
     {
       label: "Crop Approval",
-      icon: "/images/cropA.png",
+      icon: "/Images/cropA.png",
       count: totalCrops,
     },
     {
       label: "Trade Activities",
-      icon: "/images/tradeA.png",
+      icon: "/Images/tradeA.png",
       count: tradeData.length,
     },
     {
       label: "Complaints",
-      icon: "/images/complaint.png",
+      icon: "/Images/complaint.png",
       count: complaintsData.length,
     },
     {
       label: "Disputes",
-      icon: "/images/dispute.png",
+      icon: "/Images/dispute.png",
       count: disputesData.length,
     },
-    { label: "System", icon: "/images/system.png", count: systemData.length },
+    { label: "System", icon: "/Images/system.png", count: systemData.length },
   ];
 
   const data = useMemo(() => {
@@ -374,7 +374,7 @@ const VillageActivityPanel = () => {
     <div className="bg-white p-4 rounded-lg shadow-md">
       <div className="mb-6 font-semibold">
         <Image
-          src="/images/Panel.svg"
+          src="/Images/Panel.svg"
           alt="Crop Icon"
           height={0}
           width={0}

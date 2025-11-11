@@ -48,7 +48,7 @@ const UnassignedBDAs = () => {
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center text-center ">
                     <div className="flex-shrink-0 h-10 w-10">
-                      <Image src="/images/profile.jpg" alt="Profile" width={40} height={40} className="rounded-full" />
+                      <Image src="/Images/profile.jpg" alt="Profile" width={40} height={40} className="rounded-full" />
                     </div>
                     <div className="ml-4 text-center">
                       <div className="text-sm text-center font-medium text-gray-900">

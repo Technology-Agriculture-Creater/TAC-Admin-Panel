@@ -151,7 +151,7 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen }) => {
             onClick={handleDropdownToggle}
           >
             <Image
-              src="/images/Ellipse 1.svg"
+              src="/Images/Ellipse 1.svg"
               alt="User Avatar"
               height={0}
               width={0}
@@ -180,7 +180,7 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen }) => {
             <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
               <div className="flex items-center space-x-2 p-4 border-b border-gray-200">
                 <Image
-                  src="/images/Ellipse 1.svg"
+                  src="/Images/Ellipse 1.svg"
                   alt="User Avatar"
                   height={0}
                   width={0}
