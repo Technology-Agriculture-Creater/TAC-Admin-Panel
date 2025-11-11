@@ -911,7 +911,12 @@ export const getTopCropsOfDay = async (req: Request, res: Response) => {
       { $match: { "otherDetails.reportedDate": { $gte: dateToUse } } },
       {
         $group: {
-          _id: { name: "$name", variant: "$variants.name", city: "$location.city" },
+          _id: {
+            name: "$name",
+            variant: "$variants.name",
+            city: "$location.city",
+          },
+          docId: { $first: "$_id" }, // ✅ Add document _id for frontend redirection
           avgPrice: { $avg: { $arrayElemAt: ["$variants.price", 0] } },
           minPrice: { $avg: { $arrayElemAt: ["$variants.minPrice", 0] } },
           maxPrice: { $avg: { $arrayElemAt: ["$variants.maxPrice", 0] } },
@@ -945,7 +950,12 @@ export const getTopCropsOfDay = async (req: Request, res: Response) => {
         },
         {
           $group: {
-            _id: { name: "$name", variant: "$variants.name", city: "$location.city" },
+            _id: {
+              name: "$name",
+              variant: "$variants.name",
+              city: "$location.city",
+            },
+            docId: { $first: "$_id" }, // ✅ include here as well
             avgPrice: { $avg: { $arrayElemAt: ["$variants.price", 0] } },
             minPrice: { $avg: { $arrayElemAt: ["$variants.minPrice", 0] } },
             maxPrice: { $avg: { $arrayElemAt: ["$variants.maxPrice", 0] } },
@@ -963,7 +973,8 @@ export const getTopCropsOfDay = async (req: Request, res: Response) => {
       .sort({ "otherDetails.reportedDate": -1 })
       .lean();
 
-    let prevDay = subDays(dateToUse, 1);
+    let prevDay = new Date(dateToUse);
+    prevDay.setDate(prevDay.getDate() - 1);
     let prevDayEnd = new Date(dateToUse);
 
     if (prevRecord?.otherDetails?.reportedDate) {
@@ -982,7 +993,11 @@ export const getTopCropsOfDay = async (req: Request, res: Response) => {
       },
       {
         $group: {
-          _id: { name: "$name", variant: "$variants.name", city: "$location.city" },
+          _id: {
+            name: "$name",
+            variant: "$variants.name",
+            city: "$location.city",
+          },
           avgPrice: { $avg: { $arrayElemAt: ["$variants.price", 0] } },
         },
       },
@@ -991,16 +1006,16 @@ export const getTopCropsOfDay = async (req: Request, res: Response) => {
     const yesterdayMap = new Map();
     yesterdayData.forEach((y) => yesterdayMap.set(JSON.stringify(y._id), y.avgPrice));
 
-    // 5️⃣ Compute price change
+    // 5️⃣ Compute price change and prepare final response
     const result = todayData.map((t) => {
       const yesterdayAvg = yesterdayMap.get(JSON.stringify(t._id));
       const priceChange = yesterdayAvg ? t.avgPrice - yesterdayAvg : 0;
       const priceChangePercent = yesterdayAvg
         ? ((t.avgPrice - yesterdayAvg) / yesterdayAvg) * 100
         : 0;
-      const variantImage = t.variantImage || null;
 
       return {
+        _id: t.docId, // ✅ include for redirecting to detail page
         cropName: t._id.name,
         variantName: Array.isArray(t._id.variant) ? t._id.variant[0] : t._id.variant,
         location: t._id.city,
@@ -1009,8 +1024,8 @@ export const getTopCropsOfDay = async (req: Request, res: Response) => {
         maxPrice: Math.round(t.maxPrice),
         priceChange: Math.round(priceChange),
         priceChangePercent: +priceChangePercent.toFixed(2),
-        trades: t.trades,
-        image: variantImage || null,
+        trades: +t.trades.toFixed(2),
+        image: t.variantImage || null,
         dateUsed: dateToUse,
       };
     });
@@ -1025,9 +1040,14 @@ export const getTopCropsOfDay = async (req: Request, res: Response) => {
     });
   } catch (error: any) {
     console.error("❌ getTopCropsOfDay Error:", error);
-    res.status(500).json({ success: false, message: "Failed to fetch top crops", error: error.message });
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch top crops",
+      error: error.message,
+    });
   }
 };
+
 
 export const getMajorCropsInMarket = async (req: Request, res: Response) => {
   try {
