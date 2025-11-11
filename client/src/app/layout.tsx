@@ -13,6 +13,9 @@ export const metadata: Metadata = {
   title: "TAC Admin Panel",
   description:
     "TAC Admin Panel is a web application that allows administrators to manage the TAC platform.",
+  icons: {
+    icon: "/Images/TAC.png",
+  },
 };
 
 export default function RootLayout({
