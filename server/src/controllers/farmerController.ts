@@ -1070,7 +1070,7 @@ export const getMajorCropsInMarket = async (req: Request, res: Response) => {
     const nextDay = new Date(latestDate);
     nextDay.setDate(nextDay.getDate() + 1);
 
-    // 2️⃣ Aggregate crops by arrival quantity in given city
+    // 2️⃣ Aggregate crops by arrival quantity in given city with image
     const crops = await CropModel.aggregate([
       {
         $match: {
@@ -1082,7 +1082,7 @@ export const getMajorCropsInMarket = async (req: Request, res: Response) => {
         $group: {
           _id: "$name",
           totalArrival: { $sum: "$supplyDemand.arrivalQtyToday" },
-          // we'll add image here later once you have the field
+          image: { $first: "$image" }, // 👈 take first image from the group
         },
       },
       { $sort: { totalArrival: -1 } },
@@ -1092,7 +1092,9 @@ export const getMajorCropsInMarket = async (req: Request, res: Response) => {
     // 3️⃣ Format response
     const result = crops.map((c) => ({
       name: c._id,
-      // image: c.image, // <-- we'll add this later
+      image: c.image
+        ? `https://apiadmin.technologyagriculturecreater.com/api/${c.image}`
+        : null,
     }));
 
     res.status(200).json({
@@ -1110,7 +1112,6 @@ export const getMajorCropsInMarket = async (req: Request, res: Response) => {
     });
   }
 };
-
 
 export const getOilSeedCrops = async (req: Request, res: Response) => {
   try {
