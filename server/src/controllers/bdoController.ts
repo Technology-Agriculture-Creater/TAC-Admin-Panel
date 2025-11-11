@@ -10,6 +10,8 @@ import { DistrictModel } from '../models/district.model.ts';
 import { StateModel } from '../models/state.model.ts';
 import { CountryModel } from '../models/country.model.ts';
 import path from 'path';
+import { fileURLToPath } from 'url';
+import mongoose from 'mongoose';
 
 /**
  * @desc    Get all crop listings (with pagination)
@@ -139,42 +141,91 @@ export const getCropDetailsById = async (req: Request, res: Response): Promise<R
   }
 };
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-export const importCrops = async (req: Request, res: Response) => {
+// Helper: background processor
+const processCropsImport = async (filePath: Express.Multer.File) => {
   try {
-    if (!req.file)
-      return res
-        .status(400)
-        .json({ success: false, message: "No file uploaded" });
+    console.time("CropImportTotal");
 
-    // 🧾 Parse Excel or ZIP file
-    const rows = parseUploadedFile(req.file);
-    if (!rows.length)
-      return res
-        .status(400)
-        .json({ success: false, message: "No data found in file" });
+    const rows = await parseUploadedFile(filePath);
+    if (!rows?.length) {
+      console.warn("⚠️ No data found in uploaded file.");
+      return;
+    }
 
-    // 🧹 Step 1: Clear previous crops
-    await cropModel.deleteMany({});
-    console.log("🧹 Existing crops deleted successfully.");
+    const uploadsDir = path.join(__dirname, "../../uploads");
+    const allFiles: string[] = (await fs.promises.readdir(uploadsDir)).map((f) =>
+      f.toLowerCase()
+    );
 
-    // 🧠 Step 2: Map Excel rows to crop model
-    const crops = rows.map(mapRowToCrop);
+    const findImageFast = (name: string): string => {
+      const normalized = name.toLowerCase().replace(/\s+/g, " ");
+      const match = allFiles.find((file) => file.includes(normalized));
+      return match ? `/uploads/${match}` : `/uploads/defaults/placeholder.png`;
+    };
 
-    // 💾 Step 3: Save to DB
-    const result = await cropModel.insertMany(crops, { ordered: false });
+    const crops = rows.map((r) => mapRowToCrop(r, findImageFast));
 
-    // ✅ Step 4: Respond
-    return res.status(201).json({
+    const rawCollection = mongoose.connection.collection("crops");
+
+    // Delete + insert batches in background
+    const deletePromise = rawCollection.deleteMany({});
+    const insertPromise = (async () => {
+      const BATCH_SIZE = 20000;
+      const concurrency = 3;
+      const chunks: typeof crops[] = [];
+
+      for (let i = 0; i < crops.length; i += BATCH_SIZE) {
+        chunks.push(crops.slice(i, i + BATCH_SIZE));
+      }
+
+      const queue: Promise<any>[] = [];
+      for (const chunk of chunks) {
+        const task = rawCollection.insertMany(chunk, { ordered: false });
+        queue.push(task);
+        if (queue.length >= concurrency) {
+          await Promise.all(queue);
+          queue.length = 0;
+        }
+      }
+      if (queue.length > 0) await Promise.all(queue);
+    })();
+
+    await Promise.all([deletePromise, insertPromise]);
+
+    console.timeEnd("CropImportTotal");
+    console.log(`✅ Import completed successfully (${rows.length} records).`);
+  } catch (error) {
+    console.error("❌ Background Crop Import Error:", error);
+  }
+};
+
+// Main API Handler
+export const importCrops = async (req: Request, res: Response): Promise<Response> => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: "No file uploaded" });
+    }
+
+    // ✅ Respond immediately to the user
+    res.status(200).json({
       success: true,
-      message: `🧹 Old crops cleared and ${result.length} new crops imported successfully.`,
-      count: result.length,
+      message: "📦 File received. Crops import started in background.",
     });
+
+    // 🧠 Process import in background (non-blocking)
+    setImmediate(() => {
+      processCropsImport(req.file!);
+    });
+
+    return res; // already responded
   } catch (error: any) {
     console.error("❌ Crop Import Error:", error);
     return res.status(500).json({
       success: false,
-      message: "Failed to import crops",
+      message: "Failed to start crop import",
       error: error.message,
     });
   }

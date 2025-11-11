@@ -4,54 +4,70 @@ import { fileURLToPath } from "url";
 import { categoryMapper } from "./categoryMapper.ts";
 import { cropImageMapper } from "./cropImageMapper.ts";
 
-// 🧠 Recreate __dirname (fix for "is not defined" in ESM)
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// ✅ Helper: dynamically find image in /uploads
-const findImageInUploads = (name: string): string => {
-  const uploadsDir = path.join(__dirname, "../../uploads");
-  const normalized = name.toLowerCase().replace(/\s+/g, " ");
-  const allFiles = fs.readdirSync(uploadsDir);
-  const match = allFiles.find((file) =>
-    file.toLowerCase().includes(normalized)
-  );
+/**
+ * 🧩 Optimized image lookup (safe for both Array & Set)
+ */
+const findImageInUploads = (name: string, allFiles?: string[] | Set<string>): string => {
+  if (!name) return `/uploads/defaults/placeholder.png`;
 
-  if (match) return `/uploads/${match}`;
-  return `/uploads/defaults/placeholder.png`; // fallback image
+  const normalized = name.toLowerCase().replace(/\s+/g, " ");
+  let match: string | undefined;
+
+  if (Array.isArray(allFiles)) {
+    // ✅ Normal case
+    match = allFiles.find((file) => file.toLowerCase().includes(normalized));
+  } else if (allFiles instanceof Set) {
+    // ✅ Safety for when a Set is passed
+    for (const file of allFiles) {
+      if (file.toLowerCase().includes(normalized)) {
+        match = file;
+        break;
+      }
+    }
+  } else {
+    console.warn("⚠️ allFiles not iterable. Using empty list instead.");
+  }
+
+  return match ? `/uploads/${match}` : `/uploads/defaults/placeholder.png`;
 };
 
-export const mapRowToCrop = (row: Record<string, any>) => {
+/**
+ * 🧠 Core mapper (safe for background jobs)
+ */
+export const mapRowToCrop = (row: Record<string, any>, allFiles?: string[] | Set<string>) => {
+  // 🧮 Excel date conversion
   let reportedDate: Date | null = null;
   if (row["Reported Date"]) {
     const excelDate = Number(row["Reported Date"]);
-    if (!isNaN(excelDate)) {
-      reportedDate = new Date((excelDate - 25569) * 86400 * 1000);
-    } else {
-      reportedDate = new Date(row["Reported Date"]);
-    }
+    reportedDate = !isNaN(excelDate)
+      ? new Date((excelDate - 25569) * 86400 * 1000)
+      : new Date(row["Reported Date"]);
   }
 
+  // 🌾 Core crop info
   const cropName = (row["Crop Name"] || "Unknown Crop").trim();
   const normalizedCrop = cropName.toLowerCase();
 
+  // 🖼 Crop image
   const cropImage =
     cropImageMapper[cropName] ||
-    findImageInUploads(cropName) ||
+    findImageInUploads(cropName, allFiles) ||
     `/uploads/${normalizedCrop.replace(/\s+/g, "_")}.jpg`;
 
+  // 🗂 Category image
   const categoryName = (row["Category"] || "General").trim();
   const categoryImage =
     categoryMapper[categoryName] ||
-    findImageInUploads(categoryName) ||
+    findImageInUploads(categoryName, allFiles) ||
     `/uploads/${categoryName.toLowerCase().replace(/\s+/g, "_")}.jpg`;
 
-  const crop: any = {
+  // 🧱 Construct final document
+  return {
     name: cropName,
-    category: {
-      name: categoryName,
-      image: categoryImage,
-    },
+    category: { name: categoryName, image: categoryImage },
     location: {
       latitude: 0,
       longitude: 0,
@@ -96,6 +112,17 @@ export const mapRowToCrop = (row: Record<string, any>) => {
       rawExcelData: row,
     },
   };
+};
 
-  return crop;
+/**
+ * 🔥 Helper to preload all filenames once
+ */
+export const getAllUploadFiles = (): string[] => {
+  const uploadsDir = path.join(__dirname, "../../uploads");
+  try {
+    return fs.existsSync(uploadsDir) ? fs.readdirSync(uploadsDir) : [];
+  } catch (err) {
+    console.error("⚠️ Failed to read uploads directory:", err);
+    return [];
+  }
 };

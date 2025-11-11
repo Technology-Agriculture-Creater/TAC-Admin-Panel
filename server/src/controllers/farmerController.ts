@@ -1097,7 +1097,7 @@ export const getOilSeedCrops = async (req: Request, res: Response) => {
       {
         $match: {
           "location.city": { $regex: new RegExp(city, "i") },
-          category: { $regex: /oil/i }, // Match "oil" in category name
+          "category.name": { $regex: /oil/i }, // Match "oil" in category name
         },
       },
       {
@@ -1138,7 +1138,7 @@ export const getPulseCrops = async (req: Request, res: Response) => {
       {
         $match: {
           "location.city": { $regex: new RegExp(city, "i") },
-          category: { $regex: /pulse/i },
+          "category.name": { $regex: /pulse/i },
         },
       },
       {
@@ -1178,7 +1178,7 @@ export const getMoreCrops = async (req: Request, res: Response) => {
       {
         $match: {
           "location.city": { $regex: new RegExp(city, "i") },
-          category: { $not: { $regex: /(oil|pulse)/i } }, // exclude oil & pulse
+          "category.name": { $not: { $regex: /(oil|pulse)/i } }, // exclude oil & pulse
         },
       },
       {
