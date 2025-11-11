@@ -4,7 +4,7 @@
     "bda": {
       "name": "Rajesh Patil",
       "id": "BDAXXXX0001",
-      "image": "/Images/profile.jpg"
+      "image": "/images/profile.jpg"
     },
     "farmerRegistered": 620,
     "cropsVerified": 180,
@@ -17,7 +17,7 @@
     "bda": {
       "name": "Rupesh Gedam",
       "id": "BDAXXXX0001",
-      "image": "/Images/profile.jpg"
+      "image": "/images/profile.jpg"
     },
     "farmerRegistered": 620,
     "cropsVerified": 180,
@@ -30,7 +30,7 @@
     "bda": {
       "name": "Ali Khan",
       "id": "BDAXXXX0001",
-      "image": "/Images/profile.jpg"
+      "image": "/images/profile.jpg"
     },
     "farmerRegistered": 730,
     "cropsVerified": 160,
@@ -43,7 +43,7 @@
     "bda": {
       "name": "Sofia Johnson",
       "id": "BDAXXXX0001",
-      "image": "/Images/profile.jpg"
+      "image": "/images/profile.jpg"
     },
     "farmerRegistered": 610,
     "cropsVerified": 190,
@@ -56,7 +56,7 @@
     "bda": {
       "name": "Liam O'Connor",
       "id": "BDAXXXX0001",
-      "image": "/Images/profile.jpg"
+      "image": "/images/profile.jpg"
     },
     "farmerRegistered": 580,
     "cropsVerified": 210,

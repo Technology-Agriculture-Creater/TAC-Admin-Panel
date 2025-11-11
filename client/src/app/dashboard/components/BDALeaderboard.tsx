@@ -27,7 +27,7 @@ const BDALeaderboard = () => {
           <div className="mt-2">
             {/* Placeholder for Top Performer image/icon */}
             <Image
-              src="/Images/performance.png"
+              src="/images/performance.png"
               alt="Top Performer"
               height={0}
               width={0}
@@ -48,7 +48,7 @@ const BDALeaderboard = () => {
           <div className="mt-2">
             {/* Placeholder for Lowest Performer image/icon */}
             <Image
-              src="/Images/low.png"
+              src="/images/low.png"
               alt="Lowest Performer"
               height={0}
               width={0}

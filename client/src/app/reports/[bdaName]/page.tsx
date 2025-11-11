@@ -34,7 +34,7 @@ const BdaProfilePage = () => {
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center">
             <Image
-              src="/Images/profile.jpg"
+              src="/images/profile.jpg"
               alt="BDA Profile"
               height={0}
               width={0}

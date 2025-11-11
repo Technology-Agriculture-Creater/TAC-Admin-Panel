@@ -39,7 +39,7 @@ const ProfileSettingsPage = () => {
           <div className="relative w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
             {/* Placeholder for user image */}
             <Image
-              src="/Images/profile.png"
+              src="/images/profile.png"
               width={96}
               height={96}
               alt="Profile"

@@ -33,22 +33,22 @@ const ComplaintsTable: React.FC<ComplaintsTableProps> = ({
       maxBid: "N/A", // Default value
       status: complaint.status as "Pending review" | "Resolved",
       farmerEvidence: [
-        "/Images/veg.png",
-        "/Images/veg.png",
-        "/Images/veg.png",
-        "/Images/veg.png",
+        "/images/veg.png",
+        "/images/veg.png",
+        "/images/veg.png",
+        "/images/veg.png",
       ], // Default empty array
       bdaName: "N/A", // Default value
       bdaEvidence: {
         // Default values
         cropConfirmed: false,
-        cropImage: "/Images/veg.png",
+        cropImage: "/images/veg.png",
         qualityConfirmed: false,
-        qualityImage: "/Images/veg.png",
+        qualityImage: "/images/veg.png",
         locationConfirmed: false,
-        locationImage: "/Images/veg.png",
+        locationImage: "/images/veg.png",
         quantityConfirmed: false,
-        quantityImage: "/Images/veg.png",
+        quantityImage: "/images/veg.png",
       },
       remarks: "", // Default value
     };

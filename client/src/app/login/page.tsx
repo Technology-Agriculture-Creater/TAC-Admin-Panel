@@ -29,7 +29,7 @@ export default function LoginPage() {
     <div className="min-h-screen flex flex-col items-center justify-center bg-white p-4">
       <div className="mb-8 text-center">
         <Image
-          src="/Images/logo.png"
+          src="/images/logo.png"
           alt="TAC Agrilink Logo"
           width={150}
           height={150}

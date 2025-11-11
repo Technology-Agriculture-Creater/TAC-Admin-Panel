@@ -169,7 +169,7 @@ const ChatPage = () => {
             </svg>
           </button>
           <Image
-            src="/Images/profile.jpg"
+            src="/images/profile.jpg"
             alt={selectedChatUser.name}
             className="w-12 h-12 rounded-full mr-3 object-cover"
             height={0}

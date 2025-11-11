@@ -96,7 +96,7 @@ const ActivityDetailsModal: React.FC<ActivityDetailsModalProps> = ({
             <div className="w-full flex items-center justify-between">
               <div className="flex items-center">
                 <Image
-                  src="/Images/profile.jpg"
+                  src="/images/profile.jpg"
                   alt="Farmer"
                   height={0}
                   width={0}
@@ -175,7 +175,7 @@ const ActivityDetailsModal: React.FC<ActivityDetailsModalProps> = ({
           <div className="flex justify-between items-center">
             <div className="flex items-center">
               <Image
-                src="/Images/profile.jpg"
+                src="/images/profile.jpg"
                 alt="BDA"
                 height={0}
                 width={0}

@@ -121,7 +121,7 @@ const BdaFarmerManagementTable: React.FC<
             <div className="flex-shrink-0 h-10 w-10">
               <Image
                 className="h-10 w-10 rounded-full object-cover"
-                src="/Images/profile.jpg"
+                src="/images/profile.jpg"
                 alt=""
                 width={40}
                 height={40}
@@ -396,7 +396,7 @@ const BdaFarmerManagementTable: React.FC<
                     onClick={() => handlePageChange(i + 1)}
                     className={`relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium ${
                       currentPage === i + 1
-                        ? "z-10 bg-blue-50 border-blue-500 text-blue-600"
+                        ? "z-10 bg-blue-500 border-blue-500 text-blue-600"
                         : "text-gray-700 hover:bg-gray-50"
                     }`}
                     variant="outline"

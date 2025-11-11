@@ -88,17 +88,17 @@ const CropApprovalTable: React.FC<CropApprovalTableProps> = ({
           : rawCrop?.status === "sold"
           ? "Completed"
           : "Rejected",
-      farmerEvidence: rawCrop?.cropImages || ["/Images/veg.png"],
+      farmerEvidence: rawCrop?.cropImages || ["/images/veg.png"],
       bdaName: getFullName(rawCrop?.farmerId?.name || cropApproval.bda.name),
       bdaEvidence: {
         cropConfirmed: true,
-        cropImage: rawCrop?.cropImages?.[0] || "/Images/veg.png",
+        cropImage: rawCrop?.cropImages?.[0] || "/images/veg.png",
         qualityConfirmed: true,
-        qualityImage: rawCrop?.cropImages?.[1] || "/Images/veg.png",
+        qualityImage: rawCrop?.cropImages?.[1] || "/images/veg.png",
         locationConfirmed: true,
-        locationImage: rawCrop?.cropImages?.[2] || "/Images/veg.png",
+        locationImage: rawCrop?.cropImages?.[2] || "/images/veg.png",
         quantityConfirmed: true,
-        quantityImage: rawCrop?.cropImages?.[3] || "/Images/veg.png",
+        quantityImage: rawCrop?.cropImages?.[3] || "/images/veg.png",
       },
       remarks: "",
     };

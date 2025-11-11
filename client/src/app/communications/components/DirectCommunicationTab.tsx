@@ -147,8 +147,8 @@ const DirectCommunicationTab = () => {
           >
             <div className="flex items-center">
               <Image
-                src="/Images/profile.jpg"
-                alt={chat.name}
+                src="/images/profile.jpg"
+                alt="Profile"
                 className="w-10 h-10 rounded-full mr-3 object-cover"
                 height={0}
                 width={0}
