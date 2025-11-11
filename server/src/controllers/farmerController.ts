@@ -916,6 +916,7 @@ export const getTopCropsOfDay = async (req: Request, res: Response) => {
           minPrice: { $avg: { $arrayElemAt: ["$variants.minPrice", 0] } },
           maxPrice: { $avg: { $arrayElemAt: ["$variants.maxPrice", 0] } },
           trades: { $sum: "$supplyDemand.arrivalQtyToday" },
+          variantImage: { $first: { $arrayElemAt: ["$variants.image", 0] } },
         },
       },
     ]);
@@ -949,6 +950,7 @@ export const getTopCropsOfDay = async (req: Request, res: Response) => {
             minPrice: { $avg: { $arrayElemAt: ["$variants.minPrice", 0] } },
             maxPrice: { $avg: { $arrayElemAt: ["$variants.maxPrice", 0] } },
             trades: { $sum: "$supplyDemand.arrivalQtyToday" },
+            variantImage: { $first: { $arrayElemAt: ["$variants.image", 0] } },
           },
         },
       ]);
@@ -996,6 +998,7 @@ export const getTopCropsOfDay = async (req: Request, res: Response) => {
       const priceChangePercent = yesterdayAvg
         ? ((t.avgPrice - yesterdayAvg) / yesterdayAvg) * 100
         : 0;
+      const variantImage = t.variantImage || null;
 
       return {
         cropName: t._id.name,
@@ -1007,6 +1010,7 @@ export const getTopCropsOfDay = async (req: Request, res: Response) => {
         priceChange: Math.round(priceChange),
         priceChangePercent: +priceChangePercent.toFixed(2),
         trades: t.trades,
+        image: variantImage || null,
         dateUsed: dateToUse,
       };
     });
