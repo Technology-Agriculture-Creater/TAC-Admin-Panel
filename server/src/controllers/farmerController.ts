@@ -1456,10 +1456,11 @@ export const getTopLosers = async (req: Request, res: Response) => {
   }
 };
 
+
 export const getCropDetailsAndTrend = async (req: Request, res: Response) => {
   try {
     const cropId = req.params.id;
-    const period = (req.query.period as string)?.toUpperCase() || '6M'; // 1D, 1W, 1M, 6M, 1Y, ALL
+    const period = (req.query.period as string)?.toUpperCase() || '6M'; // 1M, 3M, 6M, 1Y
 
     if (!mongoose.Types.ObjectId.isValid(cropId)) {
       return res.status(400).json({ success: false, message: 'Invalid crop ID.' });
@@ -1486,19 +1487,16 @@ export const getCropDetailsAndTrend = async (req: Request, res: Response) => {
       return res.status(404).json({ success: false, message: 'No reported dates found.' });
     }
 
-    // 3️⃣ Determine latest available date safely
+    // 3️⃣ Determine latest and starting date based on period
     const latestDate: Date = allDates[0]!;
     let startDate: Date = new Date(2020, 0, 1);
 
     switch (period) {
-      case '1D':
-        startDate = subDays(latestDate, 1);
-        break;
-      case '1W':
-        startDate = subWeeks(latestDate, 1);
-        break;
       case '1M':
         startDate = subMonths(latestDate, 1);
+        break;
+      case '3M':
+        startDate = subMonths(latestDate, 3);
         break;
       case '6M':
         startDate = subMonths(latestDate, 6);
@@ -1506,7 +1504,6 @@ export const getCropDetailsAndTrend = async (req: Request, res: Response) => {
       case '1Y':
         startDate = subMonths(latestDate, 12);
         break;
-      case 'ALL':
       default:
         startDate = new Date(2020, 0, 1);
         break;
@@ -1528,7 +1525,7 @@ export const getCropDetailsAndTrend = async (req: Request, res: Response) => {
       });
     }
 
-    // 5️⃣ Latest date and entries for that date
+    // 5️⃣ Latest date details
     const latest = cropEntries[cropEntries.length - 1]!;
     const latestReportedDate = latest.otherDetails?.reportedDate
       ? new Date(latest.otherDetails.reportedDate)
@@ -1539,7 +1536,7 @@ export const getCropDetailsAndTrend = async (req: Request, res: Response) => {
       return reported && reported.toDateString() === latestReportedDate.toDateString();
     });
 
-    // 6️⃣ Compute aggregated avg/min/max + pick image (like list API)
+    // 6️⃣ Aggregate latest day prices
     const avgPrice =
       sameDayEntries.length > 0
         ? sameDayEntries.reduce((sum, e) => sum + (e.variants?.[0]?.price ?? 0), 0) /
@@ -1558,14 +1555,14 @@ export const getCropDetailsAndTrend = async (req: Request, res: Response) => {
           sameDayEntries.length
         : latest.variants?.[0]?.maxPrice ?? 0;
 
-    // 🖼️ Get representative image (first non-empty image)
+    // 🖼️ Representative image
     const variantImage =
       sameDayEntries.find((e) => e.variants?.[0]?.image)?.variants?.[0]?.image ||
       latest.variants?.[0]?.image ||
       crop.category?.image ||
       null;
 
-    // 7️⃣ Aggregate prices by day or month based on period
+    // 7️⃣ Aggregate trend data by day or month
     interface AggregatedData {
       prices: number[];
       min: number[];
@@ -1573,7 +1570,6 @@ export const getCropDetailsAndTrend = async (req: Request, res: Response) => {
       trades: number[];
     }
 
-    // Explicitly define that keys will always be strings
     const grouped: Record<string, AggregatedData> = {};
 
     for (const entry of cropEntries) {
@@ -1582,69 +1578,50 @@ export const getCropDetailsAndTrend = async (req: Request, res: Response) => {
 
       const d = new Date(reportedDate);
 
-      // ✅ Ensure key is always a string
+      // ✅ Daily for 1M, monthly for others (ISO-valid key)
       const key: string =
         period === '1M'
-          ? d.toISOString().split('T')[0] // Daily grouping (YYYY-MM-DD)
-          : `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`; // Monthly grouping (YYYY-MM)
+          ? d.toISOString().split('T')[0] // e.g. 2024-12-02
+          : `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-01`; // e.g. 2024-12-01
 
-      // ✅ Initialize if not existing
-      if (!grouped[key]) {
-        grouped[key] = { prices: [], min: [], max: [], trades: [] };
-      }
+      if (!grouped[key]) grouped[key] = { prices: [], min: [], max: [], trades: [] };
 
       const variant = entry.variants?.[0];
-      const price = variant?.price ?? 0;
-      const minPrice = variant?.minPrice ?? 0;
-      const maxPrice = variant?.maxPrice ?? 0;
-      const trades = entry.supplyDemand?.arrivalQtyToday ?? 0;
-
-      grouped[key].prices.push(price);
-      grouped[key].min.push(minPrice);
-      grouped[key].max.push(maxPrice);
-      grouped[key].trades.push(trades);
+      grouped[key].prices.push(variant?.price ?? 0);
+      grouped[key].min.push(variant?.minPrice ?? 0);
+      grouped[key].max.push(variant?.maxPrice ?? 0);
+      grouped[key].trades.push(entry.supplyDemand?.arrivalQtyToday ?? 0);
     }
 
-    // ✅ Safely compute averages per group
     const priceTrend = Object.entries(grouped)
       .map(([key, vals]) => {
-        const avg =
-          vals.prices.length > 0
-            ? vals.prices.reduce((a: number, b: number) => a + b, 0) / vals.prices.length
-            : 0;
-        const min =
-          vals.min.length > 0
-            ? vals.min.reduce((a: number, b: number) => a + b, 0) / vals.min.length
-            : 0;
-        const max =
-          vals.max.length > 0
-            ? vals.max.reduce((a: number, b: number) => a + b, 0) / vals.max.length
-            : 0;
-        const avgTrades =
-          vals.trades.length > 0
-            ? vals.trades.reduce((a: number, b: number) => a + b, 0) / vals.trades.length
-            : 0;
-
+        const safeAvg = (arr: number[]) =>
+          arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
         return {
           date: new Date(key),
-          avgPrice: Math.round(avg),
-          minPrice: Math.round(min),
-          maxPrice: Math.round(max),
-          trades: Math.round(avgTrades),
+          avgPrice: Math.round(safeAvg(vals.prices)),
+          minPrice: Math.round(safeAvg(vals.min)),
+          maxPrice: Math.round(safeAvg(vals.max)),
+          trades: Math.round(safeAvg(vals.trades)),
         };
       })
       .sort((a, b) => a.date.getTime() - b.date.getTime());
 
-    // 8️⃣ Calculate last two price changes safely
+    // 8️⃣ Price change %
     const lastTwo = priceTrend.slice(-2);
     let priceChangePercent = 0;
 
-    if (lastTwo.length === 2 && lastTwo[0] && lastTwo[1] && lastTwo[0].avgPrice > 0) {
+    if (
+      lastTwo.length === 2 &&
+      lastTwo[0] !== undefined &&
+      lastTwo[1] !== undefined &&
+      lastTwo[0].avgPrice > 0
+    ) {
       priceChangePercent =
         ((lastTwo[1].avgPrice - lastTwo[0].avgPrice) / lastTwo[0].avgPrice) * 100;
     }
 
-    // 9️⃣ Fetch related crops
+    // 9️⃣ Related crops
     const related = await CropModel.aggregate([
       {
         $match: {
@@ -1662,7 +1639,7 @@ export const getCropDetailsAndTrend = async (req: Request, res: Response) => {
       { $limit: 3 },
     ]);
 
-    // 🔟 Construct safe response
+    // 🔟 Final Response
     const response = {
       _id: crop._id,
       name: latest?.name ?? cropName,
