@@ -1082,7 +1082,7 @@ export const getMajorCropsInMarket = async (req: Request, res: Response) => {
         $group: {
           _id: "$name",
           totalArrival: { $sum: "$supplyDemand.arrivalQtyToday" },
-          image: { $first: "$image" }, // 👈 take first image from the group
+          image: { $first: { $arrayElemAt: ["$variants.image", 0] } },
         },
       },
       { $sort: { totalArrival: -1 } },
@@ -1093,7 +1093,7 @@ export const getMajorCropsInMarket = async (req: Request, res: Response) => {
     const result = crops.map((c) => ({
       name: c._id,
       image: c.image
-        ? `https://apiadmin.technologyagriculturecreater.com/api/${c.image}`
+        ? `https://apiadmin.technologyagriculturecreater.com/api${c.image}`
         : null,
     }));
 
