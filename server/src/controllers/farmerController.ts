@@ -916,7 +916,7 @@ export const getTopCropsOfDay = async (req: Request, res: Response) => {
             variant: '$variants.name',
             city: '$location.city',
           },
-          docId: { $first: '$_id' }, // ✅ Add document _id for frontend redirection
+          docId: { $first: '$_id' },
           avgPrice: { $avg: { $arrayElemAt: ['$variants.price', 0] } },
           minPrice: { $avg: { $arrayElemAt: ['$variants.minPrice', 0] } },
           maxPrice: { $avg: { $arrayElemAt: ['$variants.maxPrice', 0] } },
@@ -955,7 +955,7 @@ export const getTopCropsOfDay = async (req: Request, res: Response) => {
               variant: '$variants.name',
               city: '$location.city',
             },
-            docId: { $first: '$_id' }, // ✅ include here as well
+            docId: { $first: '$_id' },
             avgPrice: { $avg: { $arrayElemAt: ['$variants.price', 0] } },
             minPrice: { $avg: { $arrayElemAt: ['$variants.minPrice', 0] } },
             maxPrice: { $avg: { $arrayElemAt: ['$variants.maxPrice', 0] } },
@@ -1015,7 +1015,7 @@ export const getTopCropsOfDay = async (req: Request, res: Response) => {
         : 0;
 
       return {
-        _id: t.docId, // ✅ include for redirecting to detail page
+        _id: t.docId,
         cropName: t._id.name,
         variantName: Array.isArray(t._id.variant) ? t._id.variant[0] : t._id.variant,
         location: t._id.city,
@@ -1030,7 +1030,12 @@ export const getTopCropsOfDay = async (req: Request, res: Response) => {
       };
     });
 
-    result.sort((a, b) => b.trades - a.trades);
+    // ✅ Sort by city alphabetically, then by trades descending
+    result.sort((a, b) => {
+      const cityCompare = a.location.localeCompare(b.location);
+      if (cityCompare !== 0) return cityCompare;
+      return b.trades - a.trades;
+    });
 
     return res.status(200).json({
       success: true,
@@ -1047,6 +1052,7 @@ export const getTopCropsOfDay = async (req: Request, res: Response) => {
     });
   }
 };
+
 
 export const getMajorCropsInMarket = async (req: Request, res: Response) => {
   try {
