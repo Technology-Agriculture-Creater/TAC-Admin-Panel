@@ -1080,7 +1080,8 @@ export const getMajorCropsInMarket = async (req: Request, res: Response) => {
       },
       {
         $group: {
-          _id: "$name",
+          _id: "$_id", // keep the real _id
+          cropName: { $first: "$name" },
           totalArrival: { $sum: "$supplyDemand.arrivalQtyToday" },
           image: { $first: { $arrayElemAt: ["$variants.image", 0] } },
         },
@@ -1091,10 +1092,12 @@ export const getMajorCropsInMarket = async (req: Request, res: Response) => {
 
     // 3️⃣ Format response
     const result = crops.map((c) => ({
-      name: c._id,
+      _id: c._id, // actual MongoDB _id
+      name: c.cropName,
       image: c.image
         ? `https://apiadmin.technologyagriculturecreater.com/api${c.image}`
         : null,
+      totalArrival: c.totalArrival,
     }));
 
     res.status(200).json({
@@ -1112,6 +1115,7 @@ export const getMajorCropsInMarket = async (req: Request, res: Response) => {
     });
   }
 };
+
 
 export const getOilSeedCrops = async (req: Request, res: Response) => {
   try {
@@ -1539,11 +1543,49 @@ export const getCropDetailsAndTrend = async (req: Request, res: Response) => {
       });
     }
 
-    // 5️⃣ Latest entry (guaranteed)
+    // 5️⃣ Latest date and entries for that date
     const latest = cropEntries[cropEntries.length - 1]!;
-    const variant = latest.variants && latest.variants.length > 0 ? latest.variants[0] : undefined;
+    const latestReportedDate = latest.otherDetails?.reportedDate
+      ? new Date(latest.otherDetails.reportedDate)
+      : latestDate;
 
-    // 6️⃣ Build trend array safely
+    const sameDayEntries = cropEntries.filter((e) => {
+      const reported = e.otherDetails?.reportedDate
+        ? new Date(e.otherDetails.reportedDate)
+        : null;
+      return (
+        reported &&
+        reported.toDateString() === latestReportedDate.toDateString()
+      );
+    });
+
+    // 6️⃣ Compute aggregated avg/min/max + pick image (like list API)
+    const avgPrice =
+      sameDayEntries.length > 0
+        ? sameDayEntries.reduce((sum, e) => sum + (e.variants?.[0]?.price ?? 0), 0) /
+          sameDayEntries.length
+        : latest.variants?.[0]?.price ?? 0;
+
+    const minPrice =
+      sameDayEntries.length > 0
+        ? sameDayEntries.reduce((sum, e) => sum + (e.variants?.[0]?.minPrice ?? 0), 0) /
+          sameDayEntries.length
+        : latest.variants?.[0]?.minPrice ?? 0;
+
+    const maxPrice =
+      sameDayEntries.length > 0
+        ? sameDayEntries.reduce((sum, e) => sum + (e.variants?.[0]?.maxPrice ?? 0), 0) /
+          sameDayEntries.length
+        : latest.variants?.[0]?.maxPrice ?? 0;
+
+    // 🖼️ Get representative image (first non-empty image)
+    const variantImage =
+      sameDayEntries.find((e) => e.variants?.[0]?.image)?.variants?.[0]?.image ||
+      latest.variants?.[0]?.image ||
+      crop.category?.image ||
+      null;
+
+    // 7️⃣ Build trend array safely
     const priceTrend = cropEntries.map((entry) => ({
       date: entry.otherDetails?.reportedDate ? new Date(entry.otherDetails.reportedDate) : null,
       avgPrice: entry.variants?.[0]?.price ?? 0,
@@ -1552,7 +1594,7 @@ export const getCropDetailsAndTrend = async (req: Request, res: Response) => {
       trades: entry.supplyDemand?.arrivalQtyToday ?? 0,
     }));
 
-    // 7️⃣ Calculate last two price changes safely
+    // 8️⃣ Calculate last two price changes safely
     const lastTwo = priceTrend.slice(-2);
     let priceChangePercent = 0;
 
@@ -1561,7 +1603,7 @@ export const getCropDetailsAndTrend = async (req: Request, res: Response) => {
         ((lastTwo[1].avgPrice - lastTwo[0].avgPrice) / lastTwo[0].avgPrice) * 100;
     }
 
-    // 8️⃣ Fetch related crops
+    // 9️⃣ Fetch related crops
     const related = await CropModel.aggregate([
       {
         $match: {
@@ -1573,22 +1615,24 @@ export const getCropDetailsAndTrend = async (req: Request, res: Response) => {
         $group: {
           _id: "$name",
           avgPrice: { $avg: { $arrayElemAt: ["$variants.price", 0] } },
+          image: { $first: { $arrayElemAt: ["$variants.image", 0] } },
         },
       },
       { $limit: 3 },
     ]);
 
-    // 9️⃣ Construct safe response
+    // 🔟 Construct safe response
     const response = {
       _id: crop._id,
       name: latest?.name ?? cropName,
       category: latest?.category?.name ?? category,
       location: latest?.location?.city ?? city,
-      avgPrice: variant?.price ?? 0,
-      minPrice: variant?.minPrice ?? 0,
-      maxPrice: variant?.maxPrice ?? 0,
+      avgPrice: Math.round(avgPrice),
+      minPrice: Math.round(minPrice),
+      maxPrice: Math.round(maxPrice),
+      image: variantImage,
       priceChangePercent: +priceChangePercent.toFixed(2),
-      reportedDate: latest?.otherDetails?.reportedDate ?? null,
+      reportedDate: latestReportedDate,
       supplyDemand: latest?.supplyDemand ?? {},
       marketLocation: latest?.marketLocation ?? "",
       cropInsights: latest?.cropInsights ?? {},
@@ -1598,6 +1642,7 @@ export const getCropDetailsAndTrend = async (req: Request, res: Response) => {
       relatedCrops: related.map((r) => ({
         name: r._id,
         avgPrice: Math.round(r.avgPrice),
+        image: r.image || null,
       })),
     };
 
@@ -1615,3 +1660,4 @@ export const getCropDetailsAndTrend = async (req: Request, res: Response) => {
     });
   }
 };
+
