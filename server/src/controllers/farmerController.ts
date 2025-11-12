@@ -1070,7 +1070,7 @@ export const getMajorCropsInMarket = async (req: Request, res: Response) => {
     const nextDay = new Date(latestDate);
     nextDay.setDate(nextDay.getDate() + 1);
 
-    // 2️⃣ Aggregate by CROP NAME (not _id)
+    // 2️⃣ Group by crop name but keep one _id reference
     const crops = await CropModel.aggregate([
       {
         $match: {
@@ -1080,8 +1080,9 @@ export const getMajorCropsInMarket = async (req: Request, res: Response) => {
       },
       {
         $group: {
-          _id: "$name", // 👈 group by crop name to remove duplicates
+          _id: "$name", // Group by crop name (unique crops)
           name: { $first: "$name" },
+          cropId: { $first: "$_id" }, // ✅ Keep one actual _id
           image: { $first: { $arrayElemAt: ["$variants.image", 0] } },
           totalArrival: { $sum: "$supplyDemand.arrivalQtyToday" },
         },
@@ -1092,7 +1093,7 @@ export const getMajorCropsInMarket = async (req: Request, res: Response) => {
 
     // 3️⃣ Format response
     const result = crops.map((c) => ({
-      _id: c._id, // crop name used as id here
+      _id: c.cropId, // ✅ Now returns real MongoDB _id
       name: c.name,
       image: c.image
         ? `https://apiadmin.technologyagriculturecreater.com/api${c.image}`
