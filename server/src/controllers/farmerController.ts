@@ -1275,6 +1275,28 @@ export const getOilSeedCrops = async (req: Request, res: Response) => {
   }
 };
 
+const getLatestDateForCategory = async (matchQuery: any) => {
+  const lastRecord = await CropModel
+    .findOne(matchQuery, { otherDetails: 1 })
+    .sort({ "otherDetails.reportedDate": -1 })
+    .lean();
+
+  if (!lastRecord || !lastRecord.otherDetails || !lastRecord.otherDetails.reportedDate) {
+    return null;
+  }
+
+  const reportedDate = new Date(lastRecord.otherDetails.reportedDate);
+  reportedDate.setHours(0, 0, 0, 0);
+
+  const nextDay = new Date(reportedDate);
+  nextDay.setDate(nextDay.getDate() + 1);
+
+  return {
+    dateToUse: reportedDate,
+    nextDay
+  };
+};
+
 export const getPulseCrops = async (req: Request, res: Response) => {
   try {
     const city = (req.query.city as string)?.trim() || "Nagpur";
