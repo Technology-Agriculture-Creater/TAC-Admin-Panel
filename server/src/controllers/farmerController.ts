@@ -1030,10 +1030,19 @@ export const getTopCropsOfDay = async (req: Request, res: Response) => {
       };
     });
 
-    // ✅ Sort by city alphabetically, then by trades descending
+    // ✅ UPDATED SORTING: Nagpur first → then other cities alphabetically → then trades desc
+    const DEFAULT_CITY = 'Nagpur';
+
     result.sort((a, b) => {
+      // 1) Place Nagpur crops at the top
+      if (a.location === DEFAULT_CITY && b.location !== DEFAULT_CITY) return -1;
+      if (a.location !== DEFAULT_CITY && b.location === DEFAULT_CITY) return 1;
+
+      // 2) For other cities, alphabetical sorting
       const cityCompare = a.location.localeCompare(b.location);
       if (cityCompare !== 0) return cityCompare;
+
+      // 3) Inside same city, sort by trades DESC
       return b.trades - a.trades;
     });
 
@@ -1052,7 +1061,6 @@ export const getTopCropsOfDay = async (req: Request, res: Response) => {
     });
   }
 };
-
 
 export const getMajorCropsInMarket = async (req: Request, res: Response) => {
   try {
@@ -1129,26 +1137,51 @@ export const getOilSeedCrops = async (req: Request, res: Response) => {
       {
         $match: {
           'location.city': { $regex: new RegExp(city, 'i') },
-          'category.name': { $regex: /oil/i }, // Match "oil" in category name
+          'category.name': { $regex: /oil/i }, // Match "oil"
         },
       },
       {
         $group: {
-          _id: '$name',
+          _id: {
+            name: '$name',
+            city: '$location.city',
+          },
           totalArrival: { $sum: '$supplyDemand.arrivalQtyToday' },
         },
       },
-      { $sort: { totalArrival: -1 } },
-      { $limit: limit },
     ]);
 
-    const result = crops.map((c) => ({ name: c._id }));
+    // Convert aggregated data into final objects
+    const result = crops.map((c) => ({
+      name: c._id.name,
+      city: c._id.city,
+      totalArrival: c.totalArrival,
+    }));
+
+    // ✅ Sort: default city → alphabetical → arrival desc
+    const DEFAULT_CITY = 'Nagpur';
+
+    result.sort((a, b) => {
+      // 1) default city goes first
+      if (a.city === DEFAULT_CITY && b.city !== DEFAULT_CITY) return -1;
+      if (a.city !== DEFAULT_CITY && b.city === DEFAULT_CITY) return 1;
+
+      // 2) alphabetical sorting of cities
+      const cityCompare = a.city.localeCompare(b.city);
+      if (cityCompare !== 0) return cityCompare;
+
+      // 3) inside same city → sort by arrival DESC
+      return b.totalArrival - a.totalArrival;
+    });
+
+    // Apply limit after sorting
+    const limited = result.slice(0, limit);
 
     res.status(200).json({
       success: true,
       message: `Top Oil Seed crops in ${city} (all-time data)`,
-      count: result.length,
-      crops: result,
+      count: limited.length,
+      crops: limited.map((c) => ({ name: c.name })), // Only name in final output
     });
   } catch (error: any) {
     console.error('❌ getOilSeedCrops Error:', error);
@@ -1174,21 +1207,45 @@ export const getPulseCrops = async (req: Request, res: Response) => {
       },
       {
         $group: {
-          _id: '$name',
+          _id: {
+            name: '$name',
+            city: '$location.city',
+          },
           totalArrival: { $sum: '$supplyDemand.arrivalQtyToday' },
         },
       },
-      { $sort: { totalArrival: -1 } },
-      { $limit: limit },
     ]);
 
-    const result = crops.map((c) => ({ name: c._id }));
+    // Convert to usable array
+    const result = crops.map((c) => ({
+      name: c._id.name,
+      city: c._id.city,
+      totalArrival: c.totalArrival,
+    }));
+
+    // ✅ Sorting logic: Nagpur first → others A→Z → arrival desc
+    const DEFAULT_CITY = 'Nagpur';
+
+    result.sort((a, b) => {
+      // 1) Default city goes first
+      if (a.city === DEFAULT_CITY && b.city !== DEFAULT_CITY) return -1;
+      if (a.city !== DEFAULT_CITY && b.city === DEFAULT_CITY) return 1;
+
+      // 2) Alphabetical city sorting
+      const cityCompare = a.city.localeCompare(b.city);
+      if (cityCompare !== 0) return cityCompare;
+
+      // 3) Inside same city → sort by arrival DESC
+      return b.totalArrival - a.totalArrival;
+    });
+
+    const limited = result.slice(0, limit);
 
     res.status(200).json({
       success: true,
       message: `Top Pulse crops in ${city} (all-time data)`,
-      count: result.length,
-      crops: result,
+      count: limited.length,
+      crops: limited.map((c) => ({ name: c.name })),
     });
   } catch (error: any) {
     console.error('❌ getPulseCrops Error:', error);
@@ -1209,26 +1266,52 @@ export const getMoreCrops = async (req: Request, res: Response) => {
       {
         $match: {
           'location.city': { $regex: new RegExp(city, 'i') },
-          'category.name': { $not: { $regex: /(oil|pulse)/i } }, // exclude oil & pulse
+          // Exclude oil & pulse categories safely
+          'category.name': { $not: { $regex: /(oil|pulse)/i } },
         },
       },
       {
         $group: {
-          _id: '$name',
+          _id: {
+            name: '$name',
+            city: '$location.city',
+          },
           totalArrival: { $sum: '$supplyDemand.arrivalQtyToday' },
         },
       },
-      { $sort: { totalArrival: -1 } },
-      { $limit: limit },
     ]);
 
-    const result = crops.map((c) => ({ name: c._id }));
+    // Convert to usable structure
+    const result = crops.map((c) => ({
+      name: c._id.name,
+      city: c._id.city,
+      totalArrival: c.totalArrival,
+    }));
+
+    // ✅ Sorting logic (same as all your other APIs)
+    const DEFAULT_CITY = "Nagpur";
+
+    result.sort((a, b) => {
+      // 1) Default city first
+      if (a.city === DEFAULT_CITY && b.city !== DEFAULT_CITY) return -1;
+      if (a.city !== DEFAULT_CITY && b.city === DEFAULT_CITY) return 1;
+
+      // 2) Then alphabetical city sort
+      const cityCompare = a.city.localeCompare(b.city);
+      if (cityCompare !== 0) return cityCompare;
+
+      // 3) Inside same city → sort by arrival DESC
+      return b.totalArrival - a.totalArrival;
+    });
+
+    // Apply limit after sorting
+    const limited = result.slice(0, limit);
 
     res.status(200).json({
       success: true,
       message: `Top other major crops in ${city} (all-time data)`,
-      count: result.length,
-      crops: result,
+      count: limited.length,
+      crops: limited.map((c) => ({ name: c.name })), // output only name
     });
   } catch (error: any) {
     console.error('❌ getMoreCrops Error:', error);
@@ -1239,6 +1322,7 @@ export const getMoreCrops = async (req: Request, res: Response) => {
     });
   }
 };
+
 
 export const getTopGainers = async (req: Request, res: Response) => {
   try {
@@ -1461,7 +1545,6 @@ export const getTopLosers = async (req: Request, res: Response) => {
     });
   }
 };
-
 
 export const getCropDetailsAndTrend = async (req: Request, res: Response) => {
   try {

@@ -354,3 +354,49 @@ export const bulkImportLocations = async (req: Request, res: Response): Promise<
     res.status(500).json({ success: false, message: "Import failed", error: err.message });
   }
 };
+
+
+export const addCountries = async (req: Request, res: Response) => {
+  try {
+    const data = req.body;
+
+    // handle single object or array
+    const countries = Array.isArray(data) ? data : [data];
+
+    // prevent duplicates by checking existing names
+    const existingNames = await CountryModel.find({
+      name: { $in: countries.map(c => c.name) },
+    }).select("name");
+
+    const existingSet = new Set(existingNames.map(e => e.name));
+    const filtered = countries.filter(c => !existingSet.has(c.name));
+
+    if (filtered.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "All provided countries already exist",
+      });
+    }
+
+    const result = await CountryModel.insertMany(filtered);
+    res.status(201).json({
+      success: true,
+      message: `${result.length} country(s) added successfully`,
+      data: result,
+    });
+  } catch (error: any) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+/**
+ * Get all countries
+ */
+export const getCountries = async (req: Request, res: Response) => {
+  try {
+    const countries = await CountryModel.find().sort({ name: 1 });
+    res.status(200).json({ success: true, data: countries });
+  } catch (error: any) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
