@@ -1130,20 +1130,19 @@ export const getMajorCropsInMarket = async (req: Request, res: Response) => {
 
 export const getOilSeedCrops = async (req: Request, res: Response) => {
   try {
-    const city = (req.query.city as string)?.trim() || "Nagpur";
+    const city = (req.query.city as string)?.trim() || 'Nagpur';
     const limit = parseInt(req.query.limit as string) || 10;
 
     // ----------- FIND LATEST REPORTED DATE -----------
-    const lastRecord = await CropModel
-      .findOne(
-        { "category.name": { $regex: /oil/i }, "location.city": { $regex: new RegExp(city, "i") } },
-        { "otherDetails.reportedDate": 1 }
-      )
-      .sort({ "otherDetails.reportedDate": -1 })
+    const lastRecord = await CropModel.findOne(
+      { 'category.name': { $regex: /oil/i }, 'location.city': { $regex: new RegExp(city, 'i') } },
+      { 'otherDetails.reportedDate': 1 },
+    )
+      .sort({ 'otherDetails.reportedDate': -1 })
       .lean();
 
     if (!lastRecord)
-      return res.status(404).json({ success: false, message: "No oil seed crop data found." });
+      return res.status(404).json({ success: false, message: 'No oil seed crop data found.' });
 
     const dateToUse = new Date(lastRecord.otherDetails.reportedDate);
     dateToUse.setHours(0, 0, 0, 0);
@@ -1155,35 +1154,35 @@ export const getOilSeedCrops = async (req: Request, res: Response) => {
     const todayData = await CropModel.aggregate([
       {
         $match: {
-          "category.name": { $regex: /oil/i },
-          "location.city": { $regex: new RegExp(city, "i") },
-          "otherDetails.reportedDate": { $gte: dateToUse, $lt: nextDay }
-        }
+          'category.name': { $regex: /oil/i },
+          'location.city': { $regex: new RegExp(city, 'i') },
+          'otherDetails.reportedDate': { $gte: dateToUse, $lt: nextDay },
+        },
       },
       {
         $group: {
           _id: {
-            name: "$name",
-            variant: "$variants.name",
-            city: "$location.city"
+            name: '$name',
+            variant: '$variants.name',
+            city: '$location.city',
           },
-          docId: { $first: "$_id" },
-          avgPrice: { $avg: { $arrayElemAt: ["$variants.price", 0] }},
-          minPrice: { $avg: { $arrayElemAt: ["$variants.minPrice", 0] }},
-          maxPrice: { $avg: { $arrayElemAt: ["$variants.maxPrice", 0] }},
-          trades: { $sum: "$supplyDemand.arrivalQtyToday" },
-          variantImage: { $first: { $arrayElemAt: ["$variants.image", 0] }}
-        }
-      }
+          docId: { $first: '$_id' },
+          avgPrice: { $avg: { $arrayElemAt: ['$variants.price', 0] } },
+          minPrice: { $avg: { $arrayElemAt: ['$variants.minPrice', 0] } },
+          maxPrice: { $avg: { $arrayElemAt: ['$variants.maxPrice', 0] } },
+          trades: { $sum: '$supplyDemand.arrivalQtyToday' },
+          variantImage: { $first: { $arrayElemAt: ['$variants.image', 0] } },
+        },
+      },
     ]);
 
     // ----------- PREVIOUS DAY DATA -----------
     const prevRecord = await CropModel.findOne({
-      "category.name": { $regex: /oil/i },
-      "location.city": { $regex: new RegExp(city, "i") },
-      "otherDetails.reportedDate": { $lt: dateToUse }
+      'category.name': { $regex: /oil/i },
+      'location.city': { $regex: new RegExp(city, 'i') },
+      'otherDetails.reportedDate': { $lt: dateToUse },
     })
-      .sort({ "otherDetails.reportedDate": -1 })
+      .sort({ 'otherDetails.reportedDate': -1 })
       .lean();
 
     let prevDay = new Date(dateToUse);
@@ -1199,30 +1198,30 @@ export const getOilSeedCrops = async (req: Request, res: Response) => {
     const yesterdayData = await CropModel.aggregate([
       {
         $match: {
-          "category.name": { $regex: /oil/i },
-          "location.city": { $regex: new RegExp(city, "i") },
-          "otherDetails.reportedDate": { $gte: prevDay, $lt: prevDayEnd }
-        }
+          'category.name': { $regex: /oil/i },
+          'location.city': { $regex: new RegExp(city, 'i') },
+          'otherDetails.reportedDate': { $gte: prevDay, $lt: prevDayEnd },
+        },
       },
       {
         $group: {
           _id: {
-            name: "$name",
-            variant: "$variants.name",
-            city: "$location.city"
+            name: '$name',
+            variant: '$variants.name',
+            city: '$location.city',
           },
-          avgPrice: { $avg: { $arrayElemAt: ["$variants.price", 0] }}
-        }
-      }
+          avgPrice: { $avg: { $arrayElemAt: ['$variants.price', 0] } },
+        },
+      },
     ]);
 
     const yesterdayMap = new Map();
-    yesterdayData.forEach(y => {
+    yesterdayData.forEach((y) => {
       yesterdayMap.set(JSON.stringify(y._id), y.avgPrice);
     });
 
     // ----------- MERGE & CALCULATE PRICE CHANGE -----------
-    const result = todayData.map(t => {
+    const result = todayData.map((t) => {
       const yesterdayAvg = yesterdayMap.get(JSON.stringify(t._id)) || 0;
 
       const priceChange = yesterdayAvg ? t.avgPrice - yesterdayAvg : 0;
@@ -1242,12 +1241,12 @@ export const getOilSeedCrops = async (req: Request, res: Response) => {
         priceChangePercent: +priceChangePercent.toFixed(2),
         trades: +t.trades.toFixed(2),
         image: t.variantImage || null,
-        dateUsed: dateToUse
+        dateUsed: dateToUse,
       };
     });
 
     // ----------- SORTING (same as your main API) -----------
-    const DEFAULT_CITY = "Nagpur";
+    const DEFAULT_CITY = 'Nagpur';
 
     result.sort((a, b) => {
       if (a.location === DEFAULT_CITY && b.location !== DEFAULT_CITY) return -1;
@@ -1263,22 +1262,21 @@ export const getOilSeedCrops = async (req: Request, res: Response) => {
       success: true,
       message: `Oil seed crops for ${dateToUse.toDateString()}`,
       count: result.length,
-      crops: result.slice(0, limit)
+      crops: result.slice(0, limit),
     });
   } catch (error: any) {
-    console.error("❌ getOilSeedCrops Error:", error);
+    console.error('❌ getOilSeedCrops Error:', error);
     res.status(500).json({
       success: false,
-      message: "Failed to fetch oil seed crops",
-      error: error.message
+      message: 'Failed to fetch oil seed crops',
+      error: error.message,
     });
   }
 };
 
 const getLatestDateForCategory = async (matchQuery: any) => {
-  const lastRecord = await CropModel
-    .findOne(matchQuery, { otherDetails: 1 })
-    .sort({ "otherDetails.reportedDate": -1 })
+  const lastRecord = await CropModel.findOne(matchQuery, { otherDetails: 1 })
+    .sort({ 'otherDetails.reportedDate': -1 })
     .lean();
 
   if (!lastRecord || !lastRecord.otherDetails || !lastRecord.otherDetails.reportedDate) {
@@ -1293,44 +1291,46 @@ const getLatestDateForCategory = async (matchQuery: any) => {
 
   return {
     dateToUse: reportedDate,
-    nextDay
+    nextDay,
   };
 };
 
 export const getPulseCrops = async (req: Request, res: Response) => {
   try {
-    const city = (req.query.city as string)?.trim() || "Nagpur";
+    const city = (req.query.city as string)?.trim() || 'Nagpur';
     const limit = parseInt(req.query.limit as string) || 10;
 
     const matchQuery = {
-      "category.name": { $regex: /pulse/i },
-      "location.city": { $regex: new RegExp(city, "i") }
+      'category.name': { $regex: /pulse/i },
+      'location.city': { $regex: new RegExp(city, 'i') },
     };
 
     const dateInfo = await getLatestDateForCategory(matchQuery);
     if (!dateInfo)
-      return res.status(404).json({ success: false, message: "No pulse crop data found." });
+      return res.status(404).json({ success: false, message: 'No pulse crop data found.' });
 
     const { dateToUse, nextDay } = dateInfo;
 
     const todayData = await CropModel.aggregate([
-      { $match: { ...matchQuery, "otherDetails.reportedDate": { $gte: dateToUse, $lt: nextDay } }},
+      { $match: { ...matchQuery, 'otherDetails.reportedDate': { $gte: dateToUse, $lt: nextDay } } },
       {
         $group: {
-          _id: { name: "$name", variant: "$variants.name", city: "$location.city" },
-          docId: { $first: "$_id" },
-          avgPrice: { $avg: { $arrayElemAt: ["$variants.price", 0] }},
-          minPrice: { $avg: { $arrayElemAt: ["$variants.minPrice", 0] }},
-          maxPrice: { $avg: { $arrayElemAt: ["$variants.maxPrice", 0] }},
-          trades: { $sum: "$supplyDemand.arrivalQtyToday" },
-          image: { $first: { $arrayElemAt: ["$variants.image", 0] }}
-        }
-      }
+          _id: { name: '$name', variant: '$variants.name', city: '$location.city' },
+          docId: { $first: '$_id' },
+          avgPrice: { $avg: { $arrayElemAt: ['$variants.price', 0] } },
+          minPrice: { $avg: { $arrayElemAt: ['$variants.minPrice', 0] } },
+          maxPrice: { $avg: { $arrayElemAt: ['$variants.maxPrice', 0] } },
+          trades: { $sum: '$supplyDemand.arrivalQtyToday' },
+          image: { $first: { $arrayElemAt: ['$variants.image', 0] } },
+        },
+      },
     ]);
 
-    const prevRecord = await CropModel
-      .findOne({ ...matchQuery, "otherDetails.reportedDate": { $lt: dateToUse } })
-      .sort({ "otherDetails.reportedDate": -1 })
+    const prevRecord = await CropModel.findOne({
+      ...matchQuery,
+      'otherDetails.reportedDate': { $lt: dateToUse },
+    })
+      .sort({ 'otherDetails.reportedDate': -1 })
       .lean();
 
     let prevDay = new Date(dateToUse);
@@ -1344,19 +1344,21 @@ export const getPulseCrops = async (req: Request, res: Response) => {
     }
 
     const yesterdayData = await CropModel.aggregate([
-      { $match: { ...matchQuery, "otherDetails.reportedDate": { $gte: prevDay, $lt: prevDayEnd } }},
+      {
+        $match: { ...matchQuery, 'otherDetails.reportedDate': { $gte: prevDay, $lt: prevDayEnd } },
+      },
       {
         $group: {
-          _id: { name: "$name", variant: "$variants.name", city: "$location.city" },
-          avgPrice: { $avg: { $arrayElemAt: ["$variants.price", 0] }}
-        }
-      }
+          _id: { name: '$name', variant: '$variants.name', city: '$location.city' },
+          avgPrice: { $avg: { $arrayElemAt: ['$variants.price', 0] } },
+        },
+      },
     ]);
 
     const yesterdayMap = new Map();
-    yesterdayData.forEach(y => yesterdayMap.set(JSON.stringify(y._id), y.avgPrice));
+    yesterdayData.forEach((y) => yesterdayMap.set(JSON.stringify(y._id), y.avgPrice));
 
-    const result = todayData.map(t => {
+    const result = todayData.map((t) => {
       const yesterdayAvg = yesterdayMap.get(JSON.stringify(t._id)) || 0;
       const priceChange = yesterdayAvg ? t.avgPrice - yesterdayAvg : 0;
 
@@ -1369,15 +1371,14 @@ export const getPulseCrops = async (req: Request, res: Response) => {
         minPrice: Math.round(t.minPrice),
         maxPrice: Math.round(t.maxPrice),
         priceChange: Math.round(priceChange),
-        priceChangePercent: +(yesterdayAvg ? ((priceChange / yesterdayAvg) * 100) : 0)
-          .toFixed(2),
+        priceChangePercent: +(yesterdayAvg ? (priceChange / yesterdayAvg) * 100 : 0).toFixed(2),
         trades: +t.trades.toFixed(2),
         image: t.image || null,
-        dateUsed: dateToUse
+        dateUsed: dateToUse,
       };
     });
 
-    const DEFAULT_CITY = "Nagpur";
+    const DEFAULT_CITY = 'Nagpur';
     result.sort((a, b) => {
       if (a.location === DEFAULT_CITY && b.location !== DEFAULT_CITY) return -1;
       if (a.location !== DEFAULT_CITY && b.location === DEFAULT_CITY) return 1;
@@ -1390,48 +1391,50 @@ export const getPulseCrops = async (req: Request, res: Response) => {
       success: true,
       message: `Pulse crops for ${dateToUse.toDateString()}`,
       count: result.length,
-      crops: result.slice(0, limit)
+      crops: result.slice(0, limit),
     });
   } catch (err: any) {
-    console.error("Pulse crop error:", err);
+    console.error('Pulse crop error:', err);
     res.status(500).json({ success: false, error: err.message });
   }
 };
 
 export const getMoreCrops = async (req: Request, res: Response) => {
   try {
-    const city = (req.query.city as string)?.trim() || "Nagpur";
+    const city = (req.query.city as string)?.trim() || 'Nagpur';
     const limit = parseInt(req.query.limit as string) || 10;
 
     const matchQuery = {
-      "category.name": { $not: { $regex: /(oil|pulse)/i } },
-      "location.city": { $regex: new RegExp(city, "i") }
+      'category.name': { $not: { $regex: /(oil|pulse)/i } },
+      'location.city': { $regex: new RegExp(city, 'i') },
     };
 
     const dateInfo = await getLatestDateForCategory(matchQuery);
     if (!dateInfo)
-      return res.status(404).json({ success: false, message: "No other crop data found." });
+      return res.status(404).json({ success: false, message: 'No other crop data found.' });
 
     const { dateToUse, nextDay } = dateInfo;
 
     const todayData = await CropModel.aggregate([
-      { $match: { ...matchQuery, "otherDetails.reportedDate": { $gte: dateToUse, $lt: nextDay } }},
+      { $match: { ...matchQuery, 'otherDetails.reportedDate': { $gte: dateToUse, $lt: nextDay } } },
       {
         $group: {
-          _id: { name: "$name", variant: "$variants.name", city: "$location.city" },
-          docId: { $first: "$_id" },
-          avgPrice: { $avg: { $arrayElemAt: ["$variants.price", 0] }},
-          minPrice: { $avg: { $arrayElemAt: ["$variants.minPrice", 0] }},
-          maxPrice: { $avg: { $arrayElemAt: ["$variants.maxPrice", 0] }},
-          trades: { $sum: "$supplyDemand.arrivalQtyToday" },
-          image: { $first: { $arrayElemAt: ["$variants.image", 0] }}
-        }
-      }
+          _id: { name: '$name', variant: '$variants.name', city: '$location.city' },
+          docId: { $first: '$_id' },
+          avgPrice: { $avg: { $arrayElemAt: ['$variants.price', 0] } },
+          minPrice: { $avg: { $arrayElemAt: ['$variants.minPrice', 0] } },
+          maxPrice: { $avg: { $arrayElemAt: ['$variants.maxPrice', 0] } },
+          trades: { $sum: '$supplyDemand.arrivalQtyToday' },
+          image: { $first: { $arrayElemAt: ['$variants.image', 0] } },
+        },
+      },
     ]);
 
-    const prevRecord = await CropModel
-      .findOne({ ...matchQuery, "otherDetails.reportedDate": { $lt: dateToUse } })
-      .sort({ "otherDetails.reportedDate": -1 })
+    const prevRecord = await CropModel.findOne({
+      ...matchQuery,
+      'otherDetails.reportedDate': { $lt: dateToUse },
+    })
+      .sort({ 'otherDetails.reportedDate': -1 })
       .lean();
 
     let prevDay = new Date(dateToUse);
@@ -1445,19 +1448,21 @@ export const getMoreCrops = async (req: Request, res: Response) => {
     }
 
     const yesterdayData = await CropModel.aggregate([
-      { $match: { ...matchQuery, "otherDetails.reportedDate": { $gte: prevDay, $lt: prevDayEnd } }},
+      {
+        $match: { ...matchQuery, 'otherDetails.reportedDate': { $gte: prevDay, $lt: prevDayEnd } },
+      },
       {
         $group: {
-          _id: { name: "$name", variant: "$variants.name", city: "$location.city" },
-          avgPrice: { $avg: { $arrayElemAt: ["$variants.price", 0] }}
-        }
-      }
+          _id: { name: '$name', variant: '$variants.name', city: '$location.city' },
+          avgPrice: { $avg: { $arrayElemAt: ['$variants.price', 0] } },
+        },
+      },
     ]);
 
     const yesterdayMap = new Map();
-    yesterdayData.forEach(y => yesterdayMap.set(JSON.stringify(y._id), y.avgPrice));
+    yesterdayData.forEach((y) => yesterdayMap.set(JSON.stringify(y._id), y.avgPrice));
 
-    const result = todayData.map(t => {
+    const result = todayData.map((t) => {
       const yesterdayAvg = yesterdayMap.get(JSON.stringify(t._id)) || 0;
       const priceChange = yesterdayAvg ? t.avgPrice - yesterdayAvg : 0;
 
@@ -1470,15 +1475,14 @@ export const getMoreCrops = async (req: Request, res: Response) => {
         minPrice: Math.round(t.minPrice),
         maxPrice: Math.round(t.maxPrice),
         priceChange: Math.round(priceChange),
-        priceChangePercent: +(yesterdayAvg ? ((priceChange / yesterdayAvg) * 100) : 0)
-          .toFixed(2),
+        priceChangePercent: +(yesterdayAvg ? (priceChange / yesterdayAvg) * 100 : 0).toFixed(2),
         trades: +t.trades.toFixed(2),
         image: t.image || null,
-        dateUsed: dateToUse
+        dateUsed: dateToUse,
       };
     });
 
-    const DEFAULT_CITY = "Nagpur";
+    const DEFAULT_CITY = 'Nagpur';
     result.sort((a, b) => {
       if (a.location === DEFAULT_CITY && b.location !== DEFAULT_CITY) return -1;
       if (a.location !== DEFAULT_CITY && b.location === DEFAULT_CITY) return 1;
@@ -1491,10 +1495,10 @@ export const getMoreCrops = async (req: Request, res: Response) => {
       success: true,
       message: `Other major crops for ${dateToUse.toDateString()}`,
       count: result.length,
-      crops: result.slice(0, limit)
+      crops: result.slice(0, limit),
     });
   } catch (err: any) {
-    console.error("More crops error:", err);
+    console.error('More crops error:', err);
     res.status(500).json({ success: false, error: err.message });
   }
 };
@@ -1505,7 +1509,7 @@ export const getTopGainers = async (req: Request, res: Response) => {
     const city = (req.query.city as string)?.trim();
     const category = (req.query.category as string)?.trim();
 
-    const reportedDates = await CropModel.distinct("otherDetails.reportedDate");
+    const reportedDates = await CropModel.distinct('otherDetails.reportedDate');
     const sortedDates = reportedDates
       .map((d) => new Date(d))
       .filter((d) => !isNaN(d.getTime()))
@@ -1514,7 +1518,7 @@ export const getTopGainers = async (req: Request, res: Response) => {
     if (sortedDates.length < 2) {
       return res.status(404).json({
         success: false,
-        message: "Not enough reported dates found for comparison.",
+        message: 'Not enough reported dates found for comparison.',
       });
     }
 
@@ -1522,25 +1526,25 @@ export const getTopGainers = async (req: Request, res: Response) => {
     const previousDate = sortedDates[1];
 
     const matchFilter: any = {};
-    if (city) matchFilter["location.city"] = { $regex: new RegExp(city, "i") };
-    if (category) matchFilter["category.name"] = { $regex: new RegExp(category, "i") };
+    if (city) matchFilter['location.city'] = { $regex: new RegExp(city, 'i') };
+    if (category) matchFilter['category.name'] = { $regex: new RegExp(category, 'i') };
 
     const [todayData, yesterdayData] = await Promise.all([
       CropModel.aggregate([
         {
           $match: {
             ...matchFilter,
-            "otherDetails.reportedDate": latestDate,
+            'otherDetails.reportedDate': latestDate,
           },
         },
         {
           $group: {
             _id: {
-              name: "$name",
-              variant: "$variants.name",
-              city: "$location.city",
+              name: '$name',
+              variant: '$variants.name',
+              city: '$location.city',
             },
-            avgPrice: { $avg: { $arrayElemAt: ["$variants.price", 0] } },
+            avgPrice: { $avg: { $arrayElemAt: ['$variants.price', 0] } },
           },
         },
       ]),
@@ -1548,17 +1552,17 @@ export const getTopGainers = async (req: Request, res: Response) => {
         {
           $match: {
             ...matchFilter,
-            "otherDetails.reportedDate": previousDate,
+            'otherDetails.reportedDate': previousDate,
           },
         },
         {
           $group: {
             _id: {
-              name: "$name",
-              variant: "$variants.name",
-              city: "$location.city",
+              name: '$name',
+              variant: '$variants.name',
+              city: '$location.city',
             },
-            avgPrice: { $avg: { $arrayElemAt: ["$variants.price", 0] } },
+            avgPrice: { $avg: { $arrayElemAt: ['$variants.price', 0] } },
           },
         },
       ]),
@@ -1584,13 +1588,13 @@ export const getTopGainers = async (req: Request, res: Response) => {
         // 🔥 Fetch full crop document to get _id + image
         const cropDoc = await CropModel.findOne({
           name: t._id.name,
-          "variants.name": Array.isArray(t._id.variant) ? t._id.variant[0] : t._id.variant,
-          "location.city": t._id.city,
+          'variants.name': Array.isArray(t._id.variant) ? t._id.variant[0] : t._id.variant,
+          'location.city': t._id.city,
         }).lean();
 
         return {
-          _id: cropDoc?._id,                              // ✅ Added
-          image: cropDoc?.variants?.[0]?.image || null,   // ✅ Added
+          _id: cropDoc?._id, // ✅ Added
+          image: cropDoc?.variants?.[0]?.image || null, // ✅ Added
 
           cropName: t._id.name,
           variantName: Array.isArray(t._id.variant) ? t._id.variant[0] : t._id.variant,
@@ -1599,13 +1603,13 @@ export const getTopGainers = async (req: Request, res: Response) => {
           change: Math.round(change),
           changePercent: +changePercent.toFixed(2),
         };
-      })
+      }),
     );
 
     gainers = gainers.filter((c) => c && c.change > 0).slice(0, limit);
 
     // Sorting
-    const DEFAULT_CITY = "Nagpur";
+    const DEFAULT_CITY = 'Nagpur';
 
     gainers.sort((a, b) => {
       if (a!.location === DEFAULT_CITY && b!.location !== DEFAULT_CITY) return -1;
@@ -1624,16 +1628,14 @@ export const getTopGainers = async (req: Request, res: Response) => {
       crops: gainers,
     });
   } catch (error: any) {
-    console.error("❌ getTopGainers Error:", error);
+    console.error('❌ getTopGainers Error:', error);
     res.status(500).json({
       success: false,
-      message: "Failed to fetch top gainers.",
+      message: 'Failed to fetch top gainers.',
       error: error.message,
     });
   }
 };
-
-
 
 export const getTopLosers = async (req: Request, res: Response) => {
   try {
@@ -1675,11 +1677,14 @@ export const getTopLosers = async (req: Request, res: Response) => {
               name: "$name",
               variant: "$variants.name",
               city: "$location.city",
+              docId: "$_id",             // ⭐ add document ID
+              image: "$variants.image"   // ⭐ add variant image
             },
             avgPrice: { $avg: { $arrayElemAt: ["$variants.price", 0] } },
           },
         },
       ]),
+
       CropModel.aggregate([
         {
           $match: {
@@ -1707,15 +1712,21 @@ export const getTopLosers = async (req: Request, res: Response) => {
 
     let losers = todayData
       .map((t) => {
-        const key = JSON.stringify(t._id);
-        const yesterdayAvg = yesterdayMap.get(key);
+        const key = JSON.stringify({
+          name: t._id.name,
+          variant: t._id.variant,
+          city: t._id.city,
+        });
 
+        const yesterdayAvg = yesterdayMap.get(key);
         if (!yesterdayAvg || yesterdayAvg === 0) return null;
 
         const change = t.avgPrice - yesterdayAvg;
         const changePercent = (change / yesterdayAvg) * 100;
 
         return {
+          _id: t._id.docId,                                // ⭐ return document id
+          image: Array.isArray(t._id.image) ? t._id.image[0] : t._id.image,  // ⭐ return image
           cropName: t._id.name,
           variantName: Array.isArray(t._id.variant) ? t._id.variant[0] : t._id.variant,
           location: t._id.city,
@@ -1727,17 +1738,13 @@ export const getTopLosers = async (req: Request, res: Response) => {
       .filter((c) => c && c.change < 0)
       .slice(0, limit);
 
-    // ⭐ Sorting (Nagpur → A-Z → most negative % first)
     const DEFAULT_CITY = "Nagpur";
 
     losers.sort((a, b) => {
       if (a!.location === DEFAULT_CITY && b!.location !== DEFAULT_CITY) return -1;
       if (a!.location !== DEFAULT_CITY && b!.location === DEFAULT_CITY) return 1;
-
       const cityCompare = a!.location.localeCompare(b!.location);
       if (cityCompare !== 0) return cityCompare;
-
-      // more negative (larger loss) first
       return a!.changePercent - b!.changePercent;
     });
 
