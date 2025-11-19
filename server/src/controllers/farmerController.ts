@@ -1505,7 +1505,6 @@ export const getTopGainers = async (req: Request, res: Response) => {
     const city = (req.query.city as string)?.trim();
     const category = (req.query.category as string)?.trim();
 
-    // 1️⃣ Get all distinct reported dates
     const reportedDates = await CropModel.distinct("otherDetails.reportedDate");
     const sortedDates = reportedDates
       .map((d) => new Date(d))
@@ -1522,38 +1521,41 @@ export const getTopGainers = async (req: Request, res: Response) => {
     const latestDate = sortedDates[0];
     const previousDate = sortedDates[1];
 
-    // 2️⃣ Build filters
     const matchFilter: any = {};
     if (city) matchFilter["location.city"] = { $regex: new RegExp(city, "i") };
     if (category) matchFilter["category.name"] = { $regex: new RegExp(category, "i") };
 
-    // 3️⃣ Fetch today's & yesterday's data
     const [todayData, yesterdayData] = await Promise.all([
       CropModel.aggregate([
-        { $match: { ...matchFilter, "otherDetails.reportedDate": latestDate } },
+        {
+          $match: {
+            ...matchFilter,
+            "otherDetails.reportedDate": latestDate,
+          },
+        },
         {
           $group: {
             _id: {
-              docId: "$_id",
               name: "$name",
               variant: "$variants.name",
-              image: "$variants.image",
               city: "$location.city",
             },
             avgPrice: { $avg: { $arrayElemAt: ["$variants.price", 0] } },
           },
         },
       ]),
-
       CropModel.aggregate([
-        { $match: { ...matchFilter, "otherDetails.reportedDate": previousDate } },
+        {
+          $match: {
+            ...matchFilter,
+            "otherDetails.reportedDate": previousDate,
+          },
+        },
         {
           $group: {
             _id: {
-              docId: "$_id",
               name: "$name",
               variant: "$variants.name",
-              image: "$variants.image",
               city: "$location.city",
             },
             avgPrice: { $avg: { $arrayElemAt: ["$variants.price", 0] } },
@@ -1562,15 +1564,15 @@ export const getTopGainers = async (req: Request, res: Response) => {
       ]),
     ]);
 
-    // 4️⃣ Map yesterday prices
+    // Map yesterday prices
     const yesterdayMap = new Map<string, number>();
     yesterdayData.forEach((y) => {
       yesterdayMap.set(JSON.stringify(y._id), y.avgPrice);
     });
 
-    // 5️⃣ Compute gainers
-    let gainers = todayData
-      .map((t) => {
+    // Compute gainers
+    let gainers = await Promise.all(
+      todayData.map(async (t) => {
         const key = JSON.stringify(t._id);
         const yesterdayAvg = yesterdayMap.get(key);
 
@@ -1579,21 +1581,30 @@ export const getTopGainers = async (req: Request, res: Response) => {
         const change = t.avgPrice - yesterdayAvg;
         const changePercent = (change / yesterdayAvg) * 100;
 
+        // 🔥 Fetch full crop document to get _id + image
+        const cropDoc = await CropModel.findOne({
+          name: t._id.name,
+          "variants.name": Array.isArray(t._id.variant) ? t._id.variant[0] : t._id.variant,
+          "location.city": t._id.city,
+        }).lean();
+
         return {
-          id: t._id.docId,
+          _id: cropDoc?._id,                              // ✅ Added
+          image: cropDoc?.variants?.[0]?.image || null,   // ✅ Added
+
           cropName: t._id.name,
           variantName: Array.isArray(t._id.variant) ? t._id.variant[0] : t._id.variant,
-          image: Array.isArray(t._id.image) ? t._id.image[0] : t._id.image,
           location: t._id.city,
           avgPrice: Math.round(t.avgPrice),
           change: Math.round(change),
           changePercent: +changePercent.toFixed(2),
         };
       })
-      .filter((c) => c && c.change > 0)
-      .slice(0, limit);
+    );
 
-    // ⭐ 6️⃣ Sorting (Nagpur → A–Z → Highest % gain)
+    gainers = gainers.filter((c) => c && c.change > 0).slice(0, limit);
+
+    // Sorting
     const DEFAULT_CITY = "Nagpur";
 
     gainers.sort((a, b) => {
@@ -1606,8 +1617,7 @@ export const getTopGainers = async (req: Request, res: Response) => {
       return b!.changePercent - a!.changePercent;
     });
 
-    // 7️⃣ Response
-    return res.status(200).json({
+    res.status(200).json({
       success: true,
       message: `Top gainers (${latestDate.toDateString()} vs ${previousDate.toDateString()})`,
       count: gainers.length,
@@ -1615,13 +1625,15 @@ export const getTopGainers = async (req: Request, res: Response) => {
     });
   } catch (error: any) {
     console.error("❌ getTopGainers Error:", error);
-    return res.status(500).json({
+    res.status(500).json({
       success: false,
       message: "Failed to fetch top gainers.",
       error: error.message,
     });
   }
 };
+
+
 
 export const getTopLosers = async (req: Request, res: Response) => {
   try {
@@ -1649,17 +1661,19 @@ export const getTopLosers = async (req: Request, res: Response) => {
     if (city) matchFilter["location.city"] = { $regex: new RegExp(city, "i") };
     if (category) matchFilter["category.name"] = { $regex: new RegExp(category, "i") };
 
-    // 3️⃣ Today & Yesterday Aggregations with _id + image
     const [todayData, yesterdayData] = await Promise.all([
       CropModel.aggregate([
-        { $match: { ...matchFilter, "otherDetails.reportedDate": latestDate } },
+        {
+          $match: {
+            ...matchFilter,
+            "otherDetails.reportedDate": latestDate,
+          },
+        },
         {
           $group: {
             _id: {
-              docId: "$_id",
               name: "$name",
               variant: "$variants.name",
-              image: "$variants.image",
               city: "$location.city",
             },
             avgPrice: { $avg: { $arrayElemAt: ["$variants.price", 0] } },
@@ -1667,14 +1681,17 @@ export const getTopLosers = async (req: Request, res: Response) => {
         },
       ]),
       CropModel.aggregate([
-        { $match: { ...matchFilter, "otherDetails.reportedDate": previousDate } },
+        {
+          $match: {
+            ...matchFilter,
+            "otherDetails.reportedDate": previousDate,
+          },
+        },
         {
           $group: {
             _id: {
-              docId: "$_id",
               name: "$name",
               variant: "$variants.name",
-              image: "$variants.image",
               city: "$location.city",
             },
             avgPrice: { $avg: { $arrayElemAt: ["$variants.price", 0] } },
@@ -1683,13 +1700,11 @@ export const getTopLosers = async (req: Request, res: Response) => {
       ]),
     ]);
 
-    // 4️⃣ Yesterday map
     const yesterdayMap = new Map<string, number>();
     yesterdayData.forEach((y) => {
       yesterdayMap.set(JSON.stringify(y._id), y.avgPrice);
     });
 
-    // 5️⃣ Compute losers
     let losers = todayData
       .map((t) => {
         const key = JSON.stringify(t._id);
@@ -1701,10 +1716,8 @@ export const getTopLosers = async (req: Request, res: Response) => {
         const changePercent = (change / yesterdayAvg) * 100;
 
         return {
-          id: t._id.docId,
           cropName: t._id.name,
           variantName: Array.isArray(t._id.variant) ? t._id.variant[0] : t._id.variant,
-          image: Array.isArray(t._id.image) ? t._id.image[0] : t._id.image,
           location: t._id.city,
           avgPrice: Math.round(t.avgPrice),
           change: Math.round(change),
@@ -1714,7 +1727,7 @@ export const getTopLosers = async (req: Request, res: Response) => {
       .filter((c) => c && c.change < 0)
       .slice(0, limit);
 
-    // ⭐ Sorting (Nagpur → A–Z → largest negative %)
+    // ⭐ Sorting (Nagpur → A-Z → most negative % first)
     const DEFAULT_CITY = "Nagpur";
 
     losers.sort((a, b) => {
@@ -1724,10 +1737,11 @@ export const getTopLosers = async (req: Request, res: Response) => {
       const cityCompare = a!.location.localeCompare(b!.location);
       if (cityCompare !== 0) return cityCompare;
 
-      return a!.changePercent - b!.changePercent; // more negative first
+      // more negative (larger loss) first
+      return a!.changePercent - b!.changePercent;
     });
 
-    return res.status(200).json({
+    res.status(200).json({
       success: true,
       message: `Top losers (${latestDate.toDateString()} vs ${previousDate.toDateString()})`,
       count: losers.length,
@@ -1735,7 +1749,7 @@ export const getTopLosers = async (req: Request, res: Response) => {
     });
   } catch (error: any) {
     console.error("❌ getTopLosers Error:", error);
-    return res.status(500).json({
+    res.status(500).json({
       success: false,
       message: "Failed to fetch top losers.",
       error: error.message,
