@@ -1283,6 +1283,7 @@ export const getOilSeedCrops = async (req: Request, res: Response) => {
 };
 
 
+
 const getLatestDateForCategory = async (matchQuery: any) => {
   const lastRecord = await CropModel.findOne(matchQuery, { otherDetails: 1 })
     .sort({ 'otherDetails.reportedDate': -1 })
