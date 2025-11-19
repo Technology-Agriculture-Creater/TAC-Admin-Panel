@@ -1307,40 +1307,57 @@ const getLatestDateForCategory = async (matchQuery: any) => {
 
 export const getPulseCrops = async (req: Request, res: Response) => {
   try {
-    const city = (req.query.city as string)?.trim() || 'Nagpur';
+    const city = (req.query.city as string)?.trim() || "Nagpur";
     const limit = parseInt(req.query.limit as string) || 10;
 
+    // ----------- MATCH QUERY -----------
     const matchQuery = {
-      'category.name': { $regex: /pulse/i },
-      'location.city': { $regex: new RegExp(city, 'i') },
+      "category.name": { $regex: /pulse/i },
+      "location.city": { $regex: new RegExp(city, "i") },
     };
 
-    const dateInfo = await getLatestDateForCategory(matchQuery);
-    if (!dateInfo)
-      return res.status(404).json({ success: false, message: 'No pulse crop data found.' });
+    // ----------- FIND LATEST DATE (CITY-WISE, ONLY PULSE DATA) -----------
+    const latestRecord = await CropModel.findOne(matchQuery)
+      .sort({ "otherDetails.reportedDate": -1 })
+      .lean();
 
-    const { dateToUse, nextDay } = dateInfo;
+    if (!latestRecord) {
+      return res
+        .status(404)
+        .json({ success: false, message: "No pulse crop data found." });
+    }
 
+    const dateToUse = new Date(latestRecord.otherDetails.reportedDate);
+    const nextDay = new Date(dateToUse);
+    nextDay.setDate(nextDay.getDate() + 1);
+
+    // ----------- TODAY DATA (LATEST DATE) -----------
     const todayData = await CropModel.aggregate([
-      { $match: { ...matchQuery, 'otherDetails.reportedDate': { $gte: dateToUse, $lt: nextDay } } },
+      {
+        $match: {
+          ...matchQuery,
+          "otherDetails.reportedDate": { $gte: dateToUse, $lt: nextDay },
+        },
+      },
       {
         $group: {
-          _id: { name: '$name', variant: '$variants.name', city: '$location.city' },
-          docId: { $first: '$_id' },
-          avgPrice: { $avg: { $arrayElemAt: ['$variants.price', 0] } },
-          minPrice: { $avg: { $arrayElemAt: ['$variants.minPrice', 0] } },
-          maxPrice: { $avg: { $arrayElemAt: ['$variants.maxPrice', 0] } },
-          trades: { $sum: '$supplyDemand.arrivalQtyToday' },
-          image: { $first: { $arrayElemAt: ['$variants.image', 0] } },
+          _id: { name: "$name", variant: "$variants.name", city: "$location.city" },
+          docId: { $first: "$_id" },
+          avgPrice: { $avg: { $arrayElemAt: ["$variants.price", 0] } },
+          minPrice: { $avg: { $arrayElemAt: ["$variants.minPrice", 0] } },
+          maxPrice: { $avg: { $arrayElemAt: ["$variants.maxPrice", 0] } },
+          trades: { $sum: "$supplyDemand.arrivalQtyToday" },
+          image: { $first: { $arrayElemAt: ["$variants.image", 0] } },
         },
       },
     ]);
 
+    // ----------- GET PREVIOUS DATE -----------
     const prevRecord = await CropModel.findOne({
       ...matchQuery,
-      'otherDetails.reportedDate': { $lt: dateToUse },
+      "otherDetails.reportedDate": { $lt: dateToUse },
     })
-      .sort({ 'otherDetails.reportedDate': -1 })
+      .sort({ "otherDetails.reportedDate": -1 })
       .lean();
 
     let prevDay = new Date(dateToUse);
@@ -1349,25 +1366,33 @@ export const getPulseCrops = async (req: Request, res: Response) => {
     if (prevRecord?.otherDetails?.reportedDate) {
       prevDay = new Date(prevRecord.otherDetails.reportedDate);
       prevDay.setHours(0, 0, 0, 0);
+
       prevDayEnd = new Date(prevDay);
       prevDayEnd.setDate(prevDayEnd.getDate() + 1);
     }
 
+    // ----------- YESTERDAY DATA -----------
     const yesterdayData = await CropModel.aggregate([
       {
-        $match: { ...matchQuery, 'otherDetails.reportedDate': { $gte: prevDay, $lt: prevDayEnd } },
+        $match: {
+          ...matchQuery,
+          "otherDetails.reportedDate": { $gte: prevDay, $lt: prevDayEnd },
+        },
       },
       {
         $group: {
-          _id: { name: '$name', variant: '$variants.name', city: '$location.city' },
-          avgPrice: { $avg: { $arrayElemAt: ['$variants.price', 0] } },
+          _id: { name: "$name", variant: "$variants.name", city: "$location.city" },
+          avgPrice: { $avg: { $arrayElemAt: ["$variants.price", 0] } },
         },
       },
     ]);
 
     const yesterdayMap = new Map();
-    yesterdayData.forEach((y) => yesterdayMap.set(JSON.stringify(y._id), y.avgPrice));
+    yesterdayData.forEach((y) => {
+      yesterdayMap.set(JSON.stringify(y._id), y.avgPrice);
+    });
 
+    // ----------- MERGE RESULTS -----------
     const result = todayData.map((t) => {
       const yesterdayAvg = yesterdayMap.get(JSON.stringify(t._id)) || 0;
       const priceChange = yesterdayAvg ? t.avgPrice - yesterdayAvg : 0;
@@ -1388,12 +1413,15 @@ export const getPulseCrops = async (req: Request, res: Response) => {
       };
     });
 
-    const DEFAULT_CITY = 'Nagpur';
+    // ----------- SORTING (NAGPUR FIRST, THEN OTHER CITIES) -----------
+    const DEFAULT_CITY = "Nagpur";
     result.sort((a, b) => {
       if (a.location === DEFAULT_CITY && b.location !== DEFAULT_CITY) return -1;
       if (a.location !== DEFAULT_CITY && b.location === DEFAULT_CITY) return 1;
+
       const c = a.location.localeCompare(b.location);
       if (c !== 0) return c;
+
       return b.trades - a.trades;
     });
 
@@ -1404,10 +1432,11 @@ export const getPulseCrops = async (req: Request, res: Response) => {
       crops: result.slice(0, limit),
     });
   } catch (err: any) {
-    console.error('Pulse crop error:', err);
+    console.error("Pulse crop error:", err);
     res.status(500).json({ success: false, error: err.message });
   }
 };
+
 
 export const getMoreCrops = async (req: Request, res: Response) => {
   try {
