@@ -2032,11 +2032,27 @@ export const getArrivalsList = async (req: Request, res: Response) => {
       return await getTopCropsOfDayHandler(req, res);
     }
 
-    // Normal Arrivals List
-    const match: any = {};
+    // ⭐ FIRST: Find the latest date available in the DB
+    const lastRecord = await CropModel.findOne({})
+      .sort({ 'otherDetails.reportedDate': -1 })
+      .select({ 'otherDetails.reportedDate': 1 })
+      .lean();
+
+    if (!lastRecord) {
+      return res.json({ success: true, data: [] });
+    }
+
+    const latestDate = lastRecord.otherDetails.reportedDate;
+
+    // ⭐ MATCH QUERY (Use latest date only)
+    const match: any = {
+      'otherDetails.reportedDate': latestDate,
+    };
+
     if (city) match['location.city'] = { $regex: new RegExp(city, 'i') };
     if (category) match['category.name'] = { $regex: new RegExp(category, 'i') };
 
+    // SORT MAP
     const sortMap: any = {
       arrival_desc: { 'supplyDemand.arrivalQtyToday': -1 },
       arrival_asc: { 'supplyDemand.arrivalQtyToday': 1 },
@@ -2048,6 +2064,7 @@ export const getArrivalsList = async (req: Request, res: Response) => {
 
     const sortStage = sortMap[sortParam] || sortMap.arrival_desc;
 
+    // ⭐ QUERY — Only latest date crops
     const crops = await CropModel.find(match)
       .sort(sortStage)
       .skip(skip)
@@ -2060,6 +2077,7 @@ export const getArrivalsList = async (req: Request, res: Response) => {
         variants: 1,
         marketLocation: 1,
         otherDetails: 1,
+        image: 1,
       })
       .lean();
 
@@ -2068,6 +2086,7 @@ export const getArrivalsList = async (req: Request, res: Response) => {
     return res.json({
       success: true,
       type: 'arrivals',
+      latestDate,
       total,
       page,
       limit,
@@ -2077,6 +2096,7 @@ export const getArrivalsList = async (req: Request, res: Response) => {
     return res.status(500).json({ success: false, error: err.message });
   }
 };
+
 
 export const getCropsByLastDate = async (req: Request, res: Response) => {
   try {
