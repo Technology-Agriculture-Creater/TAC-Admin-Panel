@@ -10,7 +10,9 @@ import { registerFarmer, sendOtp, verifyOtp ,registerDraft,registerWithOtp,sendR
   getMoreCrops,
   getTopGainers,
   getTopLosers,
-  getCropDetailsAndTrend,} from '../controllers/farmerController.ts';
+  getCropDetailsAndTrend,
+  getArrivalsList,
+  getCropsByLastDate,} from '../controllers/farmerController.ts';
 import { authenticate } from '../middlewares/auth.middleware.ts';
 import upload from '../services/multer.service.ts';
 
@@ -91,5 +93,7 @@ authRoute.get("/more-crops", getMoreCrops);
 authRoute.get("/top-gainers", getTopGainers);
 authRoute.get("/top-losers", getTopLosers);
 authRoute.get("/:id/details-and-trend", getCropDetailsAndTrend);
+authRoute.get("/getArrivalsList", getArrivalsList);
+authRoute.get("/getCropsByLastDate", getCropsByLastDate);
 
 export default authRoute;

@@ -121,4 +121,45 @@ const CropSchema = new Schema<ICrop>(
   { timestamps: true }
 );
 
+CropSchema.index({ name: 1 });
+CropSchema.index({ "category.name": 1 });
+CropSchema.index({ "location.city": 1 });
+CropSchema.index({ "location.state": 1 });
+
+CropSchema.index({ "otherDetails.reportedDate": -1 });
+
+// Variants nested indexes
+CropSchema.index({ "variants.name": 1 });
+CropSchema.index({ "variants.price": 1 });
+CropSchema.index({ "variants.minPrice": 1 });
+CropSchema.index({ "variants.maxPrice": 1 });
+
+// Supply Demand indexes
+CropSchema.index({ "supplyDemand.arrivalQtyToday": -1 });
+
+// Combined indexes for your heaviest APIs
+CropSchema.index({
+  "location.city": 1,
+  "category.name": 1,
+  "otherDetails.reportedDate": -1
+});
+
+// Frequently used combination (city + date)
+CropSchema.index({
+  "location.city": 1,
+  "otherDetails.reportedDate": -1
+});
+
+// Often sorted by price
+CropSchema.index({
+  "location.city": 1,
+  "variants.price": -1
+});
+
+// Often sorted by arrival quantity
+CropSchema.index({
+  "location.city": 1,
+  "supplyDemand.arrivalQtyToday": -1
+});
+
 export default mongoose.model<ICrop>('Crop', CropSchema);
