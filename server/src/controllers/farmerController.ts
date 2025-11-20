@@ -2106,12 +2106,12 @@ export const getCropsByLastDate = async (req: Request, res: Response) => {
 
     const sortParam = (req.query.sort as string)?.toLowerCase() || 'price_desc';
 
-    // Base match
+    // -------- Base MATCH --------
     const baseMatch: any = {};
     if (city) baseMatch['location.city'] = { $regex: new RegExp(city, 'i') };
     if (category) baseMatch['category.name'] = { $regex: new RegExp(category, 'i') };
 
-    // 1) Find latest date
+    // -------- Step 1: Find latest reported date --------
     const latestRecord = await CropModel.find(baseMatch)
       .sort({ 'otherDetails.reportedDate': -1 })
       .limit(1)
@@ -2124,7 +2124,7 @@ export const getCropsByLastDate = async (req: Request, res: Response) => {
 
     const latestDate = latestRecord[0].otherDetails.reportedDate;
 
-    // Sorting map
+    // ---------- Sorting Options ----------
     const sortMap: any = {
       price_desc: { 'variants.price': -1 },
       price_asc: { 'variants.price': 1 },
@@ -2136,8 +2136,8 @@ export const getCropsByLastDate = async (req: Request, res: Response) => {
 
     const sortStage = sortMap[sortParam] || sortMap.price_desc;
 
-    // 2) Get crops having that latest date
-    const crops = await CropModel.find({
+    // -------- Step 2: Fetch ALL crops of latest date --------
+    const allCrops = await CropModel.find({
       ...baseMatch,
       'otherDetails.reportedDate': latestDate,
     })
@@ -2145,13 +2145,26 @@ export const getCropsByLastDate = async (req: Request, res: Response) => {
       .limit(limit)
       .lean();
 
+    // -------- Step 3: TOP 10 CROPS (by arrival) --------
+    const topCrops = await CropModel.find({
+      ...baseMatch,
+      'otherDetails.reportedDate': latestDate,
+    })
+      .sort({ 'supplyDemand.arrivalQtyToday': -1 })
+      .limit(10)
+      .lean();
+
+    // -------- Final Response --------
     res.json({
       success: true,
       latestDate,
-      count: crops.length,
-      data: crops,
+      topCropsCount: topCrops.length,
+      totalCrops: allCrops.length,
+      topCrops,
+      allCrops,
     });
   } catch (err: any) {
     res.status(500).json({ success: false, error: err.message });
   }
 };
+
