@@ -2021,21 +2021,21 @@ export const getArrivalsList = async (req: Request, res: Response) => {
   try {
     const city = (req.query.city as string)?.trim();
     const category = (req.query.category as string)?.trim()?.toLowerCase();
-    const limit = parseInt(req.query.limit as string) || 20;
+    const limit = parseInt(req.query.limit as string) || 50;
     const page = parseInt(req.query.page as string) || 1;
     const skip = (page - 1) * limit;
 
-    const sortParam = (req.query.sort as string)?.toLowerCase() || 'arrival_desc';
+    const sortParam = (req.query.sort as string)?.toLowerCase() || "arrival_desc";
 
     // ⭐ If category = topcrops → Return top crops of the day
-    if (category === 'topcrops') {
+    if (category === "topcrops") {
       return await getTopCropsOfDayHandler(req, res);
     }
 
-    // ⭐ FIRST: Find the latest date available in the DB
+    // ⭐ Get latest reported date
     const lastRecord = await CropModel.findOne({})
-      .sort({ 'otherDetails.reportedDate': -1 })
-      .select({ 'otherDetails.reportedDate': 1 })
+      .sort({ "otherDetails.reportedDate": -1 })
+      .select({ "otherDetails.reportedDate": 1 })
       .lean();
 
     if (!lastRecord) {
@@ -2044,53 +2044,67 @@ export const getArrivalsList = async (req: Request, res: Response) => {
 
     const latestDate = lastRecord.otherDetails.reportedDate;
 
-    // ⭐ MATCH QUERY (Use latest date only)
+    // ⭐ MATCH QUERY
     const match: any = {
-      'otherDetails.reportedDate': latestDate,
+      "otherDetails.reportedDate": latestDate,
     };
 
-    if (city) match['location.city'] = { $regex: new RegExp(city, 'i') };
-    if (category) match['category.name'] = { $regex: new RegExp(category, 'i') };
+    if (city) match["location.city"] = { $regex: new RegExp(city, "i") };
+    if (category) match["category.name"] = { $regex: new RegExp(category, "i") };
 
-    // SORT MAP
+    // ⭐ AGGREGATION TO GROUP CROPS
     const sortMap: any = {
-      arrival_desc: { 'supplyDemand.arrivalQtyToday': -1 },
-      arrival_asc: { 'supplyDemand.arrivalQtyToday': 1 },
-      price_desc: { 'variants.price': -1 },
-      price_asc: { 'variants.price': 1 },
-      name_asc: { name: 1 },
-      name_desc: { name: -1 },
+      arrival_desc: { totalArrivals: -1 },
+      arrival_asc: { totalArrivals: 1 },
+      name_asc: { _id: 1 },
+      name_desc: { _id: -1 },
     };
 
     const sortStage = sortMap[sortParam] || sortMap.arrival_desc;
 
-    // ⭐ QUERY — Only latest date crops
-    const crops = await CropModel.find(match)
-      .sort(sortStage)
-      .skip(skip)
-      .limit(limit)
-      .select({
-        name: 1,
-        category: 1,
-        location: 1,
-        supplyDemand: 1,
-        variants: 1,
-        marketLocation: 1,
-        otherDetails: 1,
-        image: 1,
-      })
-      .lean();
+    const aggregated = await CropModel.aggregate([
+      { $match: match },
 
-    const total = await CropModel.countDocuments(match);
+      // Group by crop name
+      {
+        $group: {
+          _id: "$name",
+          totalArrivals: { $sum: "$supplyDemand.arrivalQtyToday" },
+          image: { $first: { $arrayElemAt: ["$variants.image", 0] } },
+          category: { $first: "$category" },
+        },
+      },
+
+      // Add sorting
+      { $sort: sortStage },
+
+      // Pagination
+      { $skip: skip },
+      { $limit: limit },
+    ]);
+
+    // Get total groups count
+    const totalGroups = await CropModel.aggregate([
+      { $match: match },
+      { $group: { _id: "$name" } },
+      { $count: "count" },
+    ]);
+
+    const total = totalGroups[0]?.count || 0;
 
     return res.json({
       success: true,
-      type: 'arrivals',
+      type: "arrivals",
       latestDate,
       total,
       page,
       limit,
-      data: crops,
+      data: aggregated.map((item) => ({
+        name: item._id,
+        image: item.image,
+        category: item.category,
+        totalArrivals: item.totalArrivals,
+      })),
     });
   } catch (err: any) {
     return res.status(500).json({ success: false, error: err.message });
