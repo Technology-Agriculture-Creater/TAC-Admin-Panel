@@ -2118,64 +2118,41 @@ export const getCropsByLastDate = async (req: Request, res: Response) => {
     const category = (req.query.category as string)?.trim();
     const limit = parseInt(req.query.limit as string) || 1000;
 
-    const sortParam = (req.query.sort as string)?.toLowerCase() || 'price_desc';
-
-    // -------- Base MATCH --------
     const baseMatch: any = {};
-    if (city) baseMatch['location.city'] = { $regex: new RegExp(city, 'i') };
-    if (category) baseMatch['category.name'] = { $regex: new RegExp(category, 'i') };
+    if (city) baseMatch["location.city"] = { $regex: new RegExp(city, "i") };
+    if (category) baseMatch["category.name"] = { $regex: new RegExp(category, "i") };
 
-    // -------- Step 1: Find latest reported date --------
-    const latestRecord = await CropModel.find(baseMatch)
-      .sort({ 'otherDetails.reportedDate': -1 })
+    // ⬅️ Step 1: find the last available date
+    const latestDateDoc = await CropModel.find(baseMatch)
+      .sort({ "otherDetails.reportedDate": -1 })
       .limit(1)
-      .select('otherDetails.reportedDate')
+      .select("otherDetails.reportedDate")
       .lean();
 
-    if (!latestRecord.length || !latestRecord[0].otherDetails?.reportedDate) {
-      return res.json({ success: true, data: [], latestDate: null });
+    if (!latestDateDoc.length || !latestDateDoc[0].otherDetails?.reportedDate) {
+      return res.json({
+        success: true,
+        latestDate: null,
+        data: [],
+      });
     }
 
-    const latestDate = latestRecord[0].otherDetails.reportedDate;
+    const lastAvailableDate = latestDateDoc[0].otherDetails.reportedDate;
 
-    // ---------- Sorting Options ----------
-    const sortMap: any = {
-      price_desc: { 'variants.price': -1 },
-      price_asc: { 'variants.price': 1 },
-      name_asc: { name: 1 },
-      name_desc: { name: -1 },
-      arrival_desc: { 'supplyDemand.arrivalQtyToday': -1 },
-      arrival_asc: { 'supplyDemand.arrivalQtyToday': 1 },
-    };
-
-    const sortStage = sortMap[sortParam] || sortMap.price_desc;
-
-    // -------- Step 2: Fetch ALL crops of latest date --------
-    const allCrops = await CropModel.find({
+    // ⬅️ Step 2: fetch all crops with exactly this date
+    const crops = await CropModel.find({
       ...baseMatch,
-      'otherDetails.reportedDate': latestDate,
+      "otherDetails.reportedDate": lastAvailableDate,
     })
-      .sort(sortStage)
+      .sort({ name: 1 }) // default sorting
       .limit(limit)
       .lean();
 
-    // -------- Step 3: TOP 10 CROPS (by arrival) --------
-    const topCrops = await CropModel.find({
-      ...baseMatch,
-      'otherDetails.reportedDate': latestDate,
-    })
-      .sort({ 'supplyDemand.arrivalQtyToday': -1 })
-      .limit(10)
-      .lean();
-
-    // -------- Final Response --------
     res.json({
       success: true,
-      latestDate,
-      topCropsCount: topCrops.length,
-      totalCrops: allCrops.length,
-      topCrops,
-      allCrops,
+      latestDate: lastAvailableDate,
+      total: crops.length,
+      data: crops,
     });
   } catch (err: any) {
     res.status(500).json({ success: false, error: err.message });
