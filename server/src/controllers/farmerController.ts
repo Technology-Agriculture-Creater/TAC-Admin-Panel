@@ -187,6 +187,8 @@ export const sendRegisterOtp = async (req: Request, res: Response) => {
 };
 
 
+
+
 export const registerWithOtp = async (
   req: Request<any, any, FarmerRequestBody>,
   res: Response
