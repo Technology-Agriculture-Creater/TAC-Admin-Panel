@@ -162,30 +162,40 @@ export const sendRegisterOtp = async (req: Request, res: Response) => {
   }
 };
 
-export const registerWithOtp = async (req: Request<any, any, FarmerRequestBody>, res: Response) => {
+export const registerWithOtp = async (
+  req: Request<any, any, FarmerRequestBody>,
+  res: Response
+) => {
   try {
     const { mobileNumber, otp, userId: providedUserId, ...rest } = req.body;
-    console.log('🚀 ~ registerWithOtp ~ mobileNumber:', mobileNumber);
 
+    console.log("⬅️ registerWithOtp request body:", req.body);
+    console.log("⬅️ registerWithOtp files:", req.files);
+
+    // ---------------- VALIDATION ----------------
     if (!mobileNumber || !otp) {
       return res.status(400).json({
         success: false,
-        message: 'Mobile number and OTP are required.',
+        message: "Mobile number and OTP are required.",
       });
     }
 
-    const existing = await Farmer.findOne({ mobileNumber }).exec();
+    // ---------------- CHECK DUPLICATE ----------------
+    const existing = await Farmer.findOne({ mobileNumber }).lean();
     if (existing) {
-      return res
-        .status(400)
-        .json({ success: false, message: 'The Farmer already registered with same number' });
-    }
-
-    const record = registerOtpStore[mobileNumber];
-    if (!record || record.type !== 'otp') {
       return res.status(400).json({
         success: false,
-        message: 'No OTP sent to this number.',
+        message: "The Farmer is already registered with the same number.",
+      });
+    }
+
+    // ---------------- OTP VALIDATION ----------------
+    const record = registerOtpStore[mobileNumber];
+
+    if (!record || record.type !== "otp") {
+      return res.status(400).json({
+        success: false,
+        message: "No OTP sent to this number.",
       });
     }
 
@@ -193,75 +203,93 @@ export const registerWithOtp = async (req: Request<any, any, FarmerRequestBody>,
       delete registerOtpStore[mobileNumber];
       return res.status(400).json({
         success: false,
-        message: 'OTP has expired. Please request a new one.',
+        message: "OTP has expired. Please request a new one.",
       });
     }
 
     if (record.otpOrToken !== otp) {
       return res.status(400).json({
         success: false,
-        message: 'Invalid OTP.',
+        message: "Invalid OTP.",
       });
     }
 
-    // ✅ OTP verified → remove it immediately
+    // OTP is verified → delete it
     delete registerOtpStore[mobileNumber];
 
-    // 🧩 Generate or reuse userId
+    // ---------------- USER ID GENERATION ----------------
     let userId = providedUserId;
+
     if (!userId) {
-      const lastFarmer = await Farmer.findOne({}, { userId: 1 }).sort({ createdAt: -1 }).lean();
+      const lastFarmer = await Farmer.findOne({}, { userId: 1 })
+        .sort({ createdAt: -1 })
+        .lean();
+
       let newIdNumber = 1;
+
       if (lastFarmer?.userId) {
         const match = lastFarmer.userId.match(/\d+$/);
-        if (match) newIdNumber = parseInt(match[0]) + 1;
+        if (match) {
+          newIdNumber = parseInt(match[0]) + 1;
+        }
       }
-      userId = `TAC${newIdNumber.toString().padStart(5, '0')}`;
+
+      userId = `TAC${newIdNumber.toString().padStart(5, "0")}`;
     }
 
-    // 🖼️ File uploads
-    const files = req.files as { [fieldname: string]: Express.Multer.File[] } | undefined;
-    const profilePicUrl = files?.farmerProfilePic?.[0]?.path ?? rest.farmerProfilePic ?? null;
-    const aadharImageUrl = files?.farmerAadharPic?.[0]?.path ?? rest.farmerAadharPic ?? null;
+    // ---------------- FILE HANDLING ----------------
+    const files = req.files as
+      | { [fieldname: string]: Express.Multer.File[] }
+      | undefined;
 
-    // 🧠 Prepare data
-    const farmerData = {
+    const profilePicUrl =
+      files?.farmerProfilePic?.[0]?.path || rest.farmerProfilePic || null;
+
+    const aadharImageUrl =
+      files?.farmerAadharPic?.[0]?.path || rest.farmerAadharPic || null;
+
+    // ---------------- PREPARE DATA ----------------
+    const farmerData: any = {
       ...rest,
       userId,
       mobileNumber,
       isMobileVerified: true,
-      applicationStatus: rest.applicationStatus ?? 'submitted',
+      applicationStatus: rest.applicationStatus ?? "submitted",
       profilePicUrl,
       aadharImageUrl,
     };
 
-    if (!farmerData.name || !farmerData.mobileNumber) {
+    // REQUIRED FIELDS CHECK
+    if (!farmerData.name) {
       return res.status(400).json({
         success: false,
-        message: 'Missing required fields: name or mobile number.',
+        message: "Farmer name is required.",
       });
     }
 
-    // 💾 Save farmer
+    // ---------------- SAVE OR UPDATE ----------------
     const farmer = await Farmer.findOneAndUpdate(
       { userId },
       { $set: farmerData },
-      { new: true, upsert: true, setDefaultsOnInsert: true },
-    ).exec();
+      { new: true, upsert: true, setDefaultsOnInsert: true }
+    );
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
-      message: 'Farmer registered successfully with OTP verification',
+      message: "Farmer registered successfully with OTP verification.",
       farmer,
     });
   } catch (error: any) {
-    console.error('❌ Error in registerWithOtp:', error);
-    res.status(500).json({
+    console.error("❌ Error in registerWithOtp:", error);
+
+    return res.status(500).json({
       success: false,
-      message: 'Internal Server Error',
+      message: "Internal Server Error",
+      error: error.message,
     });
   }
 };
+
 
 export const registerFarmer = async (req: Request<any, any, FarmerRequestBody>, res: Response) => {
   try {
