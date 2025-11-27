@@ -12,7 +12,9 @@ import { registerFarmer, sendOtp, verifyOtp ,registerDraft,registerWithOtp,sendR
   getTopLosers,
   getCropDetailsAndTrend,
   getArrivalsList,
-  getCropsByLastDate,} from '../controllers/farmerController.ts';
+  getCropsByLastDate,
+  verifySignupOtp,
+  sendSignupOtp,} from '../controllers/farmerController.ts';
 import { authenticate } from '../middlewares/auth.middleware.ts';
 import upload from '../services/multer.service.ts';
 
@@ -95,5 +97,7 @@ authRoute.get("/top-losers", getTopLosers);
 authRoute.get("/:id/details-and-trend", getCropDetailsAndTrend);
 authRoute.get("/getArrivalsList", getArrivalsList);
 authRoute.get("/getCropsByLastDate", getCropsByLastDate);
+authRoute.post("/signup/send-otp", sendSignupOtp);
+authRoute.post("/signup/verify-otp", verifySignupOtp);
 
 export default authRoute;

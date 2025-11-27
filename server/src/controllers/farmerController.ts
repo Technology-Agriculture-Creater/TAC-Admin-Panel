@@ -109,6 +109,129 @@ export const registerDraft = async (req: Request<any, any, FarmerRequestBody>, r
   }
 };
 
+export const sendSignupOtp = async (req: Request, res: Response) => {
+  try {
+    const { first, middle, last, mobileNumber } = req.body;
+
+    if (!first || !mobileNumber) {
+      return res.status(400).json({
+        success: false,
+        message: "First name & mobile number are required",
+      });
+    }
+
+    // Check if already registered
+    const exists = await Farmer.findOne({ mobileNumber }).lean();
+    if (exists) {
+      return res.status(409).json({
+        success: false,
+        message: "Mobile number already registered",
+      });
+    }
+
+    // OTP generate
+    const otp = Math.floor(10000 + Math.random() * 90000).toString();
+
+    // Save OTP in your registerOtpStore
+    registerOtpStore[mobileNumber] = {
+      otpOrToken: otp,
+      expiresAt: Date.now() + 5 * 60 * 1000,
+      type: 'otp',
+    };
+
+    // SEND SMS (your style)
+    const apiKey = process.env.FAST2SMS_API_KEY;
+    if (!apiKey) {
+      return res.status(500).json({ success: false, message: "SMS gateway not configured" });
+    }
+
+    const sms = await axios({
+      method: "post",
+      url: "https://www.fast2sms.com/dev/bulkV2",
+      headers: { authorization: apiKey },
+      params: {
+        route: "q",
+        message: `Hi 👋 Your TAC signup OTP is ${otp}. Valid 5 min.`,
+        numbers: mobileNumber,
+      },
+    });
+
+    if (sms.data?.return !== true) {
+      return res.status(502).json({
+        success: false,
+        message: "Failed to send OTP",
+      });
+    }
+
+    return res.json({
+      success: true,
+      message: "OTP sent successfully",
+      otp
+    });
+
+  } catch (error) {
+    console.error("❌ sendSignupOtp error:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+export const verifySignupOtp = async (req: Request, res: Response) => {
+  try {
+    const { first, middle, last, mobileNumber, otp } = req.body;
+
+    if (!first || !mobileNumber || !otp) {
+      return res.status(400).json({
+        success: false,
+        message: "First name, mobile number, OTP required",
+      });
+    }
+
+    // OTP VALIDATION
+    const record = registerOtpStore[mobileNumber];
+    if (!record) {
+      return res.status(400).json({ success: false, message: "OTP not sent or expired" });
+    }
+    if (Date.now() > record.expiresAt) {
+      delete registerOtpStore[mobileNumber];
+      return res.status(400).json({ success: false, message: "OTP expired" });
+    }
+    if (record.otpOrToken !== otp) {
+      return res.status(400).json({ success: false, message: "Invalid OTP" });
+    }
+    delete registerOtpStore[mobileNumber];
+
+    // USER ID GENERATION (your standard code)
+    let userId;
+    const lastRecord = await Farmer.findOne({}, { userId: 1 }).sort({ createdAt: -1 }).lean();
+    let num = 1;
+    if (lastRecord?.userId) {
+      const m = lastRecord.userId.match(/\d+$/);
+      if (m) num = parseInt(m[0]) + 1;
+    }
+    userId = `TAC${num.toString().padStart(5, "0")}`;
+
+    // CREATE FARMER
+    const farmer = await Farmer.create({
+      userId,
+      mobileNumber,
+      name: { first, middle, last },
+      isMobileVerified: true,
+      applicationStatus: "submitted",
+    });
+
+    return res.json({
+      success: true,
+      message: "Signup successful",
+      farmer,
+    });
+
+  } catch (error) {
+    console.error("❌ verifySignupOtp error:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+
 export const sendRegisterOtp = async (req: Request, res: Response) => {
   try {
     const { mobileNumber } = req.body;
@@ -145,7 +268,7 @@ export const sendRegisterOtp = async (req: Request, res: Response) => {
 
     // ------------------ SEND OTP ------------------
     const smsResponse = await axios({
-      method: 'GET',
+      method: 'post',
       url: 'https://www.fast2sms.com/dev/bulkV2',
       headers: {
         authorization: apiKey,
@@ -185,6 +308,7 @@ export const sendRegisterOtp = async (req: Request, res: Response) => {
     });
   }
 };
+
 
 
 
