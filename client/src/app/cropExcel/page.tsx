@@ -70,6 +70,408 @@ const page = () => {
         },
       },
     },
+    {
+      _id: {
+        $oid: "6911b65ef06056d7e95d28b6",
+      },
+      name: "Cotton",
+      category: {
+        name: "Fibre Crops",
+        image: "/uploads/Fiber crops.png",
+      },
+      location: {
+        latitude: 0,
+        longitude: 0,
+        city: "Amarawati",
+        state: "Maharashtra",
+      },
+      supplyDemand: {
+        arrivalQtyToday: 55,
+        stockAvailability: 0,
+        majorArrivalDistricts: ["Amarawati"],
+      },
+      marketLocation: "Not Specified",
+      cropInsights: {
+        season: "Kharif Season",
+        sowingTime: "",
+        harvestTime: "",
+        averageYield: "",
+        requiredTemperature: "",
+        waterRequirement: "",
+      },
+      farmerInformation: {
+        recommendedSellingTime: "",
+        storageTips: "",
+        qualityGrading: "",
+      },
+      additionalDetails: {
+        govtMSP: null,
+        exportImportStatus: "",
+        subsidiesSchemes: [],
+      },
+      variants: [
+        {
+          name: "Cotton",
+          image: "/uploads/cotton.jpg",
+          price: 5250,
+          minPrice: 5000,
+          maxPrice: 5550,
+        },
+      ],
+      otherDetails: {
+        reportedDate: {
+          $date: "2020-01-01T00:00:00.000Z",
+        },
+        rawExcelData: {
+          State: "Maharashtra",
+          District: "Amarawati",
+          "Market ": "Varud",
+          Season: "Kharif Season",
+          "Crop Name": "Cotton",
+          Category: "Fibre Crops",
+          "Arrivals (Tonnes)": 55,
+          "Min Price (Rs./Quintal)": 5000,
+          "Max Price (Rs./Quintal)": 5550,
+          "Modal Price (Rs./Quintal)": 5250,
+          "Reported Date": 43831,
+        },
+      },
+    },
+    {
+      _id: {
+        $oid: "6911b65ef06056d7e95d28b6",
+      },
+      name: "Cotton",
+      category: {
+        name: "Fibre Crops",
+        image: "/uploads/Fiber crops.png",
+      },
+      location: {
+        latitude: 0,
+        longitude: 0,
+        city: "Amarawati",
+        state: "Maharashtra",
+      },
+      supplyDemand: {
+        arrivalQtyToday: 55,
+        stockAvailability: 0,
+        majorArrivalDistricts: ["Amarawati"],
+      },
+      marketLocation: "Not Specified",
+      cropInsights: {
+        season: "Kharif Season",
+        sowingTime: "",
+        harvestTime: "",
+        averageYield: "",
+        requiredTemperature: "",
+        waterRequirement: "",
+      },
+      farmerInformation: {
+        recommendedSellingTime: "",
+        storageTips: "",
+        qualityGrading: "",
+      },
+      additionalDetails: {
+        govtMSP: null,
+        exportImportStatus: "",
+        subsidiesSchemes: [],
+      },
+      variants: [
+        {
+          name: "Cotton",
+          image: "/uploads/cotton.jpg",
+          price: 5250,
+          minPrice: 5000,
+          maxPrice: 5550,
+        },
+      ],
+      otherDetails: {
+        reportedDate: {
+          $date: "2020-01-01T00:00:00.000Z",
+        },
+        rawExcelData: {
+          State: "Maharashtra",
+          District: "Amarawati",
+          "Market ": "Varud",
+          Season: "Kharif Season",
+          "Crop Name": "Cotton",
+          Category: "Fibre Crops",
+          "Arrivals (Tonnes)": 55,
+          "Min Price (Rs./Quintal)": 5000,
+          "Max Price (Rs./Quintal)": 5550,
+          "Modal Price (Rs./Quintal)": 5250,
+          "Reported Date": 43831,
+        },
+      },
+    },
+    {
+      _id: {
+        $oid: "6911b65ef06056d7e95d28b6",
+      },
+      name: "Cotton",
+      category: {
+        name: "Fibre Crops",
+        image: "/uploads/Fiber crops.png",
+      },
+      location: {
+        latitude: 0,
+        longitude: 0,
+        city: "Amarawati",
+        state: "Maharashtra",
+      },
+      supplyDemand: {
+        arrivalQtyToday: 55,
+        stockAvailability: 0,
+        majorArrivalDistricts: ["Amarawati"],
+      },
+      marketLocation: "Not Specified",
+      cropInsights: {
+        season: "Kharif Season",
+        sowingTime: "",
+        harvestTime: "",
+        averageYield: "",
+        requiredTemperature: "",
+        waterRequirement: "",
+      },
+      farmerInformation: {
+        recommendedSellingTime: "",
+        storageTips: "",
+        qualityGrading: "",
+      },
+      additionalDetails: {
+        govtMSP: null,
+        exportImportStatus: "",
+        subsidiesSchemes: [],
+      },
+      variants: [
+        {
+          name: "Cotton",
+          image: "/uploads/cotton.jpg",
+          price: 5250,
+          minPrice: 5000,
+          maxPrice: 5550,
+        },
+      ],
+      otherDetails: {
+        reportedDate: {
+          $date: "2020-01-01T00:00:00.000Z",
+        },
+        rawExcelData: {
+          State: "Maharashtra",
+          District: "Amarawati",
+          "Market ": "Varud",
+          Season: "Kharif Season",
+          "Crop Name": "Cotton",
+          Category: "Fibre Crops",
+          "Arrivals (Tonnes)": 55,
+          "Min Price (Rs./Quintal)": 5000,
+          "Max Price (Rs./Quintal)": 5550,
+          "Modal Price (Rs./Quintal)": 5250,
+          "Reported Date": 43831,
+        },
+      },
+    },
+    {
+      _id: {
+        $oid: "6911b65ef06056d7e95d28b6",
+      },
+      name: "Cotton",
+      category: {
+        name: "Fibre Crops",
+        image: "/uploads/Fiber crops.png",
+      },
+      location: {
+        latitude: 0,
+        longitude: 0,
+        city: "Amarawati",
+        state: "Maharashtra",
+      },
+      supplyDemand: {
+        arrivalQtyToday: 55,
+        stockAvailability: 0,
+        majorArrivalDistricts: ["Amarawati"],
+      },
+      marketLocation: "Not Specified",
+      cropInsights: {
+        season: "Kharif Season",
+        sowingTime: "",
+        harvestTime: "",
+        averageYield: "",
+        requiredTemperature: "",
+        waterRequirement: "",
+      },
+      farmerInformation: {
+        recommendedSellingTime: "",
+        storageTips: "",
+        qualityGrading: "",
+      },
+      additionalDetails: {
+        govtMSP: null,
+        exportImportStatus: "",
+        subsidiesSchemes: [],
+      },
+      variants: [
+        {
+          name: "Cotton",
+          image: "/uploads/cotton.jpg",
+          price: 5250,
+          minPrice: 5000,
+          maxPrice: 5550,
+        },
+      ],
+      otherDetails: {
+        reportedDate: {
+          $date: "2020-01-01T00:00:00.000Z",
+        },
+        rawExcelData: {
+          State: "Maharashtra",
+          District: "Amarawati",
+          "Market ": "Varud",
+          Season: "Kharif Season",
+          "Crop Name": "Cotton",
+          Category: "Fibre Crops",
+          "Arrivals (Tonnes)": 55,
+          "Min Price (Rs./Quintal)": 5000,
+          "Max Price (Rs./Quintal)": 5550,
+          "Modal Price (Rs./Quintal)": 5250,
+          "Reported Date": 43831,
+        },
+      },
+    },
+    {
+      _id: {
+        $oid: "6911b65ef06056d7e95d28b6",
+      },
+      name: "Cotton",
+      category: {
+        name: "Fibre Crops",
+        image: "/uploads/Fiber crops.png",
+      },
+      location: {
+        latitude: 0,
+        longitude: 0,
+        city: "Amarawati",
+        state: "Maharashtra",
+      },
+      supplyDemand: {
+        arrivalQtyToday: 55,
+        stockAvailability: 0,
+        majorArrivalDistricts: ["Amarawati"],
+      },
+      marketLocation: "Not Specified",
+      cropInsights: {
+        season: "Kharif Season",
+        sowingTime: "",
+        harvestTime: "",
+        averageYield: "",
+        requiredTemperature: "",
+        waterRequirement: "",
+      },
+      farmerInformation: {
+        recommendedSellingTime: "",
+        storageTips: "",
+        qualityGrading: "",
+      },
+      additionalDetails: {
+        govtMSP: null,
+        exportImportStatus: "",
+        subsidiesSchemes: [],
+      },
+      variants: [
+        {
+          name: "Cotton",
+          image: "/uploads/cotton.jpg",
+          price: 5250,
+          minPrice: 5000,
+          maxPrice: 5550,
+        },
+      ],
+      otherDetails: {
+        reportedDate: {
+          $date: "2020-01-01T00:00:00.000Z",
+        },
+        rawExcelData: {
+          State: "Maharashtra",
+          District: "Amarawati",
+          "Market ": "Varud",
+          Season: "Kharif Season",
+          "Crop Name": "Cotton",
+          Category: "Fibre Crops",
+          "Arrivals (Tonnes)": 55,
+          "Min Price (Rs./Quintal)": 5000,
+          "Max Price (Rs./Quintal)": 5550,
+          "Modal Price (Rs./Quintal)": 5250,
+          "Reported Date": 43831,
+        },
+      },
+    },
+    {
+      _id: {
+        $oid: "6911b65ef06056d7e95d28b6",
+      },
+      name: "Cotton",
+      category: {
+        name: "Fibre Crops",
+        image: "/uploads/Fiber crops.png",
+      },
+      location: {
+        latitude: 0,
+        longitude: 0,
+        city: "Amarawati",
+        state: "Maharashtra",
+      },
+      supplyDemand: {
+        arrivalQtyToday: 55,
+        stockAvailability: 0,
+        majorArrivalDistricts: ["Amarawati"],
+      },
+      marketLocation: "Not Specified",
+      cropInsights: {
+        season: "Kharif Season",
+        sowingTime: "",
+        harvestTime: "",
+        averageYield: "",
+        requiredTemperature: "",
+        waterRequirement: "",
+      },
+      farmerInformation: {
+        recommendedSellingTime: "",
+        storageTips: "",
+        qualityGrading: "",
+      },
+      additionalDetails: {
+        govtMSP: null,
+        exportImportStatus: "",
+        subsidiesSchemes: [],
+      },
+      variants: [
+        {
+          name: "Cotton",
+          image: "/uploads/cotton.jpg",
+          price: 5250,
+          minPrice: 5000,
+          maxPrice: 5550,
+        },
+      ],
+      otherDetails: {
+        reportedDate: {
+          $date: "2020-01-01T00:00:00.000Z",
+        },
+        rawExcelData: {
+          State: "Maharashtra",
+          District: "Amarawati",
+          "Market ": "Varud",
+          Season: "Kharif Season",
+          "Crop Name": "Cotton",
+          Category: "Fibre Crops",
+          "Arrivals (Tonnes)": 55,
+          "Min Price (Rs./Quintal)": 5000,
+          "Max Price (Rs./Quintal)": 5550,
+          "Modal Price (Rs./Quintal)": 5250,
+          "Reported Date": 43831,
+        },
+      },
+    },
   ];
 
   return (
