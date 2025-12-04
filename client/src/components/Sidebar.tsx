@@ -42,6 +42,16 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
       icon: "/Images/profile.png",
       href: "/profile-settings",
     },
+    {
+      name: "Crop Form",
+      icon: "/Images/report.png",
+      href: "/crops",
+    },
+    {
+      name: "Crop Excel",
+      icon: "/Images/report.png",
+      href: "/cropExcel",
+    },
   ];
 
   return (
@@ -81,7 +91,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
                 }`}
               >
                 <Image
-                  src={item.icon}
+                  src={typeof item.icon === "string" ? item.icon : ""}
                   height={0}
                   width={0}
                   sizes="100vw"
