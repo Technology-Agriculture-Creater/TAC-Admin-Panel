@@ -314,7 +314,7 @@ const CropForm = () => {
       const result = await response.json();
       console.log("Crop created successfully:", result);
       alert("Crop created successfully!");
-      setCropData(initialCropState); // Reset form
+      setCropData(initialCropState); 
     } catch (error: any) {
       console.error("Error creating crop:", error?.message);
       alert(`Error: ${error?.message}`);
