@@ -3,7 +3,35 @@ import Crop from '../models/crop.model.ts';
 
 export const createCrop = async (req: Request, res: Response) => {
   try {
-    const newCrop = new Crop(req.body);
+    const {
+      name,
+      category,
+      location,
+      supplyDemand,
+      marketLocation,
+      cropInsights,
+      farmerInformation,
+      additionalDetails,
+      variants,
+      otherDetails,
+    } = req.body;
+    const existingCrop = await Crop.findOne({ name });
+    if (existingCrop) {
+      return res.status(400).json({ message: 'Crop with this name already exists' });
+    }
+
+    const newCrop = new Crop({
+      name,
+      category,
+      location,
+      supplyDemand,
+      marketLocation,
+      cropInsights,
+      farmerInformation,
+      additionalDetails,
+      variants,
+      otherDetails,
+    });
     const savedCrop = await newCrop.save();
     res.status(201).json(savedCrop);
   } catch (error: any) {
