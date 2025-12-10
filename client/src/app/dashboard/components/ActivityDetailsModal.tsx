@@ -7,11 +7,12 @@ interface ActivityDetailsModalProps {
   isOpen: boolean;
   onClose: () => void;
   activityData: Activity | null;
-  onApprove: (id: string) => void;
-  onReject: (id: string) => void;
-  onEscalate: (id: string) => void;
-  onRetain: (id: string) => void;
-  onDelete: (id: string) => void;
+  onApprove?: (id: string) => void;
+  onReject?: (id: string) => void;
+  onEscalate?: (id: string) => void;
+  onRetain?: (id: string) => void;
+  onDelete?: (id: string) => void;
+  actionButtons?: React.ReactNode;
 }
 
 const ActivityDetailsModal: React.FC<ActivityDetailsModalProps> = ({
@@ -339,56 +340,70 @@ const ActivityDetailsModal: React.FC<ActivityDetailsModalProps> = ({
           {(activityData.status === "Pending" ||
             activityData.status === "Pending review") && (
             <>
-              <button
-                onClick={() => onEscalate(activityData.id)}
-                className="border w-full active:scale-95 border-blue-600 text-blue-600 px-6 py-2 rounded-md hover:bg-blue-50"
-              >
-                Escalate to Admin
-              </button>
-              <button
-                onClick={() => onReject(activityData.id)}
-                className="bg-red-500 w-full active:scale-95 text-white px-6 py-2 rounded-md hover:bg-red-600"
-              >
-                Reject
-              </button>
-              <button
-                onClick={() => onApprove(activityData.id)}
-                className="bg-green-500 w-full active:scale-95 text-white px-6 py-2 rounded-md hover:bg-green-600"
-              >
-                Approve
-              </button>
+              {onEscalate && (
+                <button
+                  onClick={() => onEscalate(activityData.id)}
+                  className="border w-full active:scale-95 border-blue-600 text-blue-600 px-6 py-2 rounded-md hover:bg-blue-50"
+                >
+                  Escalate to Admin
+                </button>
+              )}
+              {onReject && (
+                <button
+                  onClick={() => onReject(activityData.id)}
+                  className="bg-red-500 w-full active:scale-95 text-white px-6 py-2 rounded-md hover:bg-red-600"
+                >
+                  Reject
+                </button>
+              )}
+              {onApprove && (
+                <button
+                  onClick={() => onApprove(activityData.id)}
+                  className="bg-green-500 w-full active:scale-95 text-white px-6 py-2 rounded-md hover:bg-green-600"
+                >
+                  Approve
+                </button>
+              )}
             </>
           )}
           {activityData.status === "Approved" && (
             <>
-              <button
-                onClick={() => onDelete(activityData.id)}
-                className="border w-full active:scale-95 border-blue-600 text-blue-600 px-6 py-2 rounded-md hover:bg-blue-50"
-              >
-                Delete
-              </button>
-              <button
-                onClick={() => onReject(activityData.id)}
-                className="bg-red-500 w-full active:scale-95 text-white px-6 py-2 rounded-md hover:bg-red-600"
-              >
-                Reject
-              </button>
+              {onDelete && (
+                <button
+                  onClick={() => onDelete(activityData.id)}
+                  className="border w-full active:scale-95 border-red-600 text-red-600 px-6 py-2 rounded-md hover:bg-red-50"
+                >
+                  Delete
+                </button>
+              )}
+              {onReject && (
+                <button
+                  onClick={() => onReject(activityData.id)}
+                  className="bg-red-500 w-full active:scale-95 text-white px-6 py-2 rounded-md hover:bg-red-600"
+                >
+                  Reject
+                </button>
+              )}
             </>
           )}
           {activityData.status === "Rejected" && (
             <>
-              <button
-                onClick={() => onDelete(activityData.id)}
-                className="border w-full active:scale-95 border-blue-600 text-blue-600 px-6 py-2 rounded-md hover:bg-blue-50"
-              >
-                Delete
-              </button>
-              <button
-                onClick={() => onRetain(activityData.id)}
-                className="bg-green-500 w-full active:scale-95 text-white px-6 py-2 rounded-md hover:bg-green-600"
-              >
-                Retain
-              </button>
+              {onDelete && (
+                <button
+                  onClick={() => onDelete(activityData.id)}
+                  className="border w-full active:scale-95 border-blue-600 text-blue-600 px-6 py-2 rounded-md hover:bg-blue-50"
+                >
+                  Delete
+                </button>
+              )}
+              {onRetain && (
+                <button
+                  onClick={() => onRetain(activityData.id)}
+                  className="bg-green-500 w-full active:scale-95 text-white px-6 py-2 rounded-md hover:bg-green-600"
+                >
+                  Retain
+                </button>
+              )}
             </>
           )}
         </div>
