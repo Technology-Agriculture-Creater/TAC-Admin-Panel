@@ -158,7 +158,10 @@ const CropForm = () => {
   };
 
   // --- Variant Handlers ---
-  const handleVariantChange = (index: number, e) => {
+  const handleVariantChange = (
+    index: number,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value, type } = e.target;
     const updatedVariants = cropData.variants.map((variant, i) =>
       i === index
@@ -193,7 +196,10 @@ const CropForm = () => {
   };
 
   // --- Major Arrival Districts Handlers ---
-  const handleDistrictChange = (index: number, e) => {
+  const handleDistrictChange = (
+    index: number,
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const { value } = e.target;
     const updatedDistricts = cropData.supplyDemand.majorArrivalDistricts.map(
       (district, i) => (i === index ? value : district)
@@ -234,7 +240,10 @@ const CropForm = () => {
   };
 
   // --- Subsidies Schemes Handlers ---
-  const handleSchemeChange = (index: number, e) => {
+  const handleSchemeChange = (
+    index: number,
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const { value } = e.target;
     const updatedSchemes = cropData.additionalDetails.subsidiesSchemes.map(
       (scheme, i) => (i === index ? value : scheme)
@@ -271,7 +280,9 @@ const CropForm = () => {
   };
 
   // --- Other Details Handlers (Dynamic Key-Value Pairs) ---
-  const handleOtherDetailsInputChange = (e) => {
+  const handleOtherDetailsInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const { name, value } = e.target;
     setOtherDetailsInput((prev) => ({ ...prev, [name]: value }));
   };
@@ -314,10 +325,10 @@ const CropForm = () => {
       const result = await response.json();
       console.log("Crop created successfully:", result);
       alert("Crop created successfully!");
-      setCropData(initialCropState); 
-    } catch (error: any) {
-      console.error("Error creating crop:", error?.message);
-      alert(`Error: ${error?.message}`);
+      setCropData(initialCropState);
+    } catch (error: unknown) {
+      console.error("Error creating crop:", (error as Error)?.message);
+      alert(`Error: ${(error as Error)?.message}`);
     }
   };
 
@@ -647,14 +658,14 @@ const CropForm = () => {
                     type="number"
                     name="minPrice"
                     value={variant.minPrice}
-                    onChange={(e: unknown) => handleVariantChange(index, e)}
+                    onChange={(e) => handleVariantChange(index, e)}
                   />
                   <FormInput
                     label="Max Price"
                     type="number"
                     name="maxPrice"
                     value={variant.maxPrice}
-                    onChange={(e: unknown) => handleVariantChange(index, e)}
+                    onChange={(e) => handleVariantChange(index, e)}
                   />
                 </div>
                 <FormInput
@@ -662,7 +673,7 @@ const CropForm = () => {
                   type="number"
                   name="pricePercentage"
                   value={variant.pricePercentage}
-                  onChange={(e: unknown) => handleVariantChange(index, e)}
+                  onChange={(e) => handleVariantChange(index, e)}
                 />
                 {cropData.variants.length > 1 && (
                   <button
