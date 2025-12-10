@@ -56,7 +56,7 @@ export interface ICrop {
   cropInsights: ICropInsights;
   farmerInformation: IFarmerInformation;
   additionalDetails: IAdditionalDetails;
-  otherDetails?: Record<string, any>;
+  otherDetails?: Record<string, unknown>;
   createdAt?: Date;
   updatedAt?: Date;
 }
