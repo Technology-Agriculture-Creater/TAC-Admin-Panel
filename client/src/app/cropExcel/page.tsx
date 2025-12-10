@@ -82,67 +82,127 @@ const Page = () => {
         const worksheet = workbook.Sheets[sheetName];
         const json = XLSX.utils.sheet_to_json(worksheet);
 
-        const processedData: CropData[] = (json as any[]).map((item) => ({
-          _id: { $oid: item._id?.$oid || new Date().getTime().toString() },
-          name: item.name,
-          category: {
-            name: item["category.name"],
-            image: item["category.image"] || "",
-          },
-          location: {
-            latitude: item["location.latitude"] || 0,
-            longitude: item["location.longitude"] || 0,
-            city: item["location.city"],
-            state: item["location.state"],
-          },
-          supplyDemand: {
-            arrivalQtyToday: item["supplyDemand.arrivalQtyToday"] || 0,
-            stockAvailability: item["supplyDemand.stockAvailability"] || 0,
-            majorArrivalDistricts: item["supplyDemand.majorArrivalDistricts"]
-              ? item["supplyDemand.majorArrivalDistricts"].split(",")
-              : [],
-          },
-          marketLocation: item["marketLocation"],
-          cropInsights: {
-            season: item["cropInsights.season"] || "",
-            sowingTime: item["cropInsights.sowingTime"] || "",
-            harvestTime: item["cropInsights.harvestTime"] || "",
-            averageYield: item["cropInsights.averageYield"] || "",
-            requiredTemperature: item["cropInsights.requiredTemperature"] || "",
-            waterRequirement: item["cropInsights.waterRequirement"] || "",
-          },
-          farmerInformation: {
-            recommendedSellingTime:
-              item["farmerInformation.recommendedSellingTime"] || "",
-            storageTips: item["farmerInformation.storageTips"] || "",
-            qualityGrading: item["farmerInformation.qualityGrading"] || "",
-          },
-          additionalDetails: {
-            govtMSP: item["additionalDetails.govtMSP"] || null,
-            exportImportStatus:
-              item["additionalDetails.exportImportStatus"] || "",
-            subsidiesSchemes: item["additionalDetails.subsidiesSchemes"]
-              ? item["additionalDetails.subsidiesSchemes"].split(",")
-              : [],
-          },
-          variants: [
-            {
-              name: item["variants[0].name"] || item.name,
-              image: item["variants[0].image"] || "",
-              price: item["variants[0].price"] || 0,
-              minPrice: item["variants[0].minPrice"] || 0,
-              maxPrice: item["variants[0].maxPrice"] || 0,
+        interface ExcelCropData {
+          _id?: { $oid: string };
+          name: string;
+          "category.name": string;
+          "category.image"?: string;
+          "location.latitude"?: number;
+          "location.longitude"?: number;
+          "location.city": string;
+          "location.state": string;
+          "supplyDemand.arrivalQtyToday"?: number;
+          "supplyDemand.stockAvailability"?: number;
+          "supplyDemand.majorArrivalDistricts"?: string;
+          marketLocation: string;
+          "cropInsights.season"?: string;
+          "cropInsights.sowingTime"?: string;
+          "cropInsights.harvestTime"?: string;
+          "cropInsights.averageYield"?: string;
+          "cropInsights.requiredTemperature"?: string;
+          "cropInsights.waterRequirement"?: string;
+          "farmerInformation.recommendedSellingTime"?: string;
+          "farmerInformation.storageTips"?: string;
+          "farmerInformation.qualityGrading"?: string;
+          "additionalDetails.govtMSP"?: number;
+          "additionalDetails.exportImportStatus"?: string;
+          "additionalDetails.subsidiesSchemes"?: string;
+          "variants[0].name"?: string;
+          "variants[0].image"?: string;
+          "variants[0].price"?: number;
+          "variants[0].minPrice"?: number;
+          "variants[0].maxPrice"?: number;
+          "otherDetails.reportedDate.$date"?: string;
+          State?: string;
+          District?: string;
+          "Market "?: string;
+          Season?: string;
+          "Crop Name"?: string;
+          Category?: string;
+          "Arrivals (Tonnes)"?: number;
+          "Min Price (Rs./Quintal)"?: number;
+          "Max Price (Rs./Quintal)"?: number;
+          "Modal Price (Rs./Quintal)"?: number;
+          "Reported Date"?: number;
+        }
+
+        const processedData: CropData[] = (json as ExcelCropData[]).map(
+          (item) => ({
+            _id: { $oid: item._id?.$oid || new Date().getTime().toString() },
+            name: item.name,
+            category: {
+              name: item["category.name"],
+              image: item["category.image"] || "",
             },
-          ],
-          otherDetails: {
-            reportedDate: {
-              $date:
-                item["otherDetails.reportedDate.$date"] ||
-                new Date().toISOString(),
+            location: {
+              latitude: item["location.latitude"] || 0,
+              longitude: item["location.longitude"] || 0,
+              city: item["location.city"],
+              state: item["location.state"],
             },
-            rawExcelData: item,
-          },
-        }));
+            supplyDemand: {
+              arrivalQtyToday: item["supplyDemand.arrivalQtyToday"] || 0,
+              stockAvailability: item["supplyDemand.stockAvailability"] || 0,
+              majorArrivalDistricts: item["supplyDemand.majorArrivalDistricts"]
+                ? item["supplyDemand.majorArrivalDistricts"].split(",")
+                : [],
+            },
+            marketLocation: item["marketLocation"],
+            cropInsights: {
+              season: item["cropInsights.season"] || "",
+              sowingTime: item["cropInsights.sowingTime"] || "",
+              harvestTime: item["cropInsights.harvestTime"] || "",
+              averageYield: item["cropInsights.averageYield"] || "",
+              requiredTemperature:
+                item["cropInsights.requiredTemperature"] || "",
+              waterRequirement: item["cropInsights.waterRequirement"] || "",
+            },
+            farmerInformation: {
+              recommendedSellingTime:
+                item["farmerInformation.recommendedSellingTime"] || "",
+              storageTips: item["farmerInformation.storageTips"] || "",
+              qualityGrading: item["farmerInformation.qualityGrading"] || "",
+            },
+            additionalDetails: {
+              govtMSP: item["additionalDetails.govtMSP"] || null,
+              exportImportStatus:
+                item["additionalDetails.exportImportStatus"] || "",
+              subsidiesSchemes: item["additionalDetails.subsidiesSchemes"]
+                ? item["additionalDetails.subsidiesSchemes"].split(",")
+                : [],
+            },
+            variants: [
+              {
+                name: item["variants[0].name"] || item.name,
+                image: item["variants[0].image"] || "",
+                price: item["variants[0].price"] || 0,
+                minPrice: item["variants[0].minPrice"] || 0,
+                maxPrice: item["variants[0].maxPrice"] || 0,
+              },
+            ],
+            otherDetails: {
+              reportedDate: {
+                $date:
+                  item["otherDetails.reportedDate.$date"] ||
+                  new Date().toISOString(),
+              },
+              rawExcelData: {
+                State: item.State || "",
+                District: item.District || "",
+                "Market ": item["Market "] || "",
+                Season: item.Season || "",
+                "Crop Name": item["Crop Name"] || "",
+                Category: item.Category || "",
+                "Arrivals (Tonnes)": item["Arrivals (Tonnes)"] || 0,
+                "Min Price (Rs./Quintal)": item["Min Price (Rs./Quintal)"] || 0,
+                "Max Price (Rs./Quintal)": item["Max Price (Rs./Quintal)"] || 0,
+                "Modal Price (Rs./Quintal)":
+                  item["Modal Price (Rs./Quintal)"] || 0,
+                "Reported Date": item["Reported Date"] || 0,
+              },
+            },
+          })
+        );
 
         setExcelData(processedData);
       };
