@@ -3,6 +3,7 @@
 import React, { useState, useRef } from "react";
 import Image from "next/image";
 import * as XLSX from "xlsx";
+import Link from "next/link";
 
 interface CropData {
   _id: { $oid: string };
@@ -83,7 +84,7 @@ const Page = () => {
         const json = XLSX.utils.sheet_to_json(worksheet);
 
         interface ExcelCropData {
-          _id?: { $oid: string };
+          "_id.$oid"?: string;
           name: string;
           "category.name": string;
           "category.image"?: string;
@@ -127,84 +128,94 @@ const Page = () => {
         }
 
         const processedData: CropData[] = (json as ExcelCropData[]).map(
-          (item) => ({
-            _id: { $oid: item._id?.$oid || new Date().getTime().toString() },
-            name: item.name,
-            category: {
-              name: item["category.name"],
-              image: item["category.image"] || "",
-            },
-            location: {
-              latitude: item["location.latitude"] || 0,
-              longitude: item["location.longitude"] || 0,
-              city: item["location.city"],
-              state: item["location.state"],
-            },
-            supplyDemand: {
-              arrivalQtyToday: item["supplyDemand.arrivalQtyToday"] || 0,
-              stockAvailability: item["supplyDemand.stockAvailability"] || 0,
-              majorArrivalDistricts: item["supplyDemand.majorArrivalDistricts"]
-                ? item["supplyDemand.majorArrivalDistricts"].split(",")
-                : [],
-            },
-            marketLocation: item["marketLocation"],
-            cropInsights: {
-              season: item["cropInsights.season"] || "",
-              sowingTime: item["cropInsights.sowingTime"] || "",
-              harvestTime: item["cropInsights.harvestTime"] || "",
-              averageYield: item["cropInsights.averageYield"] || "",
-              requiredTemperature:
-                item["cropInsights.requiredTemperature"] || "",
-              waterRequirement: item["cropInsights.waterRequirement"] || "",
-            },
-            farmerInformation: {
-              recommendedSellingTime:
-                item["farmerInformation.recommendedSellingTime"] || "",
-              storageTips: item["farmerInformation.storageTips"] || "",
-              qualityGrading: item["farmerInformation.qualityGrading"] || "",
-            },
-            additionalDetails: {
-              govtMSP: item["additionalDetails.govtMSP"] || null,
-              exportImportStatus:
-                item["additionalDetails.exportImportStatus"] || "",
-              subsidiesSchemes: item["additionalDetails.subsidiesSchemes"]
-                ? item["additionalDetails.subsidiesSchemes"].split(",")
-                : [],
-            },
-            variants: [
-              {
-                name: item["variants[0].name"] || item.name,
-                image: item["variants[0].image"] || "",
-                price: item["variants[0].price"] || 0,
-                minPrice: item["variants[0].minPrice"] || 0,
-                maxPrice: item["variants[0].maxPrice"] || 0,
+          (item) => {
+            if (!item["_id.$oid"]) {
+              console.error("Missing _id from Excel file for item:", item);
+            }
+            return {
+              _id: { $oid: item["_id.$oid"] || "" },
+              name: item.name,
+              category: {
+                name: item["category.name"],
+                image: item["category.image"] || "",
               },
-            ],
-            otherDetails: {
-              reportedDate: {
-                $date:
-                  item["otherDetails.reportedDate.$date"] ||
-                  new Date().toISOString(),
+              location: {
+                latitude: item["location.latitude"] || 0,
+                longitude: item["location.longitude"] || 0,
+                city: item["location.city"],
+                state: item["location.state"],
               },
-              rawExcelData: {
-                State: item.State || "",
-                District: item.District || "",
-                "Market ": item["Market "] || "",
-                Season: item.Season || "",
-                "Crop Name": item["Crop Name"] || "",
-                Category: item.Category || "",
-                "Arrivals (Tonnes)": item["Arrivals (Tonnes)"] || 0,
-                "Min Price (Rs./Quintal)": item["Min Price (Rs./Quintal)"] || 0,
-                "Max Price (Rs./Quintal)": item["Max Price (Rs./Quintal)"] || 0,
-                "Modal Price (Rs./Quintal)":
-                  item["Modal Price (Rs./Quintal)"] || 0,
-                "Reported Date": item["Reported Date"] || 0,
+              supplyDemand: {
+                arrivalQtyToday: item["supplyDemand.arrivalQtyToday"] || 0,
+                stockAvailability: item["supplyDemand.stockAvailability"] || 0,
+                majorArrivalDistricts: item[
+                  "supplyDemand.majorArrivalDistricts"
+                ]
+                  ? item["supplyDemand.majorArrivalDistricts"].split(",")
+                  : [],
               },
-            },
-          })
+              marketLocation: item["marketLocation"],
+              cropInsights: {
+                season: item["cropInsights.season"] || "",
+                sowingTime: item["cropInsights.sowingTime"] || "",
+                harvestTime: item["cropInsights.harvestTime"] || "",
+                averageYield: item["cropInsights.averageYield"] || "",
+                requiredTemperature:
+                  item["cropInsights.requiredTemperature"] || "",
+                waterRequirement: item["cropInsights.waterRequirement"] || "",
+              },
+              farmerInformation: {
+                recommendedSellingTime:
+                  item["farmerInformation.recommendedSellingTime"] || "",
+                storageTips: item["farmerInformation.storageTips"] || "",
+                qualityGrading: item["farmerInformation.qualityGrading"] || "",
+              },
+              additionalDetails: {
+                govtMSP: item["additionalDetails.govtMSP"] || null,
+                exportImportStatus:
+                  item["additionalDetails.exportImportStatus"] || "",
+                subsidiesSchemes: item["additionalDetails.subsidiesSchemes"]
+                  ? item["additionalDetails.subsidiesSchemes"].split(",")
+                  : [],
+              },
+              variants: [
+                {
+                  name: item["variants[0].name"] || item.name,
+                  image: item["variants[0].image"] || "",
+                  price: item["variants[0].price"] || 0,
+                  minPrice: item["variants[0].minPrice"] || 0,
+                  maxPrice: item["variants[0].maxPrice"] || 0,
+                },
+              ],
+              otherDetails: {
+                reportedDate: {
+                  $date:
+                    item["otherDetails.reportedDate.$date"] ||
+                    new Date().toISOString(),
+                },
+                rawExcelData: {
+                  State: item.State || "",
+                  District: item.District || "",
+                  "Market ": item["Market "] || "",
+                  Season: item.Season || "",
+                  "Crop Name": item["Crop Name"] || "",
+                  Category: item.Category || "",
+                  "Arrivals (Tonnes)": item["Arrivals (Tonnes)"] || 0,
+                  "Min Price (Rs./Quintal)":
+                    item["Min Price (Rs./Quintal)"] || 0,
+                  "Max Price (Rs./Quintal)":
+                    item["Max Price (Rs./Quintal)"] || 0,
+                  "Modal Price (Rs./Quintal)":
+                    item["Modal Price (Rs./Quintal)"] || 0,
+                  "Reported Date": item["Reported Date"] || 0,
+                },
+              },
+            };
+          }
         );
 
         setExcelData(processedData);
+        localStorage.setItem("excelCropData", JSON.stringify(processedData));
       };
       reader.readAsArrayBuffer(file);
     }
@@ -213,8 +224,6 @@ const Page = () => {
   const handleButtonClick = () => {
     fileInputRef.current?.click();
   };
-
-  console.log(excelData);
 
   // Pagination Logic
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -239,7 +248,7 @@ const Page = () => {
           />
           <h2 className="text-lg font-semibold">All Crops</h2>
         </div>
-        <div className="flex items-center space-x-2">
+        <div className="flex items-end space-x-2">
           <div className="flex flex-col">
             <span className="text-sm font-medium text-gray-600">Category</span>
             <div className="relative">
@@ -274,7 +283,7 @@ const Page = () => {
               </div>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-end gap-2">
             <input
               type="file"
               ref={fileInputRef}
@@ -366,24 +375,24 @@ const Page = () => {
                     {crop.variants[0].price}
                   </td>
                   <td className="px-6 py-4 text-sm text-center font-medium flex items-center justify-center gap-4">
-                    <a
-                      href="#"
+                    <Link
+                      href={`/cropExcel/${crop._id.$oid}`}
                       className="text-zinc-600 border border-zinc-600 hover:text-white hover:bg-zinc-600 px-3 py-1 rounded-md"
                     >
                       Details
-                    </a>
-                    <a
+                    </Link>
+                    <Link
                       href="#"
                       className="text-green-600 border border-green-600 hover:text-white hover:bg-green-500 px-3 py-1 rounded-md"
                     >
                       Update
-                    </a>
-                    <a
+                    </Link>
+                    <Link
                       href="#"
                       className="text-red-600 border border-red-600 hover:text-white hover:bg-red-600 px-3 py-1 rounded-md"
                     >
                       Delete
-                    </a>
+                    </Link>
                   </td>
                 </tr>
               ))
